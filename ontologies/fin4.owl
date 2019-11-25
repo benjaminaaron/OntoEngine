@@ -24,7 +24,8 @@
     <!-- http://www.finfour.net/kb#claims -->
 
     <owl:ObjectProperty rdf:about="http://www.finfour.net/kb#claims">
-        <rdfs:domain rdf:resource="http://www.finfour.net/kb#Human"/>
+        <owl:inverseOf rdf:resource="http://www.finfour.net/kb#getsClaimedBy"/>
+        <rdfs:domain rdf:resource="http://www.finfour.net/kb#Claimer"/>
         <rdfs:range rdf:resource="http://www.finfour.net/kb#Token"/>
     </owl:ObjectProperty>
     
@@ -33,8 +34,40 @@
     <!-- http://www.finfour.net/kb#creates -->
 
     <owl:ObjectProperty rdf:about="http://www.finfour.net/kb#creates">
+        <owl:inverseOf rdf:resource="http://www.finfour.net/kb#getsCreatedBy"/>
         <rdfs:domain rdf:resource="http://www.finfour.net/kb#TokenCreator"/>
         <rdfs:range rdf:resource="http://www.finfour.net/kb#Token"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.finfour.net/kb#getsClaimedBy -->
+
+    <owl:ObjectProperty rdf:about="http://www.finfour.net/kb#getsClaimedBy">
+        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topObjectProperty"/>
+        <rdfs:domain rdf:resource="http://www.finfour.net/kb#Token"/>
+        <rdfs:range rdf:resource="http://www.finfour.net/kb#Claimer"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.finfour.net/kb#getsCreatedBy -->
+
+    <owl:ObjectProperty rdf:about="http://www.finfour.net/kb#getsCreatedBy">
+        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topObjectProperty"/>
+        <rdfs:domain rdf:resource="http://www.finfour.net/kb#Token"/>
+        <rdfs:range rdf:resource="http://www.finfour.net/kb#TokenCreator"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.finfour.net/kb#isRequiredFor -->
+
+    <owl:ObjectProperty rdf:about="http://www.finfour.net/kb#isRequiredFor">
+        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topObjectProperty"/>
+        <owl:inverseOf rdf:resource="http://www.finfour.net/kb#requires"/>
+        <rdfs:domain rdf:resource="http://www.finfour.net/kb#Proof"/>
+        <rdfs:range rdf:resource="http://www.finfour.net/kb#Claim"/>
     </owl:ObjectProperty>
     
 
@@ -61,6 +94,7 @@
     <!-- http://www.finfour.net/kb#triggersMinting -->
 
     <owl:ObjectProperty rdf:about="http://www.finfour.net/kb#triggersMinting">
+        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topObjectProperty"/>
         <rdfs:domain rdf:resource="http://www.finfour.net/kb#Claim"/>
         <rdfs:range rdf:resource="http://www.finfour.net/kb#Token"/>
     </owl:ObjectProperty>
@@ -78,6 +112,32 @@
     
 
 
+    <!-- http://www.finfour.net/kb#BooleanTokenProperty -->
+
+    <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#BooleanTokenProperty">
+        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#TokenProperty"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.finfour.net/kb#ChangingValueTokenProperty -->
+
+    <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#ChangingValueTokenProperty">
+        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#TokenProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.finfour.net/kb#FixedValueTokenProperty -->
+
+    <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#FixedValueTokenProperty">
+        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#TokenProperty"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
+    </owl:DatatypeProperty>
+    
+
+
     <!-- http://www.finfour.net/kb#HumanTrait -->
 
     <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#HumanTrait">
@@ -85,6 +145,21 @@
         <rdfs:domain rdf:resource="http://www.finfour.net/kb#Human"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
     </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.finfour.net/kb#InitialValueTokenProperty -->
+
+    <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#InitialValueTokenProperty">
+        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#TokenProperty"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.finfour.net/kb#TokenProperty -->
+
+    <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#TokenProperty"/>
     
 
 
@@ -107,16 +182,8 @@
     <!-- http://www.finfour.net/kb#balanceOwners -->
 
     <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#balanceOwners">
-        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#changingValues"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#ChangingValueTokenProperty"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
-    </owl:DatatypeProperty>
-    
-
-
-    <!-- http://www.finfour.net/kb#booleanProperty -->
-
-    <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#booleanProperty">
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
     </owl:DatatypeProperty>
     
 
@@ -124,7 +191,7 @@
     <!-- http://www.finfour.net/kb#burnable -->
 
     <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#burnable">
-        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#booleanProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#BooleanTokenProperty"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
     </owl:DatatypeProperty>
     
@@ -133,7 +200,7 @@
     <!-- http://www.finfour.net/kb#cap -->
 
     <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#cap">
-        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#fixValue"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#FixedValueTokenProperty"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
     </owl:DatatypeProperty>
     
@@ -142,30 +209,8 @@
     <!-- http://www.finfour.net/kb#capped -->
 
     <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#capped">
-        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#booleanProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#BooleanTokenProperty"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
-    </owl:DatatypeProperty>
-    
-
-
-    <!-- http://www.finfour.net/kb#changingValues -->
-
-    <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#changingValues"/>
-    
-
-
-    <!-- http://www.finfour.net/kb#fixValue -->
-
-    <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#fixValue">
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
-    </owl:DatatypeProperty>
-    
-
-
-    <!-- http://www.finfour.net/kb#freeTextField -->
-
-    <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#freeTextField">
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
     </owl:DatatypeProperty>
     
 
@@ -173,15 +218,7 @@
     <!-- http://www.finfour.net/kb#initialSupply -->
 
     <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#initialSupply">
-        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#initialValue"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
-    </owl:DatatypeProperty>
-    
-
-
-    <!-- http://www.finfour.net/kb#initialValue -->
-
-    <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#initialValue">
+        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#InitialValueTokenProperty"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
     </owl:DatatypeProperty>
     
@@ -206,7 +243,7 @@
     <!-- http://www.finfour.net/kb#mintable -->
 
     <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#mintable">
-        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#booleanProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#BooleanTokenProperty"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
     </owl:DatatypeProperty>
     
@@ -252,10 +289,18 @@
     
 
 
+    <!-- http://www.finfour.net/kb#textContent -->
+
+    <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#textContent">
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
     <!-- http://www.finfour.net/kb#totalSupply -->
 
     <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#totalSupply">
-        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#changingValues"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#ChangingValueTokenProperty"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
     </owl:DatatypeProperty>
     
@@ -264,7 +309,7 @@
     <!-- http://www.finfour.net/kb#transferable -->
 
     <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#transferable">
-        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#booleanProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#BooleanTokenProperty"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
     </owl:DatatypeProperty>
     
@@ -319,6 +364,12 @@
 
     <owl:Class rdf:about="http://www.finfour.net/kb#Claimer">
         <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Human"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.finfour.net/kb#claims"/>
+                <owl:someValuesFrom rdf:resource="http://www.finfour.net/kb#Token"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
     </owl:Class>
     
 
@@ -427,13 +478,26 @@
 
     <owl:Class rdf:about="http://www.finfour.net/kb#TokenCreator">
         <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Human"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.finfour.net/kb#creates"/>
+                <owl:someValuesFrom rdf:resource="http://www.finfour.net/kb#Token"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
     </owl:Class>
     
 
 
     <!-- http://www.finfour.net/kb#TraitOwner -->
 
-    <owl:Class rdf:about="http://www.finfour.net/kb#TraitOwner"/>
+    <owl:Class rdf:about="http://www.finfour.net/kb#TraitOwner">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.finfour.net/kb#Trait"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
     
 
 
