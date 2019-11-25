@@ -39,6 +39,34 @@
     
 
 
+    <!-- http://www.finfour.net/kb#mintableVia -->
+
+    <owl:ObjectProperty rdf:about="http://www.finfour.net/kb#mintableVia">
+        <owl:inverseOf rdf:resource="http://www.finfour.net/kb#triggersMinting"/>
+        <rdfs:domain rdf:resource="http://www.finfour.net/kb#Token"/>
+        <rdfs:range rdf:resource="http://www.finfour.net/kb#Claim"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.finfour.net/kb#requires -->
+
+    <owl:ObjectProperty rdf:about="http://www.finfour.net/kb#requires">
+        <rdfs:domain rdf:resource="http://www.finfour.net/kb#Claim"/>
+        <rdfs:range rdf:resource="http://www.finfour.net/kb#Proof"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.finfour.net/kb#triggersMinting -->
+
+    <owl:ObjectProperty rdf:about="http://www.finfour.net/kb#triggersMinting">
+        <rdfs:domain rdf:resource="http://www.finfour.net/kb#Claim"/>
+        <rdfs:range rdf:resource="http://www.finfour.net/kb#Token"/>
+    </owl:ObjectProperty>
+    
+
+
     <!-- 
     ///////////////////////////////////////////////////////////////////////////////////////
     //
@@ -271,6 +299,18 @@
 
     <owl:Class rdf:about="http://www.finfour.net/kb#Claim">
         <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Concept"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.finfour.net/kb#requires"/>
+                <owl:someValuesFrom rdf:resource="http://www.finfour.net/kb#Proof"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.finfour.net/kb#triggersMinting"/>
+                <owl:someValuesFrom rdf:resource="http://www.finfour.net/kb#Token"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
     </owl:Class>
     
 
@@ -325,6 +365,12 @@
     <owl:Class rdf:about="http://www.finfour.net/kb#Token">
         <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Concept"/>
         <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#TraitOwner"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.finfour.net/kb#mintableVia"/>
+                <owl:someValuesFrom rdf:resource="http://www.finfour.net/kb#Claim"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://www.finfour.net/kb#TokenTrait"/>
