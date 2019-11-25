@@ -1,0 +1,62 @@
+--------------------------------------------------------------------------------
+get token props
+--------------------------------------------------------------------------------
+
+PREFIX kb: <http://www.finfour.net/kb#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT * WHERE { 
+	kb:Token rdfs:subClassOf ?node .
+    ?node owl:onProperty ?property .
+    ?property rdfs:range ?range .
+    FILTER (?range IN (xsd:boolean, xsd:double)) .
+}
+
+--------------------------------------------------------------------------------
+get traits
+--------------------------------------------------------------------------------
+
+PREFIX kb: <http://www.finfour.net/kb#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT * WHERE {
+	?trait rdfs:subPropertyOf ?traitType .
+    ?traitType rdfs:subPropertyOf kb:Trait .
+    ?traitType rdfs:domain ?domain .
+}
+
+--------------------------------------------------------------------------------
+get trait owners
+--------------------------------------------------------------------------------
+
+PREFIX kb: <http://www.finfour.net/kb#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT * WHERE {
+    ?parent rdfs:subClassOf kb:TraitOwner .
+    OPTIONAL {
+    	?child rdfs:subClassOf ?parent .
+    }
+}
+
+--------------------------------------------------------------------------------
+get list (poc)
+--------------------------------------------------------------------------------
+
+PREFIX kb: <http://www.finfour.net/kb#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+SELECT * WHERE { 
+	kb:booleanProperty rdfs:range ?range .
+    ?range owl:oneOf ?list .
+    ?list rdf:rest* ?listRest .
+    ?listRest rdf:first ?head ;
+              rdf:rest ?tail .
+ 
+}
+
+--------------------------------------------------------------------------------
