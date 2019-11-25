@@ -261,6 +261,20 @@
     
 
 
+    <!-- http://www.finfour.net/kb#Agent -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#Agent"/>
+    
+
+
+    <!-- http://www.finfour.net/kb#Claim -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#Claim">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Concept"/>
+    </owl:Class>
+    
+
+
     <!-- http://www.finfour.net/kb#Claimer -->
 
     <owl:Class rdf:about="http://www.finfour.net/kb#Claimer">
@@ -269,9 +283,16 @@
     
 
 
+    <!-- http://www.finfour.net/kb#Concept -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#Concept"/>
+    
+
+
     <!-- http://www.finfour.net/kb#Human -->
 
     <owl:Class rdf:about="http://www.finfour.net/kb#Human">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Agent"/>
         <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#TraitOwner"/>
         <rdfs:subClassOf>
             <owl:Restriction>
@@ -283,11 +304,27 @@
     
 
 
+    <!-- http://www.finfour.net/kb#Proof -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#Proof">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Concept"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.finfour.net/kb#Sensor -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#Sensor">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Agent"/>
+    </owl:Class>
+    
+
+
     <!-- http://www.finfour.net/kb#Token -->
 
     <owl:Class rdf:about="http://www.finfour.net/kb#Token">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Concept"/>
         <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#TraitOwner"/>
-        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://www.finfour.net/kb#TokenTrait"/>
