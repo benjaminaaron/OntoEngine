@@ -13,6 +13,35 @@
     <!-- 
     ///////////////////////////////////////////////////////////////////////////////////////
     //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.finfour.net/kb#claims -->
+
+    <owl:ObjectProperty rdf:about="http://www.finfour.net/kb#claims">
+        <rdfs:domain rdf:resource="http://www.finfour.net/kb#Human"/>
+        <rdfs:range rdf:resource="http://www.finfour.net/kb#Token"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.finfour.net/kb#creates -->
+
+    <owl:ObjectProperty rdf:about="http://www.finfour.net/kb#creates">
+        <rdfs:domain rdf:resource="http://www.finfour.net/kb#TokenCreator"/>
+        <rdfs:range rdf:resource="http://www.finfour.net/kb#Token"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
     // Data properties
     //
     ///////////////////////////////////////////////////////////////////////////////////////
