@@ -257,9 +257,9 @@
     
 
 
-    <!-- http://www.finfour.net/kb#nobel -->
+    <!-- http://www.finfour.net/kb#noble -->
 
-    <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#nobel">
+    <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#noble">
         <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#HumanTrait"/>
     </owl:DatatypeProperty>
     
