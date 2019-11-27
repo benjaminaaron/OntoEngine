@@ -158,6 +158,14 @@
     
 
 
+    <!-- http://www.finfour.net/kb#OrganizationalTrait -->
+
+    <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#OrganizationalTrait">
+        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#Trait"/>
+    </owl:DatatypeProperty>
+    
+
+
     <!-- http://www.finfour.net/kb#TokenProperty -->
 
     <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#TokenProperty"/>
@@ -216,6 +224,30 @@
     
 
 
+    <!-- http://www.finfour.net/kb#greenWashing -->
+
+    <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#greenWashing">
+        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#OrganizationalTrait"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.finfour.net/kb#honest -->
+
+    <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#honest">
+        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#OrganizationalTrait"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.finfour.net/kb#indifferent -->
+
+    <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#indifferent">
+        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#HumanTrait"/>
+    </owl:DatatypeProperty>
+    
+
+
     <!-- http://www.finfour.net/kb#initialSupply -->
 
     <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#initialSupply">
@@ -237,6 +269,14 @@
 
     <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#manipulable">
         <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#TokenTrait"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.finfour.net/kb#manipulative -->
+
+    <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#manipulative">
+        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#OrganizationalTrait"/>
     </owl:DatatypeProperty>
     
 
@@ -286,6 +326,14 @@
 
     <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#oversimplified">
         <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#TokenTrait"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.finfour.net/kb#politicallyMotivated -->
+
+    <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#politicallyMotivated">
+        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#OrganizationalTrait"/>
     </owl:DatatypeProperty>
     
 
