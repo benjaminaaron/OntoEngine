@@ -656,11 +656,73 @@
     
 
 
-    <!-- http://www.finfour.net/kb#TestToken -->
+    <!-- http://www.finfour.net/kb#Julia -->
 
-    <owl:NamedIndividual rdf:about="http://www.finfour.net/kb#TestToken">
+    <owl:NamedIndividual rdf:about="http://www.finfour.net/kb#Julia">
+        <rdf:type rdf:resource="http://www.finfour.net/kb#Claimer"/>
+        <claims rdf:resource="http://www.finfour.net/kb#TreeToken_Claim0"/>
+        <indifferent rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</indifferent>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.finfour.net/kb#LocationProof -->
+
+    <owl:NamedIndividual rdf:about="http://www.finfour.net/kb#LocationProof">
+        <rdf:type rdf:resource="http://www.finfour.net/kb#Proof"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.finfour.net/kb#Max -->
+
+    <owl:NamedIndividual rdf:about="http://www.finfour.net/kb#Max">
+        <rdf:type rdf:resource="http://www.finfour.net/kb#TokenCreator"/>
+        <creates rdf:resource="http://www.finfour.net/kb#TreeToken"/>
+        <noble rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</noble>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.finfour.net/kb#PictureProof -->
+
+    <owl:NamedIndividual rdf:about="http://www.finfour.net/kb#PictureProof">
+        <rdf:type rdf:resource="http://www.finfour.net/kb#Proof"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.finfour.net/kb#TreeToken -->
+
+    <owl:NamedIndividual rdf:about="http://www.finfour.net/kb#TreeToken">
         <rdf:type rdf:resource="http://www.finfour.net/kb#Token"/>
+        <burnable rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</burnable>
+        <capped rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</capped>
+        <initialSupply rdf:datatype="http://www.w3.org/2001/XMLSchema#double">0.0</initialSupply>
         <mintable rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</mintable>
+        <transferable rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</transferable>
+        <trustworthy rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</trustworthy>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.finfour.net/kb#TreeToken_Claim0 -->
+
+    <owl:NamedIndividual rdf:about="http://www.finfour.net/kb#TreeToken_Claim0">
+        <rdf:type rdf:resource="http://www.finfour.net/kb#Claim"/>
+        <dispensedFrom rdf:resource="http://www.finfour.net/kb#TreeToken"/>
+        <requires rdf:resource="http://www.finfour.net/kb#LocationProof"/>
+        <requires rdf:resource="http://www.finfour.net/kb#PictureProof"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.finfour.net/kb#TreeToken_Impact -->
+
+    <owl:NamedIndividual rdf:about="http://www.finfour.net/kb#TreeToken_Impact">
+        <rdf:type rdf:resource="http://www.finfour.net/kb#TokenImpact"/>
+        <resultsFrom rdf:resource="http://www.finfour.net/kb#TreeToken"/>
+        <approximate rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</approximate>
     </owl:NamedIndividual>
 </rdf:RDF>
 
