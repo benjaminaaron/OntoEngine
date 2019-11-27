@@ -273,15 +273,6 @@
     
 
 
-    <!-- http://www.finfour.net/kb#InitialValueTokenProperty -->
-
-    <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#InitialValueTokenProperty">
-        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#TokenProperty"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
-    </owl:DatatypeProperty>
-    
-
-
     <!-- http://www.finfour.net/kb#OrganizationalTrait -->
 
     <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#OrganizationalTrait">
@@ -385,7 +376,7 @@
     <!-- http://www.finfour.net/kb#initialSupply -->
 
     <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#initialSupply">
-        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#InitialValueTokenProperty"/>
+        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#FixedValueTokenProperty"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
     </owl:DatatypeProperty>
     
