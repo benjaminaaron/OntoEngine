@@ -73,6 +73,15 @@
     
 
 
+    <!-- http://www.finfour.net/kb#isResultFrom -->
+
+    <owl:ObjectProperty rdf:about="http://www.finfour.net/kb#isResultFrom">
+        <rdfs:domain rdf:resource="http://www.finfour.net/kb#TokenImpact"/>
+        <rdfs:range rdf:resource="http://www.finfour.net/kb#Token"/>
+    </owl:ObjectProperty>
+    
+
+
     <!-- http://www.finfour.net/kb#mintableVia -->
 
     <owl:ObjectProperty rdf:about="http://www.finfour.net/kb#mintableVia">
@@ -88,6 +97,15 @@
     <owl:ObjectProperty rdf:about="http://www.finfour.net/kb#requires">
         <rdfs:domain rdf:resource="http://www.finfour.net/kb#Claim"/>
         <rdfs:range rdf:resource="http://www.finfour.net/kb#Proof"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.finfour.net/kb#resultsIn -->
+
+    <owl:ObjectProperty rdf:about="http://www.finfour.net/kb#resultsIn">
+        <rdfs:domain rdf:resource="http://www.finfour.net/kb#Token"/>
+        <rdfs:range rdf:resource="http://www.finfour.net/kb#TokenImpact"/>
     </owl:ObjectProperty>
     
 
@@ -569,6 +587,20 @@
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://www.finfour.net/kb#creates"/>
                 <owl:someValuesFrom rdf:resource="http://www.finfour.net/kb#Token"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.finfour.net/kb#TokenImpact -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#TokenImpact">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Concept"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.finfour.net/kb#AlignmentIntentImpact"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
             </owl:Restriction>
         </rdfs:subClassOf>
     </owl:Class>
