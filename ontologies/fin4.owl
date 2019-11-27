@@ -474,6 +474,12 @@
         <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Concept"/>
         <rdfs:subClassOf>
             <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.finfour.net/kb#dispensedFrom"/>
+                <owl:someValuesFrom rdf:resource="http://www.finfour.net/kb#Token"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
                 <owl:onProperty rdf:resource="http://www.finfour.net/kb#requires"/>
                 <owl:someValuesFrom rdf:resource="http://www.finfour.net/kb#Proof"/>
             </owl:Restriction>
@@ -575,6 +581,12 @@
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://www.finfour.net/kb#createdBy"/>
                 <owl:someValuesFrom rdf:resource="http://www.finfour.net/kb#TokenCreator"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.finfour.net/kb#dispenses"/>
+                <owl:someValuesFrom rdf:resource="http://www.finfour.net/kb#Claim"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
