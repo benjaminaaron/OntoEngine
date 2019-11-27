@@ -113,6 +113,12 @@
     
 
 
+    <!-- http://www.finfour.net/kb#AlignmentIntentImpact -->
+
+    <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#AlignmentIntentImpact"/>
+    
+
+
     <!-- http://www.finfour.net/kb#BooleanTokenProperty -->
 
     <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#BooleanTokenProperty">
@@ -185,6 +191,14 @@
     <!-- http://www.finfour.net/kb#Trait -->
 
     <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#Trait"/>
+    
+
+
+    <!-- http://www.finfour.net/kb#approximate -->
+
+    <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#approximate">
+        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#AlignmentIntentImpact"/>
+    </owl:DatatypeProperty>
     
 
 
@@ -314,6 +328,14 @@
     
 
 
+    <!-- http://www.finfour.net/kb#oppositeEffect -->
+
+    <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#oppositeEffect">
+        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#AlignmentIntentImpact"/>
+    </owl:DatatypeProperty>
+    
+
+
     <!-- http://www.finfour.net/kb#overcomplicated -->
 
     <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#overcomplicated">
@@ -326,6 +348,14 @@
 
     <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#oversimplified">
         <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#TokenTrait"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.finfour.net/kb#perfect -->
+
+    <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#perfect">
+        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#AlignmentIntentImpact"/>
     </owl:DatatypeProperty>
     
 
@@ -368,6 +398,14 @@
 
     <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#trustworthy">
         <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#TokenTrait"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.finfour.net/kb#unintendedConsequences -->
+
+    <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#unintendedConsequences">
+        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#AlignmentIntentImpact"/>
     </owl:DatatypeProperty>
     
 
