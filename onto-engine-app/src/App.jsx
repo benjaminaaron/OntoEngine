@@ -58,26 +58,6 @@ function App() {
 
             // TODO
         });
-            
-        /*
-        const axios = require('axios');
-        axios
-			.get(repositoryURL, {
-                params: {
-                    data: {
-                        'query': query,
-                        'infer': false
-                    }
-                }
-            })
-			.then(response => {
-				console.log('Success', response);
-			})
-			.catch(error => {
-				console.log('Error', error);
-			})
-            .finally(() => {});
-        */
     };
 
     return (
