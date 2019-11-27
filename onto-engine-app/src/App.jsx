@@ -15,26 +15,50 @@ function App() {
     });
 
     const fetchData = () => {
-        const query =
+        const boolTokenPropsQuery =
             "PREFIX kb: <http://www.finfour.net/kb#> " +
             "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> " +
-            "PREFIX owl: <http://www.w3.org/2002/07/owl#> " +
-            "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> " +
             "SELECT * WHERE { " +
-	        "    kb:Token rdfs:subClassOf ?node . " +
-            "    ?node owl:onProperty ?property . " +
-            "    ?property rdfs:range ?range . " +
-            "    FILTER (?range IN (xsd:boolean, xsd:double)) . " +
+            "   ?tokenProp rdfs:subPropertyOf kb:BooleanTokenProperty . " +
+            "   FILTER (?tokenProp != kb:BooleanTokenProperty) . " +
+            "}";
+        const traitsQuery =
+            "PREFIX kb: <http://www.finfour.net/kb#> " +
+            "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> " +
+            "SELECT * WHERE { " +
+            "VALUES (?traitType) { " +
+            "   (kb:HumanTrait) " +
+            "   (kb:TokenTrait) " +
+            "   (kb:OrganizationalTrait) " +
+            "} " +
+            "?trait rdfs:subPropertyOf ?traitType . " +
+            "FILTER (?trait != ?traitType) . " +
             "}";
 
-        $.getJSON(repositoryURL, { query: query, infer: false })
-            .done(response => {
-                console.log("Response", response);
-                let rows = response.results.bindings;
+        $.when(
+            $.getJSON({url: repositoryURL, data: {query: boolTokenPropsQuery, infer: false}}),
+            $.getJSON({url: repositoryURL, data: {query: traitsQuery, infer: false}})
+        ).done((boolTokenPropsQueryResponse, traitsQueryResponse) => {
+            let boolTokenPropsRows = boolTokenPropsQueryResponse[0].results.bindings;
+            let traitsRows = traitsQueryResponse[0].results.bindings;
 
-                // TODO setData();
-            });
+            let boolTokenProps = [];
+            for (let i = 0; i < boolTokenPropsRows.length; ++i) {
+                boolTokenProps.push(boolTokenPropsRows[i].tokenProp.value.split('#')[1]);
+            }
 
+            let traits = {};
+            for (let i = 0; i < traitsRows.length; ++i) {
+                let traitType = traitsRows[i].traitType.value.split('#')[1];
+                if (!traits[traitType]) {
+                    traits[traitType] = [];
+                }
+                traits[traitType].push(traitsRows[i].trait.value.split('#')[1]);                
+            }
+
+            // TODO
+        });
+            
         /*
         const axios = require('axios');
         axios
