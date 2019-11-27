@@ -14,6 +14,85 @@
     <!-- 
     ///////////////////////////////////////////////////////////////////////////////////////
     //
+    // Annotation properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.finfour.net/kb#GraphNavigationMarker -->
+
+    <owl:AnnotationProperty rdf:about="http://www.finfour.net/kb#GraphNavigationMarker"/>
+    
+
+
+    <!-- http://www.finfour.net/kb#VariableTypeMarker -->
+
+    <owl:AnnotationProperty rdf:about="http://www.finfour.net/kb#VariableTypeMarker"/>
+    
+
+
+    <!-- http://www.finfour.net/kb#all -->
+
+    <owl:AnnotationProperty rdf:about="http://www.finfour.net/kb#all">
+        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#GraphNavigationMarker"/>
+    </owl:AnnotationProperty>
+    
+
+
+    <!-- http://www.finfour.net/kb#atLeastOne -->
+
+    <owl:AnnotationProperty rdf:about="http://www.finfour.net/kb#atLeastOne">
+        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#GraphNavigationMarker"/>
+    </owl:AnnotationProperty>
+    
+
+
+    <!-- http://www.finfour.net/kb#boolean -->
+
+    <owl:AnnotationProperty rdf:about="http://www.finfour.net/kb#boolean">
+        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#VariableTypeMarker"/>
+    </owl:AnnotationProperty>
+    
+
+
+    <!-- http://www.finfour.net/kb#double -->
+
+    <owl:AnnotationProperty rdf:about="http://www.finfour.net/kb#double">
+        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#VariableTypeMarker"/>
+    </owl:AnnotationProperty>
+    
+
+
+    <!-- http://www.finfour.net/kb#exactlyOne -->
+
+    <owl:AnnotationProperty rdf:about="http://www.finfour.net/kb#exactlyOne">
+        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#GraphNavigationMarker"/>
+    </owl:AnnotationProperty>
+    
+
+
+    <!-- http://www.finfour.net/kb#zeroOrMore -->
+
+    <owl:AnnotationProperty rdf:about="http://www.finfour.net/kb#zeroOrMore">
+        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#GraphNavigationMarker"/>
+    </owl:AnnotationProperty>
+    
+
+
+    <!-- http://www.finfour.net/kb#zeroOrOne -->
+
+    <owl:AnnotationProperty rdf:about="http://www.finfour.net/kb#zeroOrOne">
+        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#GraphNavigationMarker"/>
+    </owl:AnnotationProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
     // Object Properties
     //
     ///////////////////////////////////////////////////////////////////////////////////////
