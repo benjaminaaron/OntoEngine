@@ -22,12 +22,33 @@
     
 
 
+    <!-- http://www.finfour.net/kb#claimedBy -->
+
+    <owl:ObjectProperty rdf:about="http://www.finfour.net/kb#claimedBy">
+        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topObjectProperty"/>
+        <owl:inverseOf rdf:resource="http://www.finfour.net/kb#claims"/>
+        <rdfs:domain rdf:resource="http://www.finfour.net/kb#Token"/>
+        <rdfs:range rdf:resource="http://www.finfour.net/kb#Claimer"/>
+    </owl:ObjectProperty>
+    
+
+
     <!-- http://www.finfour.net/kb#claims -->
 
     <owl:ObjectProperty rdf:about="http://www.finfour.net/kb#claims">
-        <owl:inverseOf rdf:resource="http://www.finfour.net/kb#getsClaimedBy"/>
         <rdfs:domain rdf:resource="http://www.finfour.net/kb#Claimer"/>
         <rdfs:range rdf:resource="http://www.finfour.net/kb#Token"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.finfour.net/kb#createdBy -->
+
+    <owl:ObjectProperty rdf:about="http://www.finfour.net/kb#createdBy">
+        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topObjectProperty"/>
+        <owl:inverseOf rdf:resource="http://www.finfour.net/kb#creates"/>
+        <rdfs:domain rdf:resource="http://www.finfour.net/kb#Token"/>
+        <rdfs:range rdf:resource="http://www.finfour.net/kb#TokenCreator"/>
     </owl:ObjectProperty>
     
 
@@ -35,48 +56,7 @@
     <!-- http://www.finfour.net/kb#creates -->
 
     <owl:ObjectProperty rdf:about="http://www.finfour.net/kb#creates">
-        <owl:inverseOf rdf:resource="http://www.finfour.net/kb#getsCreatedBy"/>
         <rdfs:domain rdf:resource="http://www.finfour.net/kb#TokenCreator"/>
-        <rdfs:range rdf:resource="http://www.finfour.net/kb#Token"/>
-    </owl:ObjectProperty>
-    
-
-
-    <!-- http://www.finfour.net/kb#getsClaimedBy -->
-
-    <owl:ObjectProperty rdf:about="http://www.finfour.net/kb#getsClaimedBy">
-        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topObjectProperty"/>
-        <rdfs:domain rdf:resource="http://www.finfour.net/kb#Token"/>
-        <rdfs:range rdf:resource="http://www.finfour.net/kb#Claimer"/>
-    </owl:ObjectProperty>
-    
-
-
-    <!-- http://www.finfour.net/kb#getsCreatedBy -->
-
-    <owl:ObjectProperty rdf:about="http://www.finfour.net/kb#getsCreatedBy">
-        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topObjectProperty"/>
-        <rdfs:domain rdf:resource="http://www.finfour.net/kb#Token"/>
-        <rdfs:range rdf:resource="http://www.finfour.net/kb#TokenCreator"/>
-    </owl:ObjectProperty>
-    
-
-
-    <!-- http://www.finfour.net/kb#isRequiredFor -->
-
-    <owl:ObjectProperty rdf:about="http://www.finfour.net/kb#isRequiredFor">
-        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topObjectProperty"/>
-        <owl:inverseOf rdf:resource="http://www.finfour.net/kb#requires"/>
-        <rdfs:domain rdf:resource="http://www.finfour.net/kb#Proof"/>
-        <rdfs:range rdf:resource="http://www.finfour.net/kb#Claim"/>
-    </owl:ObjectProperty>
-    
-
-
-    <!-- http://www.finfour.net/kb#isResultFrom -->
-
-    <owl:ObjectProperty rdf:about="http://www.finfour.net/kb#isResultFrom">
-        <rdfs:domain rdf:resource="http://www.finfour.net/kb#TokenImpact"/>
         <rdfs:range rdf:resource="http://www.finfour.net/kb#Token"/>
     </owl:ObjectProperty>
     
@@ -92,11 +72,32 @@
     
 
 
+    <!-- http://www.finfour.net/kb#requiredFor -->
+
+    <owl:ObjectProperty rdf:about="http://www.finfour.net/kb#requiredFor">
+        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topObjectProperty"/>
+        <owl:inverseOf rdf:resource="http://www.finfour.net/kb#requires"/>
+        <rdfs:domain rdf:resource="http://www.finfour.net/kb#Proof"/>
+        <rdfs:range rdf:resource="http://www.finfour.net/kb#Claim"/>
+    </owl:ObjectProperty>
+    
+
+
     <!-- http://www.finfour.net/kb#requires -->
 
     <owl:ObjectProperty rdf:about="http://www.finfour.net/kb#requires">
         <rdfs:domain rdf:resource="http://www.finfour.net/kb#Claim"/>
         <rdfs:range rdf:resource="http://www.finfour.net/kb#Proof"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.finfour.net/kb#resultsFrom -->
+
+    <owl:ObjectProperty rdf:about="http://www.finfour.net/kb#resultsFrom">
+        <owl:inverseOf rdf:resource="http://www.finfour.net/kb#resultsIn"/>
+        <rdfs:domain rdf:resource="http://www.finfour.net/kb#TokenImpact"/>
+        <rdfs:range rdf:resource="http://www.finfour.net/kb#Token"/>
     </owl:ObjectProperty>
     
 
@@ -524,7 +525,7 @@
         <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Concept"/>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="http://www.finfour.net/kb#isRequiredFor"/>
+                <owl:onProperty rdf:resource="http://www.finfour.net/kb#requiredFor"/>
                 <owl:someValuesFrom rdf:resource="http://www.finfour.net/kb#Claim"/>
             </owl:Restriction>
         </rdfs:subClassOf>
@@ -547,13 +548,13 @@
         <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#TraitOwner"/>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="http://www.finfour.net/kb#getsClaimedBy"/>
+                <owl:onProperty rdf:resource="http://www.finfour.net/kb#claimedBy"/>
                 <owl:someValuesFrom rdf:resource="http://www.finfour.net/kb#Claimer"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="http://www.finfour.net/kb#getsCreatedBy"/>
+                <owl:onProperty rdf:resource="http://www.finfour.net/kb#createdBy"/>
                 <owl:someValuesFrom rdf:resource="http://www.finfour.net/kb#TokenCreator"/>
             </owl:Restriction>
         </rdfs:subClassOf>
