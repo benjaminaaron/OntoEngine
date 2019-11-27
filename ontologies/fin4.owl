@@ -150,7 +150,6 @@
     <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#HumanTrait">
         <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#Trait"/>
         <rdfs:domain rdf:resource="http://www.finfour.net/kb#Human"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
     </owl:DatatypeProperty>
     
 
@@ -168,6 +167,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#OrganizationalTrait">
         <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#Trait"/>
+        <rdfs:domain rdf:resource="http://www.finfour.net/kb#Organization"/>
     </owl:DatatypeProperty>
     
 
@@ -183,14 +183,15 @@
     <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#TokenTrait">
         <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#Trait"/>
         <rdfs:domain rdf:resource="http://www.finfour.net/kb#Token"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
     </owl:DatatypeProperty>
     
 
 
     <!-- http://www.finfour.net/kb#Trait -->
 
-    <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#Trait"/>
+    <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#Trait">
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
     
 
 
@@ -482,6 +483,21 @@
     
 
 
+    <!-- http://www.finfour.net/kb#Organization -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#Organization">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Agent"/>
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#TraitOwner"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.finfour.net/kb#OrganizationalTrait"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
     <!-- http://www.finfour.net/kb#Proof -->
 
     <owl:Class rdf:about="http://www.finfour.net/kb#Proof">
@@ -595,14 +611,7 @@
 
     <!-- http://www.finfour.net/kb#TraitOwner -->
 
-    <owl:Class rdf:about="http://www.finfour.net/kb#TraitOwner">
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://www.finfour.net/kb#Trait"/>
-                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-    </owl:Class>
+    <owl:Class rdf:about="http://www.finfour.net/kb#TraitOwner"/>
     
 
 
