@@ -670,6 +670,14 @@
     
 
 
+    <!-- http://www.finfour.net/kb#Data -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#Data">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Concept"/>
+    </owl:Class>
+    
+
+
     <!-- http://www.finfour.net/kb#Delegation -->
 
     <owl:Class rdf:about="http://www.finfour.net/kb#Delegation">
@@ -733,6 +741,14 @@
     
 
 
+    <!-- http://www.finfour.net/kb#Location -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#Location">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Data"/>
+    </owl:Class>
+    
+
+
     <!-- http://www.finfour.net/kb#Message -->
 
     <owl:Class rdf:about="http://www.finfour.net/kb#Message">
@@ -768,6 +784,30 @@
                 <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
             </owl:Restriction>
         </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.finfour.net/kb#Password -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#Password">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Data"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.finfour.net/kb#PendingApproval -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#PendingApproval">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Fin4"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.finfour.net/kb#Picture -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#Picture">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Data"/>
     </owl:Class>
     
 
@@ -828,6 +868,14 @@
 
     <owl:Class rdf:about="http://www.finfour.net/kb#Scenario">
         <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Narrative"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.finfour.net/kb#Selfie -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#Selfie">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Picture"/>
     </owl:Class>
     
 
