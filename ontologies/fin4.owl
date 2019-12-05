@@ -560,6 +560,14 @@
     
 
 
+    <!-- http://www.finfour.net/kb#Challenge -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#Challenge">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#TCR"/>
+    </owl:Class>
+    
+
+
     <!-- http://www.finfour.net/kb#Claim -->
 
     <owl:Class rdf:about="http://www.finfour.net/kb#Claim">
@@ -622,6 +630,14 @@
     
 
 
+    <!-- http://www.finfour.net/kb#Delegation -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#Delegation">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#TCR"/>
+    </owl:Class>
+    
+
+
     <!-- http://www.finfour.net/kb#Fin4 -->
 
     <owl:Class rdf:about="http://www.finfour.net/kb#Fin4">
@@ -653,10 +669,34 @@
     
 
 
+    <!-- http://www.finfour.net/kb#Listing -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#Listing">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#TCR"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.finfour.net/kb#Message -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#Message">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Fin4"/>
+    </owl:Class>
+    
+
+
     <!-- http://www.finfour.net/kb#Narrative -->
 
     <owl:Class rdf:about="http://www.finfour.net/kb#Narrative">
         <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Concept"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.finfour.net/kb#OPAT -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#OPAT">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#TCR"/>
     </owl:Class>
     
 
@@ -690,6 +730,30 @@
     
 
 
+    <!-- http://www.finfour.net/kb#Proposal -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#Proposal">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#TCR"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.finfour.net/kb#Reparameterization -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#Reparameterization">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#TCR"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.finfour.net/kb#Reveal -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#Reveal">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#TCR"/>
+    </owl:Class>
+    
+
+
     <!-- http://www.finfour.net/kb#Scenario -->
 
     <owl:Class rdf:about="http://www.finfour.net/kb#Scenario">
@@ -716,6 +780,22 @@
                 <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
             </owl:Restriction>
         </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.finfour.net/kb#TCR -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#TCR">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Fin4"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.finfour.net/kb#TCRParameter -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#TCRParameter">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#TCR"/>
     </owl:Class>
     
 
@@ -766,6 +846,14 @@
     
 
 
+    <!-- http://www.finfour.net/kb#TokenCollection -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#TokenCollection">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Fin4"/>
+    </owl:Class>
+    
+
+
     <!-- http://www.finfour.net/kb#TokenCreator -->
 
     <owl:Class rdf:about="http://www.finfour.net/kb#TokenCreator">
@@ -794,9 +882,33 @@
     
 
 
+    <!-- http://www.finfour.net/kb#TokenTransfer -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#TokenTransfer">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Cryptoeconomics"/>
+    </owl:Class>
+    
+
+
     <!-- http://www.finfour.net/kb#TraitOwner -->
 
     <owl:Class rdf:about="http://www.finfour.net/kb#TraitOwner"/>
+    
+
+
+    <!-- http://www.finfour.net/kb#UserGroup -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#UserGroup">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Fin4"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.finfour.net/kb#Vote -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#Vote">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#TCR"/>
+    </owl:Class>
     
 
 
