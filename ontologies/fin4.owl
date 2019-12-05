@@ -549,7 +549,7 @@
     <!-- http://www.finfour.net/kb#Claim -->
 
     <owl:Class rdf:about="http://www.finfour.net/kb#Claim">
-        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Concept"/>
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Fin4"/>
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://www.finfour.net/kb#dispensedFrom"/>
@@ -592,6 +592,30 @@
     
 
 
+    <!-- http://www.finfour.net/kb#Context -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#Context">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Narrative"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.finfour.net/kb#Cryptoeconomics -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#Cryptoeconomics">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Concept"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.finfour.net/kb#Fin4 -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#Fin4">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Concept"/>
+    </owl:Class>
+    
+
+
     <!-- http://www.finfour.net/kb#Human -->
 
     <owl:Class rdf:about="http://www.finfour.net/kb#Human">
@@ -603,6 +627,22 @@
                 <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
             </owl:Restriction>
         </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.finfour.net/kb#ImpactVector -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#ImpactVector">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Narrative"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.finfour.net/kb#Narrative -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#Narrative">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Concept"/>
     </owl:Class>
     
 
@@ -625,13 +665,21 @@
     <!-- http://www.finfour.net/kb#Proof -->
 
     <owl:Class rdf:about="http://www.finfour.net/kb#Proof">
-        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Concept"/>
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Fin4"/>
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://www.finfour.net/kb#requiredFor"/>
                 <owl:someValuesFrom rdf:resource="http://www.finfour.net/kb#Claim"/>
             </owl:Restriction>
         </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.finfour.net/kb#Scenario -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#Scenario">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Narrative"/>
     </owl:Class>
     
 
@@ -644,10 +692,25 @@
     
 
 
+    <!-- http://www.finfour.net/kb#Story -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#Story">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Narrative"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.finfour.net/kb#textContent"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
     <!-- http://www.finfour.net/kb#Token -->
 
     <owl:Class rdf:about="http://www.finfour.net/kb#Token">
-        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Concept"/>
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Cryptoeconomics"/>
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Fin4"/>
         <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#TraitOwner"/>
         <rdfs:subClassOf>
             <owl:Restriction>
@@ -706,7 +769,7 @@
     <!-- http://www.finfour.net/kb#TokenImpact -->
 
     <owl:Class rdf:about="http://www.finfour.net/kb#TokenImpact">
-        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Concept"/>
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Fin4"/>
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://www.finfour.net/kb#AlignmentIntentImpact"/>
