@@ -584,6 +584,14 @@
     
 
 
+    <!-- http://www.finfour.net/kb#Blockchain -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#Blockchain">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Cryptoeconomics"/>
+    </owl:Class>
+    
+
+
     <!-- http://www.finfour.net/kb#Challenge -->
 
     <owl:Class rdf:about="http://www.finfour.net/kb#Challenge">
@@ -654,6 +662,14 @@
     
 
 
+    <!-- http://www.finfour.net/kb#DLT -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#DLT">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Cryptoeconomics"/>
+    </owl:Class>
+    
+
+
     <!-- http://www.finfour.net/kb#Delegation -->
 
     <owl:Class rdf:about="http://www.finfour.net/kb#Delegation">
@@ -662,10 +678,26 @@
     
 
 
+    <!-- http://www.finfour.net/kb#DigitalWallet -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#DigitalWallet">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Cryptoeconomics"/>
+    </owl:Class>
+    
+
+
     <!-- http://www.finfour.net/kb#Fin4 -->
 
     <owl:Class rdf:about="http://www.finfour.net/kb#Fin4">
         <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Concept"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.finfour.net/kb#GasFee -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#GasFee">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Cryptoeconomics"/>
     </owl:Class>
     
 
@@ -768,6 +800,14 @@
     
 
 
+    <!-- http://www.finfour.net/kb#PublicAddress -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#PublicAddress">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Cryptoeconomics"/>
+    </owl:Class>
+    
+
+
     <!-- http://www.finfour.net/kb#Reparameterization -->
 
     <owl:Class rdf:about="http://www.finfour.net/kb#Reparameterization">
@@ -800,6 +840,14 @@
     
 
 
+    <!-- http://www.finfour.net/kb#SmartContract -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#SmartContract">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Cryptoeconomics"/>
+    </owl:Class>
+    
+
+
     <!-- http://www.finfour.net/kb#Story -->
 
     <owl:Class rdf:about="http://www.finfour.net/kb#Story">
@@ -810,6 +858,14 @@
                 <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
             </owl:Restriction>
         </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.finfour.net/kb#Submission -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#Submission">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Fin4"/>
     </owl:Class>
     
 
@@ -923,6 +979,14 @@
     <!-- http://www.finfour.net/kb#TraitOwner -->
 
     <owl:Class rdf:about="http://www.finfour.net/kb#TraitOwner"/>
+    
+
+
+    <!-- http://www.finfour.net/kb#Transaction -->
+
+    <owl:Class rdf:about="http://www.finfour.net/kb#Transaction">
+        <rdfs:subClassOf rdf:resource="http://www.finfour.net/kb#Cryptoeconomics"/>
+    </owl:Class>
     
 
 
