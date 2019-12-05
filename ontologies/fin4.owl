@@ -303,6 +303,12 @@
     
 
 
+    <!-- http://www.finfour.net/kb#ProofProperty -->
+
+    <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#ProofProperty"/>
+    
+
+
     <!-- http://www.finfour.net/kb#TokenProperty -->
 
     <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#TokenProperty"/>
@@ -379,6 +385,15 @@
     
 
 
+    <!-- http://www.finfour.net/kb#hasParameterForTokenCreatorToSet -->
+
+    <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#hasParameterForTokenCreatorToSet">
+        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#ProofProperty"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+    </owl:DatatypeProperty>
+    
+
+
     <!-- http://www.finfour.net/kb#honest -->
 
     <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#honest">
@@ -400,6 +415,15 @@
     <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#initialSupply">
         <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#FixedValueTokenProperty"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.finfour.net/kb#isAutoInitiable -->
+
+    <owl:DatatypeProperty rdf:about="http://www.finfour.net/kb#isAutoInitiable">
+        <rdfs:subPropertyOf rdf:resource="http://www.finfour.net/kb#ProofProperty"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
     </owl:DatatypeProperty>
     
 
@@ -724,6 +748,12 @@
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://www.finfour.net/kb#requiredFor"/>
                 <owl:someValuesFrom rdf:resource="http://www.finfour.net/kb#Claim"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.finfour.net/kb#ProofProperty"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
             </owl:Restriction>
         </rdfs:subClassOf>
     </owl:Class>
