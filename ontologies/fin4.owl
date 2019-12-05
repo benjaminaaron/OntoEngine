@@ -101,6 +101,14 @@
     
 
 
+    <!-- http://www.finfour.net/kb#approves -->
+
+    <owl:ObjectProperty rdf:about="http://www.finfour.net/kb#approves">
+        <owl:inverseOf rdf:resource="http://www.finfour.net/kb#rejects"/>
+    </owl:ObjectProperty>
+    
+
+
     <!-- http://www.finfour.net/kb#claimedBy -->
 
     <owl:ObjectProperty rdf:about="http://www.finfour.net/kb#claimedBy">
@@ -167,6 +175,12 @@
         <rdfs:domain rdf:resource="http://www.finfour.net/kb#Token"/>
         <rdfs:range rdf:resource="http://www.finfour.net/kb#Claim"/>
     </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.finfour.net/kb#rejects -->
+
+    <owl:ObjectProperty rdf:about="http://www.finfour.net/kb#rejects"/>
     
 
 
