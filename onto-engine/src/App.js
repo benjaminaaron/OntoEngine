@@ -9,16 +9,19 @@ function App() {
           <div>
             <Card
               name="Subject"
+              color="bg-classColor"
             />
           </div>
           <div>
             <Card
               name="Predicate"
+              color="bg-objectPropertyColor"
             />
           </div>
           <div>
             <Card
               name="Object"
+              color="bg-classColor"
             />
           </div>
         </div>

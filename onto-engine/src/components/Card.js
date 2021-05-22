@@ -1,10 +1,11 @@
 import React from 'react';
 import AutocompleteCreatable from './AutocompleteCreatable';
+import classnames from 'classnames';
 
 const Card = props => {
   return (
-    <div className="p-6 max-w-sm mx-auto bg-white rounded-xl shadow-md space-y-6">
-      <div className="text-xl font-medium text-blue-600">{props.name}</div>
+    <div className={classnames("p-6 max-w-sm mx-auto rounded-xl shadow-md space-y-6 bg-opacity-20", props.color)}>
+      <div className={classnames("text-xl font-medium text-gray-500")}>{props.name}</div>
       <AutocompleteCreatable/>
     </div>
   );
