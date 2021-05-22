@@ -1,11 +1,13 @@
 import './App.css';
+import AutocompleteCreatable from './components/AutocompleteCreatable';
 
 function App() {
   return (
     <>
-      <div className="App p-6 items-center justify-center">
-          <h1 className="text-blue-400 font-extrabold">Hello World</h1>
-          <p className="tracking-widest">This is to test tailwindcss integration</p>
+      <div className="p-6 max-w-sm mx-auto bg-white rounded-xl shadow-md space-y-6">
+        <div className="text-xl font-medium text-blue-600">Subject</div>
+        <input type="text" className="rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"/>
+        <AutocompleteCreatable/>
       </div>
     </>
   );
