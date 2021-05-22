@@ -4,17 +4,16 @@ import { Fragment, useState } from 'react'
 export default function ModalDialog() {
   let [isOpen, setIsOpen] = useState(false)
 
-  function closeModal() {
+  const closeModal = () => {
     setIsOpen(false)
   }
 
-  function openModal() {
-    setIsOpen(true)
+  const openModal = () =>  {
+    setIsOpen(true);
   }
 
   return (
     <>
-      <div className="fixed inset-0 flex items-center justify-center">
         <button
           type="button"
           onClick={openModal}
@@ -22,7 +21,6 @@ export default function ModalDialog() {
         >
           Open dialog
         </button>
-      </div>
 
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog
@@ -88,4 +86,4 @@ export default function ModalDialog() {
       </Transition>
     </>
   )
-}
+};
