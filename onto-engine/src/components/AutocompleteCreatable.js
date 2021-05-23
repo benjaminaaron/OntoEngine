@@ -9,17 +9,17 @@ export default function AutocompleteCreatable() {
     ];
 
     const handleChange = e => {
-        if (e.__isNew__) {
-            console.log("new: ", e);
-        } else {
-            console.log("existing: ", e);
-        }
-    }
+        console.log("selected existing: ", e);
+    };
+
+    const handleCreation = e => {
+        console.log("created ", e);
+    };
 
     return (
       <CreatableSelect
         onChange={handleChange}
-        // onInputChange={handleInputChange}
+        onCreateOption={handleCreation}
         options={options}
       />
     );
