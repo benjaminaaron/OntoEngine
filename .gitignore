@@ -1,4 +1,7 @@
 
+# same for all modules
+target/
+
 # maven files
 mvnw*
 .mvn/
