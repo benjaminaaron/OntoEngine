@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+<GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2"
+          fx:controller="de.benjaminaaron.ontoclientjavafx.gui.GuiController"
+          alignment="center" hgap="20" vgap="10">
+    <padding><Insets top="25" right="25" bottom="25" left="25"/></padding>
+
+    <Label text="Subject" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+    <TextField prefWidth="160" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+
+    <Label text="Predicate" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+    <TextField prefWidth="160" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+    <Label text="Object" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+    <TextField prefWidth="160" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+
+    <HBox GridPane.columnIndex="1" GridPane.rowIndex="2" alignment="CENTER">
+        <padding><Insets top="40"/></padding>
+        <Button text="Submit" onAction="#submitClicked"/>
+    </HBox>
+
+    <stylesheets>
+        <URL value="@style.css" />
+    </stylesheets>
+</GridPane>
