@@ -1,4 +1,8 @@
 
+# maven files
+mvnw*
+.mvn/
+
 # from here downwards is recommended from JetBrains:
 # https://github.com/github/gitignore/blob/master/Global/JetBrains.gitignore
 # removed some things not needed
