@@ -56,7 +56,7 @@ public class WebSocketController {
             @Override
             public void handleFrame(StompHeaders stompHeaders, Object payload) {
                 ServerToClientMessage msg = (ServerToClientMessage) payload;
-                System.out.println("Client received message: " + msg.getMessage());
+                System.out.println("Server says: " + msg.getMessage());
             }
         });
     }

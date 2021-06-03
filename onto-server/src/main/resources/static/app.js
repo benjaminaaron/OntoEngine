@@ -6,27 +6,27 @@ const connect = () => {
     stompClient.connect({}, frame => {
         console.log('Connected: ' + frame);
         stompClient.subscribe('/topic/serverBroadcasting', messageObj => {
-            console.log("got the message: ", messageObj, JSON.parse(messageObj.body).message);
+            console.log("Server says: ", JSON.parse(messageObj.body).message);
         });
     });
     // stompClient.disconnect();
 };
 
-const send = () => {
+const dev = () => {
     stompClient.send("/app/routeServerListening", {}, JSON.stringify({'message': 'the browser client says hello'}));
 };
 
 const addStatement = () => {
     let statement = {
-        subject: 'browser',
-        predicate: 'says',
-        object: 'hi'
+        subject: $("#subjectTextField").val(),
+        predicate: $("#predicateTextField").val(),
+        object: $("#objectTextField").val()
     };
     stompClient.send("/app/serverReceiveAddStatements", {}, JSON.stringify(statement));
 };
 
 $(() => {
     connect();
-    $("#sendBtn").click(() => { send(); });
+    $("#devBtn").click(() => { dev(); });
     $("#addStatementBtn").click(() => { addStatement(); });
 });

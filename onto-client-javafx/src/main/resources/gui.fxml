@@ -10,13 +10,13 @@
     <padding><Insets top="25" right="25" bottom="25" left="25"/></padding>
 
     <Label text="Subject" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-    <TextField prefWidth="160" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+    <TextField fx:id="subjectTextField" prefWidth="160" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
 
     <Label text="Predicate" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-    <TextField prefWidth="160" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+    <TextField fx:id="predicateTextField" prefWidth="160" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
     <Label text="Object" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
-    <TextField prefWidth="160" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+    <TextField fx:id="objectTextField" prefWidth="160" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
 
     <HBox GridPane.columnIndex="1" GridPane.rowIndex="2" alignment="CENTER">
         <padding><Insets top="40"/></padding>

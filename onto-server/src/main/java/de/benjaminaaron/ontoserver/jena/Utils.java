@@ -9,6 +9,7 @@ public class Utils {
     final static String DEFAULT_BASE_URL = "http://onto/";
 
     public static String ensureIri(String word) {
+        word = word.trim();
         try {
             new URL(word).toURI();
         } catch (URISyntaxException | MalformedURLException e) {
