@@ -10,13 +10,23 @@ const connect = () => {
         });
     });
     // stompClient.disconnect();
-}
+};
 
 const send = () => {
     stompClient.send("/app/routeServerListening", {}, JSON.stringify({'message': 'the browser client says hello'}));
-}
+};
+
+const addStatement = () => {
+    let statement = {
+        subject: 'browser',
+        predicate: 'says',
+        object: 'hi'
+    };
+    stompClient.send("/app/serverReceiveAddStatements", {}, JSON.stringify(statement));
+};
 
 $(() => {
     connect();
-    $("#send").click(() => { send(); });
+    $("#sendBtn").click(() => { send(); });
+    $("#addStatementBtn").click(() => { addStatement(); });
 });
