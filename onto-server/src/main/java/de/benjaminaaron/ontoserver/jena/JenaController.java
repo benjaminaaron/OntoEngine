@@ -37,4 +37,28 @@ public class JenaController {
         Statement statement = ResourceFactory.createStatement(sub, pred, obj);
         model.add(statement);
     }
+
+    public void exportToRdfFile() {
+        // TODO
+    }
+
+    public void exportToGraphmlFile() {
+        // TODO
+    }
+
+    public void importFromSparqlEndpoint() {
+        // TODO
+    }
+
+    public void exportToGraphDB() {
+        // TODO
+    }
+
+    public void backupTdbDirectory() {
+        // TODO
+    }
+
+    public void clearTDB() {
+        // TODO
+    }
 }
