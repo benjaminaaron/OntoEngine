@@ -1,7 +1,6 @@
-package de.benjaminaaron.ontoserver.rest;
+package de.benjaminaaron.ontoserver.routing.rest;
 
-import de.benjaminaaron.ontoserver.jena.JenaController;
-import org.springframework.beans.factory.annotation.Autowired;
+import de.benjaminaaron.ontoserver.routing.BaseRouting;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -12,10 +11,7 @@ import java.util.Map;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
-public class RestRouting {
-
-    @Autowired
-    JenaController jenaController;
+public class RestRouting extends BaseRouting {
 
     @RequestMapping(value = "/addStatement", method = POST)
     @ResponseBody

@@ -1,19 +1,15 @@
-package de.benjaminaaron.ontoserver.websocket;
+package de.benjaminaaron.ontoserver.routing.websocket;
 
-import de.benjaminaaron.ontoserver.jena.JenaController;
-import de.benjaminaaron.ontoserver.websocket.messages.AddStatementMessage;
-import de.benjaminaaron.ontoserver.websocket.messages.ClientToServerMessage;
-import de.benjaminaaron.ontoserver.websocket.messages.ServerToClientMessage;
-import org.springframework.beans.factory.annotation.Autowired;
+import de.benjaminaaron.ontoserver.routing.BaseRouting;
+import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementMessage;
+import de.benjaminaaron.ontoserver.routing.websocket.messages.ClientToServerMessage;
+import de.benjaminaaron.ontoserver.routing.websocket.messages.ServerToClientMessage;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
 @Controller
-public class WebSocketRouting {
-
-    @Autowired
-    JenaController jenaController;
+public class WebSocketRouting extends BaseRouting {
 
     @MessageMapping("/routeServerListening")
     @SendTo("/topic/serverBroadcasting")
