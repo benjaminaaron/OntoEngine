@@ -1,14 +1,19 @@
 package de.benjaminaaron.ontoserver.websocket;
 
+import de.benjaminaaron.ontoserver.jena.JenaController;
 import de.benjaminaaron.ontoserver.websocket.messages.AddStatementMessage;
 import de.benjaminaaron.ontoserver.websocket.messages.ClientToServerMessage;
 import de.benjaminaaron.ontoserver.websocket.messages.ServerToClientMessage;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
 @Controller
 public class WebSocketRouting {
+
+    @Autowired
+    JenaController jenaController;
 
     @MessageMapping("/routeServerListening")
     @SendTo("/topic/serverBroadcasting")
@@ -23,7 +28,7 @@ public class WebSocketRouting {
     @SendTo("/topic/serverBroadcasting")
     public ServerToClientMessage addStatement(AddStatementMessage statement) {
         System.out.println("Received: " + statement);
-        // TODO
+        jenaController.addStatement(statement.getSubject(), statement.getPredicate(), statement.getObject());
         ServerToClientMessage response = new ServerToClientMessage();
         response.setMessage("Statement received and added");
         return response;
