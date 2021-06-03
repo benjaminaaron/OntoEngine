@@ -15,6 +15,7 @@ public class GuiController {
     public TextField subjectTextField;
     public TextField predicateTextField;
     public TextField objectTextField;
+    public TextField commandTextField;
 
     @FXML
     public void initialize() {}
@@ -22,5 +23,10 @@ public class GuiController {
     @FXML
     public void submitClicked(ActionEvent actionEvent) {
         webSocketController.sendAddStatement(subjectTextField.getText(), predicateTextField.getText(), objectTextField.getText());
+    }
+
+    @FXML
+    public void sendCommandClicked(ActionEvent actionEvent) {
+        webSocketController.sendCommand(commandTextField.getText());
     }
 }

@@ -12,10 +12,6 @@ const connect = () => {
     // stompClient.disconnect();
 };
 
-const dev = () => {
-    stompClient.send("/app/routeServerListening", {}, JSON.stringify({'message': 'the browser client says hello'}));
-};
-
 const addStatement = () => {
     let statement = {
         subject: $("#subjectTextField").val(),
@@ -25,8 +21,15 @@ const addStatement = () => {
     stompClient.send("/app/serverReceiveAddStatements", {}, JSON.stringify(statement));
 };
 
+const sendCommand = () => {
+    let command = {
+        command: $("#commandTextField").val()
+    }
+    stompClient.send("/app/serverReceiveCommand", {}, JSON.stringify(command));
+};
+
 $(() => {
     connect();
-    $("#devBtn").click(() => { dev(); });
     $("#addStatementBtn").click(() => { addStatement(); });
+    $("#sendCommandBtn").click(() => { sendCommand(); });
 });

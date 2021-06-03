@@ -3,6 +3,7 @@ package de.benjaminaaron.ontoserver.routing.websocket;
 import de.benjaminaaron.ontoserver.routing.BaseRouting;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementMessage;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.ClientToServerMessage;
+import de.benjaminaaron.ontoserver.routing.websocket.messages.CommandMessage;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.ServerToClientMessage;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -27,6 +28,16 @@ public class WebSocketRouting extends BaseRouting {
         jenaController.addStatement(statement.getSubject(), statement.getPredicate(), statement.getObject());
         ServerToClientMessage response = new ServerToClientMessage();
         response.setMessage("Statement received and added");
+        return response;
+    }
+
+    @MessageMapping("/serverReceiveCommand")
+    @SendTo("/topic/serverBroadcasting")
+    public ServerToClientMessage receiveCommand(CommandMessage command) {
+        System.out.println("Received: " + command);
+        handleCommand(command);
+        ServerToClientMessage response = new ServerToClientMessage();
+        response.setMessage("Command received");
         return response;
     }
 }

@@ -20,5 +20,4 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/onto-engine-websocket").withSockJS();
     }
-
 }

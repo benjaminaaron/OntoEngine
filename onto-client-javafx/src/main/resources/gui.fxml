@@ -19,9 +19,12 @@
     <TextField fx:id="objectTextField" prefWidth="160" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
 
     <HBox GridPane.columnIndex="1" GridPane.rowIndex="2" alignment="CENTER">
-        <padding><Insets top="40"/></padding>
-        <Button text="Submit" onAction="#submitClicked"/>
+        <padding><Insets top="30" bottom="80"/></padding>
+        <Button id="submitBtn" text="Submit" onAction="#submitClicked"/>
     </HBox>
+
+    <TextField fx:id="commandTextField" prefWidth="160" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+    <Button text="Send command" onAction="#sendCommandClicked" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
 
     <stylesheets>
         <URL value="@style.css" />

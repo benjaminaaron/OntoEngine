@@ -1,6 +1,7 @@
 package de.benjaminaaron.ontoclientjavafx.websocket;
 
 import de.benjaminaaron.ontoclientjavafx.websocket.messages.AddStatementMessage;
+import de.benjaminaaron.ontoclientjavafx.websocket.messages.CommandMessage;
 import de.benjaminaaron.ontoclientjavafx.websocket.messages.ServerToClientMessage;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
@@ -67,5 +68,11 @@ public class WebSocketController {
         msg.setPredicate(predicate);
         msg.setObject(object);
         session.send("/app/serverReceiveAddStatements", msg);
+    }
+
+    public void sendCommand(String commandStr) {
+        CommandMessage command = new CommandMessage();
+        command.setCommand(commandStr);
+        session.send("/app/serverReceiveCommand", command);
     }
 }
