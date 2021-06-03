@@ -1,4 +1,4 @@
-package de.benjaminaaron.ontoclientjavafx.gui;
+package de.benjaminaaron.ontoclientjavafx;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -29,7 +29,7 @@ public class GuiApplication extends Application {
         Platform.exit();
     }
 
-    static class StageReadyEvent extends ApplicationEvent {
+    public static class StageReadyEvent extends ApplicationEvent {
         public StageReadyEvent(Stage stage) {
             super(stage);
         }

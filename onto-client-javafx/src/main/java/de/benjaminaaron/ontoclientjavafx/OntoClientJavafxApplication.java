@@ -1,6 +1,5 @@
 package de.benjaminaaron.ontoclientjavafx;
 
-import de.benjaminaaron.ontoclientjavafx.gui.GuiApplication;
 import javafx.application.Application;
 
 public class OntoClientJavafxApplication {

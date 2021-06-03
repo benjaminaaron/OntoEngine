@@ -1,6 +1,6 @@
 package de.benjaminaaron.ontoclientjavafx.gui;
 
-import de.benjaminaaron.ontoclientjavafx.gui.GuiApplication.StageReadyEvent;
+import de.benjaminaaron.ontoclientjavafx.GuiApplication.StageReadyEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
