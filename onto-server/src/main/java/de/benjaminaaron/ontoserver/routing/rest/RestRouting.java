@@ -17,9 +17,8 @@ public class RestRouting extends BaseRouting {
     @RequestMapping(value = "/addStatement", method = POST)
     @ResponseBody
     public String addStatement(@RequestParam Map<String, String> params) {
-        System.out.println("addStatement POST request received with params: " + params);
-        jenaController.addStatement(params.get("subject"), params.get("predicate"), params.get("object"));
-        return "Statement received and added";
+        System.out.println("addStatement via POST request received: " + params);
+        return addStatement(params.get("subject"), params.get("predicate"), params.get("object"));
     }
 
     @RequestMapping(value = "/command", method = POST)

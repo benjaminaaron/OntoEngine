@@ -23,11 +23,10 @@ public class WebSocketRouting extends BaseRouting {
 
     @MessageMapping("/serverReceiveAddStatements")
     @SendTo("/topic/serverBroadcasting")
-    public ServerToClientMessage addStatement(AddStatementMessage statement) {
-        System.out.println("Received: " + statement);
-        jenaController.addStatement(statement.getSubject(), statement.getPredicate(), statement.getObject());
+    public ServerToClientMessage addStatement(AddStatementMessage statementMsg) {
+        System.out.println("addStatement via websocket received: " + statementMsg);
         ServerToClientMessage response = new ServerToClientMessage();
-        response.setMessage("Statement received and added");
+        response.setMessage(addStatement(statementMsg.getSubject(), statementMsg.getPredicate(), statementMsg.getObject()));
         return response;
     }
 

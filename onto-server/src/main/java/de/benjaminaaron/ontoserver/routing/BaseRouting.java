@@ -9,6 +9,13 @@ public abstract class BaseRouting {
     @Autowired
     protected JenaController jenaController;
 
+    protected String addStatement(String subject, String predicate, String object) {
+        if (jenaController.addStatement(subject, predicate, object)) {
+            return "Statement added";
+        }
+        return "Statement already exists";
+    }
+
     protected void handleCommand(CommandMessage command) {
         String commandStr = command.getCommand().split(" ")[0];
         String argsStr = command.getCommand().substring(commandStr.length() + 1);

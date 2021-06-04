@@ -34,12 +34,16 @@ public class JenaController {
         model.close();
     }
 
-    public void addStatement(String subject, String predicate, String object) {
+    public boolean addStatement(String subject, String predicate, String object) {
         Resource sub = model.createResource(ensureIri(subject));
         Property pred = model.createProperty(ensureIri(predicate));
         RDFNode obj = model.createResource(ensureIri(object));
         Statement statement = ResourceFactory.createStatement(sub, pred, obj);
+        if (model.contains(statement)) {
+            return false;
+        }
         model.add(statement);
+        return true;
     }
 
     public void printStatements() {
