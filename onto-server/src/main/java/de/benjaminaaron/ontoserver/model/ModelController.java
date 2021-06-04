@@ -1,4 +1,4 @@
-package de.benjaminaaron.ontoserver.jena;
+package de.benjaminaaron.ontoserver.model;
 
 import org.apache.jena.query.Dataset;
 import org.apache.jena.rdf.model.*;
@@ -13,10 +13,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import static de.benjaminaaron.ontoserver.jena.Utils.ensureIri;
+import static de.benjaminaaron.ontoserver.model.Utils.ensureIri;
 
 @Component
-public class JenaController {
+public class ModelController {
 
     @Value("${jena.tdb.directory}")
     private String TBD_DIR;

@@ -1,16 +1,16 @@
 package de.benjaminaaron.ontoserver.routing;
 
-import de.benjaminaaron.ontoserver.jena.JenaController;
+import de.benjaminaaron.ontoserver.model.ModelController;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.CommandMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class BaseRouting {
 
     @Autowired
-    protected JenaController jenaController;
+    protected ModelController modelController;
 
     protected String addStatement(String subject, String predicate, String object) {
-        if (jenaController.addStatement(subject, predicate, object)) {
+        if (modelController.addStatement(subject, predicate, object)) {
             return "Statement added";
         }
         return "Statement already exists";
@@ -22,10 +22,10 @@ public abstract class BaseRouting {
         System.out.println("handleCommand: \"" + commandStr + "\", args \"" + argsStr + "\"");
         switch (commandStr) {
             case "print":
-                jenaController.printStatements();
+                modelController.printStatements();
                 break;
             case "export":
-                jenaController.exportToRdfFile();
+                modelController.exportToRdfFile();
             default:
                 break;
         }

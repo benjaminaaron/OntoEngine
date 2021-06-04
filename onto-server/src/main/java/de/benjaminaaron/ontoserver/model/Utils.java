@@ -1,4 +1,4 @@
-package de.benjaminaaron.ontoserver.jena;
+package de.benjaminaaron.ontoserver.model;
 
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
