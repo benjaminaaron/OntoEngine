@@ -5,7 +5,10 @@ import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Statement;
 import org.jgrapht.graph.DefaultDirectedGraph;
+import org.jgrapht.nio.graphml.GraphMLExporter;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,5 +38,19 @@ public class Graph {
         nodesMap.put(rdfNode, node);
         graph.addVertex(node);
         return node;
+    }
+
+    public void exportGraphml() {
+        GraphMLExporter<Node, Edge> exporter = new GraphMLExporter<>();
+        // use Edit > "Properties Mapper..." to map VertexLabel and EdgeLabel to LabelText
+        exporter.setExportVertexLabels(true);
+        exporter.setExportEdgeLabels(true);
+        try {
+            FileWriter fileWriter = new FileWriter("out.graphml");
+            exporter.exportGraph(graph, fileWriter);
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

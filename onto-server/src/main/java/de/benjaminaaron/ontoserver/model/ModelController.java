@@ -54,7 +54,7 @@ public class ModelController {
         model.listStatements().toList().forEach(System.out::println);
     }
 
-    public void exportToRdfFile() {
+    public void exportRDF() {
         try(FileOutputStream fos = new FileOutputStream(Path.of("model.rdf").toFile())) {
             model.write(fos, "RDF/XML");
         } catch (IOException e) {
@@ -62,8 +62,8 @@ public class ModelController {
         }
     }
 
-    public void exportToGraphmlFile() {
-        // TODO
+    public void exportGraphml() {
+        graph.exportGraphml();
     }
 
     public void importFromSparqlEndpoint() {

@@ -9,4 +9,9 @@ public class Edge {
     public void setProperty(Property property) {
         this.property = property;
     }
+
+    @Override
+    public String toString() {
+        return property.toString();
+    }
 }

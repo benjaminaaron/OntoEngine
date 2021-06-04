@@ -4,6 +4,10 @@ import de.benjaminaaron.ontoserver.model.ModelController;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.CommandMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
 public abstract class BaseRouting {
 
     @Autowired
@@ -17,15 +21,21 @@ public abstract class BaseRouting {
     }
 
     protected void handleCommand(CommandMessage command) {
-        String commandStr = command.getCommand().split(" ")[0];
-        String argsStr = command.getCommand().substring(commandStr.length() + 1);
-        System.out.println("handleCommand: \"" + commandStr + "\", args \"" + argsStr + "\"");
+        List<String> args = new LinkedList<>(Arrays.asList(command.getCommand().split(" ")));
+        String commandStr = args.remove(0);
+        System.out.println("handleCommand: \"" + commandStr + "\", args \"" + args + "\"");
         switch (commandStr) {
             case "print":
                 modelController.printStatements();
                 break;
             case "export":
-                modelController.exportToRdfFile();
+                String arg0 = args.get(0).toLowerCase();
+                if (arg0.equals("rdf")) {
+                    modelController.exportRDF();
+                }
+                if (arg0.equals("graphml")) {
+                    modelController.exportGraphml();
+                }
             default:
                 break;
         }

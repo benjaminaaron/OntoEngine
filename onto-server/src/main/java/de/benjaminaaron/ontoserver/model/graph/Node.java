@@ -9,4 +9,9 @@ public class Node {
     public Node(RDFNode rdfNode) {
         this.rdfNode = rdfNode;
     }
+
+    @Override
+    public String toString() {
+        return rdfNode.toString();
+    }
 }
