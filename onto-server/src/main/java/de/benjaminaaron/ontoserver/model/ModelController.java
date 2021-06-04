@@ -14,7 +14,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import static de.benjaminaaron.ontoserver.model.Utils.ensureIri;
+import static de.benjaminaaron.ontoserver.model.Utils.ensureUri;
 
 @Component
 public class ModelController {
@@ -38,9 +38,9 @@ public class ModelController {
     }
 
     public boolean addStatement(String subject, String predicate, String object) {
-        Resource sub = model.createResource(ensureIri(subject));
-        Property pred = model.createProperty(ensureIri(predicate));
-        RDFNode obj = model.createResource(ensureIri(object));
+        Resource sub = model.createResource(ensureUri(subject));
+        Property pred = model.createProperty(ensureUri(predicate));
+        RDFNode obj = model.createResource(ensureUri(object));
         Statement statement = ResourceFactory.createStatement(sub, pred, obj);
         if (model.contains(statement)) {
             return false;
@@ -62,8 +62,8 @@ public class ModelController {
         }
     }
 
-    public void exportGraphml() {
-        graph.exportGraphml();
+    public void exportGraphml(boolean fullUri) {
+        graph.exportGraphml(fullUri);
     }
 
     public void importFromSparqlEndpoint() {

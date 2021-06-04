@@ -5,11 +5,14 @@ import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Statement;
 import org.jgrapht.graph.DefaultDirectedGraph;
+import org.jgrapht.nio.Attribute;
+import org.jgrapht.nio.DefaultAttribute;
 import org.jgrapht.nio.graphml.GraphMLExporter;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Graph {
@@ -40,11 +43,27 @@ public class Graph {
         return node;
     }
 
-    public void exportGraphml() {
+    public void exportGraphml(boolean fullUri) {
         GraphMLExporter<Node, Edge> exporter = new GraphMLExporter<>();
-        // use Edit > "Properties Mapper..." to map VertexLabel and EdgeLabel to LabelText
+
+        exporter.setVertexAttributeProvider(vertex -> {
+            Map<String, Attribute> map = new LinkedHashMap<>();
+            map.put("label", DefaultAttribute.createAttribute(fullUri ? vertex.toString() : vertex.getPathFromUri()));
+            return map;
+        });
+
+        exporter.setVertexLabelAttributeName("label");
         exporter.setExportVertexLabels(true);
+
+        exporter.setEdgeAttributeProvider(edge -> {
+            Map<String, Attribute> map = new LinkedHashMap<>();
+            map.put("label", DefaultAttribute.createAttribute(fullUri ? edge.toString() : edge.getPathFromUri()));
+            return map;
+        });
+        exporter.setEdgeLabelAttributeName("label");
         exporter.setExportEdgeLabels(true);
+
+        // use Edit > "Properties Mapper..." to map "label" to "Label Text" for nodes and edges
         try {
             FileWriter fileWriter = new FileWriter("out.graphml");
             exporter.exportGraph(graph, fileWriter);
