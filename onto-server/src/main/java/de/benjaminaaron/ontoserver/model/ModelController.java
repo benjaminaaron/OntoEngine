@@ -1,5 +1,6 @@
 package de.benjaminaaron.ontoserver.model;
 
+import de.benjaminaaron.ontoserver.model.graph.Graph;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.tdb.TDBFactory;
@@ -21,11 +22,13 @@ public class ModelController {
     @Value("${jena.tdb.directory}")
     private String TBD_DIR;
     private Model model;
+    private Graph graph;
 
     @PostConstruct
     private void init() {
         Dataset dataset = TDBFactory.createDataset(TBD_DIR) ;
         model = dataset.getDefaultModel();
+        graph = new Graph(model);
         printStatements();
     }
 
@@ -43,6 +46,7 @@ public class ModelController {
             return false;
         }
         model.add(statement);
+        graph.importStatement(statement);
         return true;
     }
 
