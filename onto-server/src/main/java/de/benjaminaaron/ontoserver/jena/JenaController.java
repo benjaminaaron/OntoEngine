@@ -9,6 +9,10 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Path;
+
 import static de.benjaminaaron.ontoserver.jena.Utils.ensureIri;
 
 @Component
@@ -22,7 +26,7 @@ public class JenaController {
     private void init() {
         Dataset dataset = TDBFactory.createDataset(TBD_DIR) ;
         model = dataset.getDefaultModel();
-        System.out.println(model.listStatements().toSet());
+        printStatements();
     }
 
     @PreDestroy
@@ -38,8 +42,16 @@ public class JenaController {
         model.add(statement);
     }
 
+    public void printStatements() {
+        model.listStatements().toList().forEach(System.out::println);
+    }
+
     public void exportToRdfFile() {
-        // TODO
+        try(FileOutputStream fos = new FileOutputStream(Path.of("model.rdf").toFile())) {
+            model.write(fos, "RDF/XML");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void exportToGraphmlFile() {

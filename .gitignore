@@ -4,3 +4,4 @@
 target/
 
 jena-tdb/
+*.rdf

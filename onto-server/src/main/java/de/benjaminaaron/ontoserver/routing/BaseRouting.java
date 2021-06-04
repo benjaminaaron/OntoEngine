@@ -10,7 +10,17 @@ public abstract class BaseRouting {
     protected JenaController jenaController;
 
     protected void handleCommand(CommandMessage command) {
-        System.out.println("handleCommand: " + command);
-        // TODO
+        String commandStr = command.getCommand().split(" ")[0];
+        String argsStr = command.getCommand().substring(commandStr.length() + 1);
+        System.out.println("handleCommand: \"" + commandStr + "\", args \"" + argsStr + "\"");
+        switch (commandStr) {
+            case "print":
+                jenaController.printStatements();
+                break;
+            case "export":
+                jenaController.exportToRdfFile();
+            default:
+                break;
+        }
     }
 }
