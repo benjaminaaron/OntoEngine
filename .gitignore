@@ -7,3 +7,4 @@ jena-tdb/
 *.rdf
 *.graphml
 logs/
+export/

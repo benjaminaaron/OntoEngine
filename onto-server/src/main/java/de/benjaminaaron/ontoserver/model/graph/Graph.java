@@ -9,6 +9,7 @@ import org.jgrapht.nio.Attribute;
 import org.jgrapht.nio.DefaultAttribute;
 import org.jgrapht.nio.graphml.GraphMLExporter;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
@@ -45,7 +46,7 @@ public class Graph {
         return node;
     }
 
-    public void exportGraphml(boolean fullUri) {
+    public void exportGraphml(File graphmlFile, boolean fullUri) {
         GraphMLExporter<Node, Edge> exporter = new GraphMLExporter<>();
 
         exporter.setVertexAttributeProvider(vertex -> {
@@ -67,7 +68,8 @@ public class Graph {
 
         // use Edit > "Properties Mapper..." to map "label" to "Label Text" for nodes and edges
         try {
-            FileWriter fileWriter = new FileWriter("out.graphml");
+            graphmlFile.getParentFile().mkdirs();
+            FileWriter fileWriter = new FileWriter(graphmlFile);
             exporter.exportGraph(graph, fileWriter);
             fileWriter.close();
         } catch (IOException e) {

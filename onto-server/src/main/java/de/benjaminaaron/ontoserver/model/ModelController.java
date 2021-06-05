@@ -12,9 +12,9 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Path;
 
 import static de.benjaminaaron.ontoserver.model.Utils.ensureUri;
 
@@ -25,6 +25,10 @@ public class ModelController {
 
     @Value("${jena.tdb.directory}")
     private String TBD_DIR;
+    @Value("${model.export.rdf.default}")
+    private File RDF_EXPORT_DEFAULT_FILE;
+    @Value("${model.export.graphml.default}")
+    private File GRAPHML_EXPORT_DEFAULT_FILE;
     private Model model;
     private Graph graph;
 
@@ -60,7 +64,8 @@ public class ModelController {
     }
 
     public void exportRDF() {
-        try(FileOutputStream fos = new FileOutputStream(Path.of("model.rdf").toFile())) {
+        RDF_EXPORT_DEFAULT_FILE.getParentFile().mkdirs();
+        try(FileOutputStream fos = new FileOutputStream(RDF_EXPORT_DEFAULT_FILE)) {
             model.write(fos, "RDF/XML");
         } catch (IOException e) {
             e.printStackTrace();
@@ -68,7 +73,7 @@ public class ModelController {
     }
 
     public void exportGraphml(boolean fullUri) {
-        graph.exportGraphml(fullUri);
+        graph.exportGraphml(GRAPHML_EXPORT_DEFAULT_FILE, fullUri);
     }
 
     public void importFromSparqlEndpoint() {}
