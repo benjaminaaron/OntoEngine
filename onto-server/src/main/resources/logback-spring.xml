@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property resource="application.properties" />
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+    </root>
+    <property name="LOG_FILE" value="${logging.ModelController.file}"/>
+    <include resource="org/springframework/boot/logging/logback/file-appender.xml" />
+    <logger name="de.benjaminaaron.ontoserver.model.ModelController" level="INFO">
+        <appender-ref ref="FILE" />
+    </logger>
+</configuration>

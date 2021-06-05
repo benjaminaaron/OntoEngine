@@ -4,6 +4,8 @@ import de.benjaminaaron.ontoserver.model.graph.Graph;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.tdb.TDBFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +20,8 @@ import static de.benjaminaaron.ontoserver.model.Utils.ensureUri;
 
 @Component
 public class ModelController {
+
+    private final Logger logger = LogManager.getLogger(ModelController.class);
 
     @Value("${jena.tdb.directory}")
     private String TBD_DIR;
@@ -45,6 +49,7 @@ public class ModelController {
         if (model.contains(statement)) {
             return false;
         }
+        logger.info("Statement added: " + subject + ", " + predicate + ", " + object);
         model.add(statement);
         graph.importStatement(statement);
         return true;
@@ -66,19 +71,11 @@ public class ModelController {
         graph.exportGraphml(fullUri);
     }
 
-    public void importFromSparqlEndpoint() {
-        // TODO
-    }
+    public void importFromSparqlEndpoint() {}
 
-    public void exportToGraphDB() {
-        // TODO
-    }
+    public void exportToGraphDB() {}
 
-    public void backupTdbDirectory() {
-        // TODO
-    }
+    public void backupTdbDirectory() {}
 
-    public void clearTDB() {
-        // TODO
-    }
+    public void clearTDB() {}
 }
