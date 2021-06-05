@@ -20,6 +20,8 @@ public class Graph {
     private final DefaultDirectedGraph<Node, Edge> graph;
     private final Map<RDFNode, Node> nodesMap = new HashMap<>();
 
+    // integrate more tightly with the Jena Graph?
+    // https://github.com/SmartDataAnalytics/SubgraphIsomorphismIndex/blob/master/jena-jgrapht-bindings/src/main/java/org/aksw/commons/jena/jgrapht/PseudoGraphJenaGraph.java
     public Graph(Model model) {
         graph = new DefaultDirectedGraph<>(Edge.class);
         model.listStatements().toList().forEach(this::importStatement);
