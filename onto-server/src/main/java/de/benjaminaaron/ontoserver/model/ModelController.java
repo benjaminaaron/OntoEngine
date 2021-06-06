@@ -11,12 +11,12 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Path;
 
 import static de.benjaminaaron.ontoserver.model.Utils.ensureUri;
+import static de.benjaminaaron.ontoserver.model.Utils.getExportFile;
 
 @Component
 public class ModelController {
@@ -24,17 +24,15 @@ public class ModelController {
     private final Logger logger = LogManager.getLogger(ModelController.class);
 
     @Value("${jena.tdb.directory}")
-    private String TBD_DIR;
-    @Value("${model.export.rdf.default}")
-    private File RDF_EXPORT_DEFAULT_FILE;
-    @Value("${model.export.graphml.default}")
-    private File GRAPHML_EXPORT_DEFAULT_FILE;
+    private Path TBD_DIR;
+    @Value("${model.export.directory}")
+    private Path EXPORT_DIRECTORY;
     private Model model;
     private Graph graph;
 
     @PostConstruct
     private void init() {
-        Dataset dataset = TDBFactory.createDataset(TBD_DIR) ;
+        Dataset dataset = TDBFactory.createDataset(TBD_DIR.toString()) ;
         model = dataset.getDefaultModel();
         graph = new Graph(model);
         printStatements();
@@ -64,8 +62,7 @@ public class ModelController {
     }
 
     public void exportRDF() {
-        RDF_EXPORT_DEFAULT_FILE.getParentFile().mkdirs();
-        try(FileOutputStream fos = new FileOutputStream(RDF_EXPORT_DEFAULT_FILE)) {
+        try(FileOutputStream fos = new FileOutputStream(getExportFile(EXPORT_DIRECTORY, "model", "rdf"))) {
             model.write(fos, "RDF/XML");
         } catch (IOException e) {
             e.printStackTrace();
@@ -73,7 +70,7 @@ public class ModelController {
     }
 
     public void exportGraphml(boolean fullUri) {
-        graph.exportGraphml(GRAPHML_EXPORT_DEFAULT_FILE, fullUri);
+        graph.exportGraphml(getExportFile(EXPORT_DIRECTORY, "model", "graphml"), fullUri);
     }
 
     public void importFromSparqlEndpoint() {}

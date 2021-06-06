@@ -46,7 +46,7 @@ public class Graph {
         return node;
     }
 
-    public void exportGraphml(File graphmlFile, boolean fullUri) {
+    public void exportGraphml(File file, boolean fullUri) {
         GraphMLExporter<Node, Edge> exporter = new GraphMLExporter<>();
 
         exporter.setVertexAttributeProvider(vertex -> {
@@ -68,8 +68,7 @@ public class Graph {
 
         // use Edit > "Properties Mapper..." to map "label" to "Label Text" for nodes and edges
         try {
-            graphmlFile.getParentFile().mkdirs();
-            FileWriter fileWriter = new FileWriter(graphmlFile);
+            FileWriter fileWriter = new FileWriter(file);
             exporter.exportGraph(graph, fileWriter);
             fileWriter.close();
         } catch (IOException e) {
