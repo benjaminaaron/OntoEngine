@@ -3,6 +3,9 @@ package de.benjaminaaron.ontoserver.model;
 import de.benjaminaaron.ontoserver.model.graph.Graph;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.rdf.model.*;
+import org.apache.jena.rdfconnection.RDFConnection;
+import org.apache.jena.rdfconnection.RDFConnectionFactory;
+import org.apache.jena.system.Txn;
 import org.apache.jena.tdb.TDBFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,6 +30,13 @@ public class ModelController {
     private Path TBD_DIR;
     @Value("${model.export.directory}")
     private Path EXPORT_DIRECTORY;
+    @Value("${graphdb.get-url}")
+    private String GRAPHDB_GET_URL;
+    @Value("${graphdb.insert-url}")
+    private String GRAPHDB_INSERT_URL;
+    @Value("${graphdb.default-repository}")
+    private String GRAPHDB_DEFAULT_REPOSITORY;
+
     private Model model;
     private Graph graph;
 
@@ -75,9 +85,19 @@ public class ModelController {
 
     public void importFromSparqlEndpoint() {}
 
-    public void exportToGraphDB() {}
-
-    public void backupTdbDirectory() {}
-
-    public void clearTDB() {}
+    public void exportToGraphDB() {
+        try (RDFConnection conn = RDFConnectionFactory.connect(GRAPHDB_INSERT_URL.replace("<repository>", GRAPHDB_DEFAULT_REPOSITORY))) {
+            Txn.executeWrite(conn, () -> {
+                StmtIterator iterator = model.listStatements();
+                while (iterator.hasNext()) {
+                    Statement statement = iterator.nextStatement();
+                    String sUri = statement.getSubject().getURI();
+                    String pUri = statement.getPredicate().getURI();
+                    String oUri = statement.getObject().asResource().getURI();
+                    // TODO handle resource vs. literal for object
+                    conn.update("INSERT DATA { <" + sUri + "> <" + pUri + "> <" + oUri + "> }");
+                }
+            });
+        }
+    }
 }

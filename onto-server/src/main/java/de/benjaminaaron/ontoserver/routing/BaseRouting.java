@@ -36,6 +36,9 @@ public abstract class BaseRouting {
                 if (arg0.equals("graphml")) {
                     modelController.exportGraphml(args.size() >= 2 && args.get(1).equalsIgnoreCase("full"));
                 }
+                if (arg0.equals("graphdb")) {
+                    modelController.exportToGraphDB();
+                }
             default:
                 break;
         }
