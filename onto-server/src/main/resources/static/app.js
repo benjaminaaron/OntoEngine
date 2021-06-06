@@ -5,6 +5,9 @@ const connect = () => {
     stompClient = Stomp.over(socket);
     stompClient.connect({}, frame => {
         console.log('Connected: ' + frame);
+        stompClient.subscribe('/app/subscribe', messageObj => {
+            console.log("Server says: ", JSON.parse(messageObj.body).message);
+        });
         stompClient.subscribe('/topic/serverBroadcasting', messageObj => {
             console.log("Server says: ", JSON.parse(messageObj.body).message);
         });

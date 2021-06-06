@@ -7,10 +7,18 @@ import de.benjaminaaron.ontoserver.routing.websocket.messages.CommandMessage;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.ServerToClientMessage;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Controller;
 
 @Controller
 public class WebSocketRouting extends BaseRouting {
+
+    @SubscribeMapping("/subscribe")
+    public ServerToClientMessage oneTimeMessageUponSubscribe() {
+        ServerToClientMessage serverMsg = new ServerToClientMessage();
+        serverMsg.setMessage("One-time message from the server upon subscribing");
+        return serverMsg;
+    }
 
     @MessageMapping("/routeServerListening")
     @SendTo("/topic/serverBroadcasting")

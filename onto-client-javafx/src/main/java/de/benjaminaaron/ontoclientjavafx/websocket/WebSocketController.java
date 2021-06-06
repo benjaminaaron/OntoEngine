@@ -48,6 +48,19 @@ public class WebSocketController {
             }
         }).get();
 
+        session.subscribe("/app/subscribe", new StompFrameHandler() {
+            @Override
+            public Type getPayloadType(StompHeaders stompHeaders) {
+                return ServerToClientMessage.class;
+            }
+
+            @Override
+            public void handleFrame(StompHeaders stompHeaders, Object payload) {
+                ServerToClientMessage msg = (ServerToClientMessage) payload;
+                System.out.println("Server says: " + msg.getMessage());
+            }
+        });
+
         session.subscribe("/topic/serverBroadcasting", new StompFrameHandler() {
             @Override
             public Type getPayloadType(StompHeaders stompHeaders) {
