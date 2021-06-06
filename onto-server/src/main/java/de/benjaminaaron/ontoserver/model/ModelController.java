@@ -2,6 +2,7 @@ package de.benjaminaaron.ontoserver.model;
 
 import de.benjaminaaron.ontoserver.model.graph.Graph;
 import org.apache.jena.query.Dataset;
+import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.rdfconnection.RDFConnection;
 import org.apache.jena.rdfconnection.RDFConnectionFactory;
@@ -18,7 +19,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import static de.benjaminaaron.ontoserver.model.Utils.ensureUri;
 import static de.benjaminaaron.ontoserver.model.Utils.getExportFile;
 
 @Component
@@ -53,15 +53,15 @@ public class ModelController {
         model.close();
     }
 
-    public boolean addStatement(String subject, String predicate, String object) {
-        Resource sub = model.createResource(ensureUri(subject));
-        Property pred = model.createProperty(ensureUri(predicate));
-        RDFNode obj = model.createResource(ensureUri(object));
+    public boolean addStatement(String subjectUri, String predicateUri, String objectUri) {
+        Resource sub = model.createResource(subjectUri);
+        Property pred = model.createProperty(predicateUri);
+        Resource obj = model.createResource(objectUri);
         Statement statement = ResourceFactory.createStatement(sub, pred, obj);
         if (model.contains(statement)) {
             return false;
         }
-        logger.info("Statement added: " + subject + ", " + predicate + ", " + object);
+        logger.info("Statement added: " + subjectUri + ", " + predicateUri + ", " + objectUri);
         model.add(statement);
         graph.importStatement(statement);
         return true;
@@ -83,7 +83,20 @@ public class ModelController {
         graph.exportGraphml(getExportFile(EXPORT_DIRECTORY, "model", "graphml"), fullUri);
     }
 
-    public void importFromSparqlEndpoint() {}
+    public void importFromGraphDB(String repository) {
+        try (RDFConnection conn = RDFConnectionFactory.connect(GRAPHDB_GET_URL.replace("<repository>", repository))) {
+            Txn.executeRead(conn, () -> {
+                String queryStr = "SELECT ?s ?p ?o WHERE { ?s ?p ?o } LIMIT 5";
+                conn.querySelect(QueryFactory.create(queryStr), qs -> {
+                    Resource subj = qs.getResource("s");
+                    RDFNode pred = qs.get("p");
+                    RDFNode obj = qs.get("o");
+                    // TODO case differentiation
+                    addStatement(subj.getURI(), pred.asResource().getURI(), obj.asResource().getURI());
+                });
+            });
+        }
+    }
 
     public void exportToGraphDB() {
         try (RDFConnection conn = RDFConnectionFactory.connect(GRAPHDB_INSERT_URL.replace("<repository>", GRAPHDB_DEFAULT_REPOSITORY))) {

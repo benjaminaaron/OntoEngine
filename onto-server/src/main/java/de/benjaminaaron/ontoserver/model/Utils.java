@@ -11,19 +11,20 @@ import java.util.Date;
 
 public class Utils {
 
-    final static String DEFAULT_BASE_URL = "http://onto.de/";
+    final static String DEFAULT_NAMESPACE = "http://onto.de/";
 
-    public static String ensureUri(String word) {
-        word = word.trim();
+    public static String ensureUri(String fullUriOrJustLocalName) {
+        fullUriOrJustLocalName = fullUriOrJustLocalName.trim();
         try {
-            new URL(word).toURI();
+            new URL(fullUriOrJustLocalName).toURI();
         } catch (URISyntaxException | MalformedURLException e) {
-            return DEFAULT_BASE_URL + word;
+            return DEFAULT_NAMESPACE + fullUriOrJustLocalName;
         }
-        return word;
+        return fullUriOrJustLocalName;
     }
 
     public static String pathFromUri(String uri) {
+        // TODO doesn't work with multiple "/"s
         return URI.create(uri).getPath().substring(1);
     }
 
