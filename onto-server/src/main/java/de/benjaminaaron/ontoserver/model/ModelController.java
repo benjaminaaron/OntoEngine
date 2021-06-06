@@ -19,7 +19,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import static de.benjaminaaron.ontoserver.model.Utils.getExportFile;
+import static de.benjaminaaron.ontoserver.model.Utils.*;
 
 @Component
 public class ModelController {
@@ -53,15 +53,24 @@ public class ModelController {
         model.close();
     }
 
-    public boolean addStatement(String subjectUri, String predicateUri, String objectUri) {
-        Resource sub = model.createResource(subjectUri);
-        Property pred = model.createProperty(predicateUri);
-        Resource obj = model.createResource(objectUri);
+    public boolean addStatement(String subject, String predicate, String object, boolean objectIsLiteral) {
+        Resource sub = model.createResource(ensureUri(subject));
+        Property pred = model.createProperty(ensureUri(predicate));
+        RDFNode obj;
+        if (objectIsLiteral) {
+            obj = model.createTypedLiteral(detectLiteralType(object));
+        } else {
+            obj = model.createResource(ensureUri(object));
+        }
         Statement statement = ResourceFactory.createStatement(sub, pred, obj);
+        return addStatement(statement);
+    }
+
+    private boolean addStatement(Statement statement) {
         if (model.contains(statement)) {
             return false;
         }
-        logger.info("Statement added: " + subjectUri + ", " + predicateUri + ", " + objectUri);
+        logger.info("Statement added: " + statement.getSubject() + ", " + statement.getPredicate() + ", " + statement.getObject());
         model.add(statement);
         graph.importStatement(statement);
         return true;
@@ -89,10 +98,9 @@ public class ModelController {
                 String queryStr = "SELECT ?s ?p ?o WHERE { ?s ?p ?o } LIMIT 5";
                 conn.querySelect(QueryFactory.create(queryStr), qs -> {
                     Resource subj = qs.getResource("s");
-                    RDFNode pred = qs.get("p");
+                    Property pred = model.createProperty(qs.get("p").toString());
                     RDFNode obj = qs.get("o");
-                    // TODO case differentiation
-                    addStatement(subj.getURI(), pred.asResource().getURI(), obj.asResource().getURI());
+                    addStatement(ResourceFactory.createStatement(subj, pred, obj));
                 });
             });
         }
@@ -106,9 +114,13 @@ public class ModelController {
                     Statement statement = iterator.nextStatement();
                     String sUri = statement.getSubject().getURI();
                     String pUri = statement.getPredicate().getURI();
-                    String oUri = statement.getObject().asResource().getURI();
-                    // TODO handle resource vs. literal for object
-                    conn.update("INSERT DATA { <" + sUri + "> <" + pUri + "> <" + oUri + "> }");
+                    String objStr;
+                    if (statement.getObject().isLiteral()) {
+                        objStr = "\"" + statement.getObject().asLiteral().toString() + "\"";
+                    } else {
+                        objStr = "<" + statement.getObject().asResource().getURI() + ">";
+                    }
+                    conn.update("INSERT DATA { <" + sUri + "> <" + pUri + "> " + objStr + " }");
                 }
             });
         }

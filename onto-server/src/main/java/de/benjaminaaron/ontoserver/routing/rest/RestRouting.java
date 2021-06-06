@@ -18,7 +18,8 @@ public class RestRouting extends BaseRouting {
     @ResponseBody
     public String addStatement(@RequestParam Map<String, String> params) {
         System.out.println("addStatement via POST request received: " + params);
-        return addStatement(params.get("subject"), params.get("predicate"), params.get("object"));
+        return addStatement(params.get("subject"), params.get("predicate"), params.get("object"),
+                Boolean.parseBoolean(params.get("objectIsLiteral")));
     }
 
     @RequestMapping(value = "/command", method = POST)

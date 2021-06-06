@@ -34,7 +34,9 @@ public class WebSocketRouting extends BaseRouting {
     public ServerToClientMessage addStatement(AddStatementMessage statementMsg) {
         System.out.println("addStatement via websocket received: " + statementMsg);
         ServerToClientMessage response = new ServerToClientMessage();
-        response.setMessage(addStatement(statementMsg.getSubject(), statementMsg.getPredicate(), statementMsg.getObject()));
+        response.setMessage(addStatement(
+                statementMsg.getSubject(), statementMsg.getPredicate(), statementMsg.getObject(),
+                statementMsg.isObjectIsLiteral()));
         return response;
     }
 

@@ -75,11 +75,12 @@ public class WebSocketController {
         });
     }
 
-    public void sendAddStatement(String subject, String predicate, String object) {
+    public void sendAddStatement(String subject, String predicate, String object, boolean objectIsLiteral) {
         AddStatementMessage msg = new AddStatementMessage();
         msg.setSubject(subject);
         msg.setPredicate(predicate);
         msg.setObject(object);
+        msg.setObjectIsLiteral(objectIsLiteral);
         session.send("/app/serverReceiveAddStatements", msg);
     }
 

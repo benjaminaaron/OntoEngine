@@ -19,8 +19,10 @@ const addStatement = () => {
     let statement = {
         subject: $("#subjectTextField").val(),
         predicate: $("#predicateTextField").val(),
-        object: $("#objectTextField").val()
+        object: $("#objectTextField").val(),
+        objectIsLiteral: $("#literalCheckBox").prop('checked')
     };
+    console.log("statement: ", statement);
     stompClient.send("/app/serverReceiveAddStatements", {}, JSON.stringify(statement));
 };
 

@@ -17,14 +17,20 @@
 
     <Label text="Object" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
     <TextField fx:id="objectTextField" prefWidth="160" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-
-    <HBox GridPane.columnIndex="1" GridPane.rowIndex="2" alignment="CENTER">
-        <padding><Insets top="30" bottom="80"/></padding>
-        <Button id="submitBtn" text="Submit" onAction="#submitClicked"/>
+    <HBox GridPane.columnIndex="2" GridPane.rowIndex="2" spacing="8" alignment="CENTER_RIGHT">
+        <CheckBox fx:id="literalCheckBox"/>
+        <Label text="Literal"/>
     </HBox>
 
-    <TextField fx:id="commandTextField" prefWidth="160" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-    <Button text="Send command" onAction="#sendCommandClicked" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+    <VBox GridPane.columnIndex="1" GridPane.rowIndex="3" alignment="CENTER">
+        <padding><Insets top="20" bottom="100"/></padding>
+        <Button id="submitBtn" text="Submit" onAction="#submitClicked" prefWidth="120"/>
+    </VBox>
+
+    <HBox GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.columnSpan="3" alignment="CENTER" spacing="8">
+        <TextField fx:id="commandTextField" prefWidth="140"/>
+        <Button text="Send command" onAction="#sendCommandClicked"/>
+    </HBox>
 
     <stylesheets>
         <URL value="@style.css" />

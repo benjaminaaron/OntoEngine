@@ -1,8 +1,8 @@
 package de.benjaminaaron.ontoclientjavafx.gui;
 
 import de.benjaminaaron.ontoclientjavafx.websocket.WebSocketController;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,17 +16,20 @@ public class GuiController {
     public TextField predicateTextField;
     public TextField objectTextField;
     public TextField commandTextField;
+    public CheckBox literalCheckBox;
 
     @FXML
     public void initialize() {}
 
     @FXML
-    public void submitClicked(ActionEvent actionEvent) {
-        webSocketController.sendAddStatement(subjectTextField.getText(), predicateTextField.getText(), objectTextField.getText());
+    public void submitClicked() {
+        webSocketController.sendAddStatement(
+                subjectTextField.getText(), predicateTextField.getText(), objectTextField.getText(),
+                literalCheckBox.isSelected());
     }
 
     @FXML
-    public void sendCommandClicked(ActionEvent actionEvent) {
+    public void sendCommandClicked() {
         webSocketController.sendCommand(commandTextField.getText());
     }
 }

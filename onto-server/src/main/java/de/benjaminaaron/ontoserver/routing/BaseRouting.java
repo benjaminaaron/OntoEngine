@@ -8,15 +8,13 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import static de.benjaminaaron.ontoserver.model.Utils.ensureUri;
-
 public abstract class BaseRouting {
 
     @Autowired
     protected ModelController modelController;
 
-    protected String addStatement(String subject, String predicate, String object) {
-        if (modelController.addStatement(ensureUri(subject), ensureUri(predicate), ensureUri(object))) {
+    protected String addStatement(String subject, String predicate, String object, boolean objectIsLiteral) {
+        if (modelController.addStatement(subject, predicate, object, objectIsLiteral)) {
             return "Statement added";
         }
         return "Statement already exists";

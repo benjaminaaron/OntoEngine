@@ -1,5 +1,7 @@
 package de.benjaminaaron.ontoserver.model;
 
+import org.apache.jena.datatypes.RDFDatatype;
+
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -35,5 +37,19 @@ public class Utils {
     public static File getExportFile(Path exportPath, String baseName, String extension) {
         exportPath.toFile().mkdirs();
         return exportPath.resolve(baseName + "_" + getTimestamp() + "." + extension).toFile();
+    }
+
+    public static Object detectLiteralType(String data) {
+        if (data.equalsIgnoreCase("true") || data.equalsIgnoreCase("false")) {
+            return Boolean.parseBoolean(data);
+        }
+        try {
+            return Integer.parseInt(data);
+        } catch (NumberFormatException ignored) {}
+        try {
+            return Double.parseDouble(data);
+        } catch (NumberFormatException ignored) {}
+        // TODO more types
+        return data;
     }
 }
