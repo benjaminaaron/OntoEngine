@@ -116,7 +116,15 @@ public class ModelController {
                     String pUri = statement.getPredicate().getURI();
                     String objStr;
                     if (statement.getObject().isLiteral()) {
-                        objStr = "\"" + statement.getObject().asLiteral().toString() + "\"";
+                        Literal literal = statement.getObject().asLiteral();
+                        if (literal.getDatatype().getJavaClass() == String.class) {
+                            objStr = "\"" + literal + "\"";
+                        } else {
+                            String[] parts = literal.toString().split("http");
+                            String value = parts[0].substring(0, parts[0].length() - 2);
+                            // is there a more elegant way to assemble this?
+                            objStr = "\"" + value + "\"^^<" + literal.getDatatypeURI() + ">";
+                        }
                     } else {
                         objStr = "<" + statement.getObject().asResource().getURI() + ">";
                     }
