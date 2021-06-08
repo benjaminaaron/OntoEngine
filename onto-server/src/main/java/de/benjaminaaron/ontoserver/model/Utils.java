@@ -1,6 +1,7 @@
 package de.benjaminaaron.ontoserver.model;
 
-import org.apache.jena.datatypes.RDFDatatype;
+import org.apache.jena.rdf.model.Literal;
+import org.apache.jena.rdf.model.RDFNode;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -51,5 +52,22 @@ public class Utils {
         } catch (NumberFormatException ignored) {}
         // TODO more types
         return data;
+    }
+
+    public static String getValueFromLiteral(Literal literal) {
+        // is there a more elegant way to get the value?
+        String[] parts = literal.toString().split("http");
+        return parts[0].substring(0, parts[0].length() - 2); // -2 for the ^^
+    }
+
+    public static String rdfNodeToGraphDatabaseEntryString(RDFNode rdfNode) {
+        if (rdfNode.isResource()) {
+            return "<" + rdfNode.asResource().getURI() + ">";
+        }
+        Literal literal = rdfNode.asLiteral();
+        if (literal.getDatatype().getJavaClass() == String.class) {
+            return "\"" + literal + "\"";
+        }
+        return "\"" + getValueFromLiteral(literal) + "\"^^<" + literal.getDatatypeURI() + ">";
     }
 }
