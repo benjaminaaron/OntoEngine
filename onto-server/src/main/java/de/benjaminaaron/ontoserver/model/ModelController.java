@@ -1,6 +1,7 @@
 package de.benjaminaaron.ontoserver.model;
 
 import de.benjaminaaron.ontoserver.model.graph.Graph;
+import lombok.SneakyThrows;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.*;
@@ -17,6 +18,10 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static de.benjaminaaron.ontoserver.model.Utils.*;
@@ -106,7 +111,35 @@ public class ModelController {
         }
     }
 
+    @Value("classpath:graphdb_repo_template.json")
+    Path graphdb_repo_template;
+
+    @SneakyThrows
     public void exportToGraphDB() {
+        URL url = new URL("http://localhost:7200/repositories/onto-engine");
+        HttpURLConnection http = (HttpURLConnection) url.openConnection();
+        http.setRequestMethod("DELETE");
+        http.setRequestProperty("Accept", "application/json");
+        if (http.getResponseCode() != 204) {
+            System.out.println("Could not delete the GraphDB repository");
+        }
+        http.disconnect();
+
+        url = new URL("http://localhost:7200/rest/repositories");
+        http = (HttpURLConnection) url.openConnection();
+        http.setRequestMethod("POST");
+        http.setDoOutput(true);
+        http.setRequestProperty("Content-Type", "application/json");
+        http.setRequestProperty("Accept", "application/json");
+
+        String jsonStr = Files.readString(graphdb_repo_template, StandardCharsets.UTF_8);
+        jsonStr = jsonStr.replace("<id>", "onto-engine");
+        http.getOutputStream().write(jsonStr.getBytes(StandardCharsets.UTF_8));
+        if (http.getResponseCode() != 201) {
+            System.out.println("Could not create GraphDB repository");
+        }
+        http.disconnect();
+
         try (RDFConnection conn = RDFConnectionFactory.connect(GRAPHDB_INSERT_URL.replace("<repository>", GRAPHDB_DEFAULT_REPOSITORY))) {
             Txn.executeWrite(conn, () -> {
                 StmtIterator iterator = model.listStatements();

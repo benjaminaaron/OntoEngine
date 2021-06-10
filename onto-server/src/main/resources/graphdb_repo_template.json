@@ -1,0 +1,13 @@
+{
+  "id": "<id>",
+  "location": "",
+  "params": {
+    "ruleset" : {
+      "label": "Ruleset",
+      "name": "ruleset",
+      "value": "empty"
+    }
+  },
+  "title": "",
+  "type": "free"
+}
