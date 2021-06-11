@@ -41,6 +41,10 @@ public class ModelController {
     private String GRAPHDB_INSERT_URL;
     @Value("${graphdb.default-repository}")
     private String GRAPHDB_DEFAULT_REPOSITORY;
+    @Value("${graphdb.rest-url}")
+    private String GRAPHDB_REST_URL;
+    @Value("classpath:graphdb_repo_template.json")
+    private Path GRAPHDB_REPO_TEMPLATE;
 
     private Model model;
     private Graph graph;
@@ -111,12 +115,10 @@ public class ModelController {
         }
     }
 
-    @Value("classpath:graphdb_repo_template.json")
-    Path graphdb_repo_template;
-
     @SneakyThrows
     public void exportToGraphDB() {
-        URL url = new URL("http://localhost:7200/repositories/onto-engine");
+        // TODO allow passing of "clear" and "repo-name" param
+        URL url = new URL(GRAPHDB_INSERT_URL.replace("<repository>", GRAPHDB_DEFAULT_REPOSITORY));
         HttpURLConnection http = (HttpURLConnection) url.openConnection();
         http.setRequestMethod("DELETE");
         http.setRequestProperty("Accept", "application/json");
@@ -125,15 +127,14 @@ public class ModelController {
         }
         http.disconnect();
 
-        url = new URL("http://localhost:7200/rest/repositories");
+        url = new URL(GRAPHDB_REST_URL);
         http = (HttpURLConnection) url.openConnection();
         http.setRequestMethod("POST");
         http.setDoOutput(true);
         http.setRequestProperty("Content-Type", "application/json");
         http.setRequestProperty("Accept", "application/json");
-
-        String jsonStr = Files.readString(graphdb_repo_template, StandardCharsets.UTF_8);
-        jsonStr = jsonStr.replace("<id>", "onto-engine");
+        String jsonStr = Files.readString(GRAPHDB_REPO_TEMPLATE, StandardCharsets.UTF_8)
+                .replace("<id>", GRAPHDB_DEFAULT_REPOSITORY);
         http.getOutputStream().write(jsonStr.getBytes(StandardCharsets.UTF_8));
         if (http.getResponseCode() != 201) {
             System.out.println("Could not create GraphDB repository");
