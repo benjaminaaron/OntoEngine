@@ -11,6 +11,9 @@ const connect = () => {
         stompClient.subscribe('/topic/serverBroadcasting', messageObj => {
             console.log("Server says: ", JSON.parse(messageObj.body).message);
         });
+        stompClient.subscribe('/topic/serverAddStatementResponse', messageObj => {
+            console.log("AddStatementResponse from server: ", JSON.parse(messageObj.body));
+        });
     });
     // stompClient.disconnect();
 };
@@ -23,7 +26,7 @@ const addStatement = () => {
         objectIsLiteral: $("#literalCheckBox").prop('checked')
     };
     console.log("statement: ", statement);
-    stompClient.send("/app/serverReceiveAddStatements", {}, JSON.stringify(statement));
+    stompClient.send("/app/serverReceiveAddStatement", {}, JSON.stringify(statement));
 };
 
 const sendCommand = () => {

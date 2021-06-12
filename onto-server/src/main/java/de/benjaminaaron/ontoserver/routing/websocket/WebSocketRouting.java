@@ -1,10 +1,7 @@
 package de.benjaminaaron.ontoserver.routing.websocket;
 
 import de.benjaminaaron.ontoserver.routing.BaseRouting;
-import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementMessage;
-import de.benjaminaaron.ontoserver.routing.websocket.messages.ClientToServerMessage;
-import de.benjaminaaron.ontoserver.routing.websocket.messages.CommandMessage;
-import de.benjaminaaron.ontoserver.routing.websocket.messages.ServerToClientMessage;
+import de.benjaminaaron.ontoserver.routing.websocket.messages.*;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
@@ -29,15 +26,11 @@ public class WebSocketRouting extends BaseRouting {
         return serverMsg;
     }
 
-    @MessageMapping("/serverReceiveAddStatements")
-    @SendTo("/topic/serverBroadcasting")
-    public ServerToClientMessage addStatement(AddStatementMessage statementMsg) {
-        System.out.println("addStatement via websocket received: " + statementMsg);
-        ServerToClientMessage response = new ServerToClientMessage();
-        response.setMessage(addStatement(
-                statementMsg.getSubject(), statementMsg.getPredicate(), statementMsg.getObject(),
-                statementMsg.isObjectIsLiteral()));
-        return response;
+    @MessageMapping("/serverReceiveAddStatement")
+    @SendTo("/topic/serverAddStatementResponse")
+    public AddStatementResponse addStatementWebSocket(AddStatementMessage statementMsg) {
+        System.out.println("AddStatement via websocket received: " + statementMsg);
+        return addStatement(statementMsg);
     }
 
     @MessageMapping("/serverReceiveCommand")

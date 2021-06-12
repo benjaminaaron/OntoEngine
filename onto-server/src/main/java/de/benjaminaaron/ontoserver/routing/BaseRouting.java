@@ -1,7 +1,9 @@
 package de.benjaminaaron.ontoserver.routing;
 
 import de.benjaminaaron.ontoserver.model.ModelController;
+import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementMessage;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.CommandMessage;
+import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
@@ -13,11 +15,17 @@ public abstract class BaseRouting {
     @Autowired
     protected ModelController modelController;
 
-    protected String addStatement(String subject, String predicate, String object, boolean objectIsLiteral) {
-        if (modelController.addStatement(subject, predicate, object, objectIsLiteral)) {
-            return "Statement added";
-        }
-        return "Statement already exists";
+    protected AddStatementResponse addStatement(AddStatementMessage statementMsg) {
+        return modelController.addStatement(statementMsg);
+    }
+
+    protected String addStatementStringResponse(String subject, String predicate, String object, boolean objectIsLiteral) {
+        AddStatementMessage message = new AddStatementMessage();
+        message.setSubject(subject);
+        message.setPredicate(predicate);
+        message.setObject(object);
+        message.setObjectIsLiteral(objectIsLiteral);
+        return addStatement(message).toString();
     }
 
     protected void handleCommand(CommandMessage command) {

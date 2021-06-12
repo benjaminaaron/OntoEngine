@@ -1,6 +1,7 @@
 package de.benjaminaaron.ontoclientjavafx.websocket;
 
 import de.benjaminaaron.ontoclientjavafx.websocket.messages.AddStatementMessage;
+import de.benjaminaaron.ontoclientjavafx.websocket.messages.AddStatementResponse;
 import de.benjaminaaron.ontoclientjavafx.websocket.messages.CommandMessage;
 import de.benjaminaaron.ontoclientjavafx.websocket.messages.ServerToClientMessage;
 import lombok.SneakyThrows;
@@ -73,6 +74,19 @@ public class WebSocketController {
                 System.out.println("Server says: " + msg.getMessage());
             }
         });
+
+        session.subscribe("/topic/serverAddStatementResponse", new StompFrameHandler() {
+            @Override
+            public Type getPayloadType(StompHeaders stompHeaders) {
+                return AddStatementResponse.class;
+            }
+
+            @Override
+            public void handleFrame(StompHeaders stompHeaders, Object payload) {
+                AddStatementResponse response = (AddStatementResponse) payload;
+                System.out.println("AddStatementResponse from server: " + response);
+            }
+        });
     }
 
     public void sendAddStatement(String subject, String predicate, String object, boolean objectIsLiteral) {
@@ -81,7 +95,7 @@ public class WebSocketController {
         msg.setPredicate(predicate);
         msg.setObject(object);
         msg.setObjectIsLiteral(objectIsLiteral);
-        session.send("/app/serverReceiveAddStatements", msg);
+        session.send("/app/serverReceiveAddStatement", msg);
     }
 
     public void sendCommand(String commandStr) {

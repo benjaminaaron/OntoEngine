@@ -1,7 +1,10 @@
 package de.benjaminaaron.ontoserver.model;
 
 import de.benjaminaaron.ontoserver.model.graph.Graph;
+import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementMessage;
+import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementResponse;
 import lombok.SneakyThrows;
+import org.apache.jena.graph.Node;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.*;
@@ -62,27 +65,32 @@ public class ModelController {
         model.close();
     }
 
-    public boolean addStatement(String subject, String predicate, String object, boolean objectIsLiteral) {
-        Resource sub = model.createResource(ensureUri(subject));
-        Property pred = model.createProperty(ensureUri(predicate));
+    public AddStatementResponse addStatement(AddStatementMessage statementMsg) {
+        Resource sub = model.createResource(ensureUri(statementMsg.getSubject()));
+        Property pred = model.createProperty(ensureUri(statementMsg.getPredicate()));
         RDFNode obj;
-        if (objectIsLiteral) {
-            obj = model.createTypedLiteral(detectLiteralType(object));
+        if (statementMsg.isObjectIsLiteral()) {
+            obj = model.createTypedLiteral(detectLiteralType(statementMsg.getObject()));
         } else {
-            obj = model.createResource(ensureUri(object));
+            obj = model.createResource(ensureUri(statementMsg.getObject()));
         }
         Statement statement = ResourceFactory.createStatement(sub, pred, obj);
-        return addStatement(statement);
+        AddStatementResponse response = new AddStatementResponse();
+        if (model.contains(statement)) {
+            return response;
+        }
+        response.setStatementAdded(true);
+        response.setSubjectIsNew(!model.getGraph().contains(sub.asNode(), Node.ANY, Node.ANY));
+        response.setPredicateIsNew(!model.getGraph().contains(Node.ANY, pred.asNode(), Node.ANY));
+        response.setObjectIsNew(!model.getGraph().contains(Node.ANY, Node.ANY, obj.asNode()));
+        addStatement(statement);
+        return response;
     }
 
-    private boolean addStatement(Statement statement) {
-        if (model.contains(statement)) {
-            return false;
-        }
+    private void addStatement(Statement statement) {
         logger.info("Statement added: " + statement.getSubject() + ", " + statement.getPredicate() + ", " + statement.getObject());
         model.add(statement);
         graph.importStatement(statement);
-        return true;
     }
 
     public void printStatements() {
