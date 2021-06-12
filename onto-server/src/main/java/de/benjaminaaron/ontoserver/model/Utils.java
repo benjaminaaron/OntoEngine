@@ -1,5 +1,6 @@
 package de.benjaminaaron.ontoserver.model;
 
+import com.github.slugify.Slugify;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.RDFNode;
 
@@ -15,9 +16,10 @@ import java.util.Date;
 public class Utils {
 
     final static String DEFAULT_NAMESPACE = "http://onto.de/";
+    final static Slugify slugifier = new Slugify().withLowerCase(false);
 
     public static String ensureUri(String fullUriOrJustLocalName) {
-        fullUriOrJustLocalName = fullUriOrJustLocalName.trim();
+        fullUriOrJustLocalName = slugifier.slugify(fullUriOrJustLocalName);
         try {
             new URL(fullUriOrJustLocalName).toURI();
         } catch (URISyntaxException | MalformedURLException e) {
