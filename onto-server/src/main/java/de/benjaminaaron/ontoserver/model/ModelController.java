@@ -1,6 +1,7 @@
 package de.benjaminaaron.ontoserver.model;
 
 import de.benjaminaaron.ontoserver.model.graph.Graph;
+import de.benjaminaaron.ontoserver.model.suggestion.SuggestionEngine;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementMessage;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementResponse;
 import lombok.SneakyThrows;
@@ -51,12 +52,14 @@ public class ModelController {
 
     private Model model;
     private Graph graph;
+    private SuggestionEngine suggestionEngine;
 
     @PostConstruct
     private void init() {
         Dataset dataset = TDBFactory.createDataset(TBD_DIR.toString()) ;
         model = dataset.getDefaultModel();
         // graph = new Graph(model);
+        suggestionEngine = new SuggestionEngine();
         printStatements();
     }
 
@@ -84,6 +87,7 @@ public class ModelController {
         response.setPredicateIsNew(!model.getGraph().contains(Node.ANY, pred.asNode(), Node.ANY));
         response.setObjectIsNew(!model.getGraph().contains(Node.ANY, Node.ANY, obj.asNode()));
         addStatement(statement);
+        suggestionEngine.startPostAddStatementChecks(model.listStatements(), statement);
         return response;
     }
 
