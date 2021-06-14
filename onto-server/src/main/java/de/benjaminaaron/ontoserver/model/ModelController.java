@@ -56,7 +56,7 @@ public class ModelController {
     private void init() {
         Dataset dataset = TDBFactory.createDataset(TBD_DIR.toString()) ;
         model = dataset.getDefaultModel();
-        graph = new Graph(model);
+        // graph = new Graph(model);
         printStatements();
     }
 
@@ -90,7 +90,7 @@ public class ModelController {
     private void addStatement(Statement statement) {
         logger.info("Statement added: " + statement.getSubject() + ", " + statement.getPredicate() + ", " + statement.getObject());
         model.add(statement);
-        graph.importStatement(statement);
+        // graph.importStatement(statement);
     }
 
     public void printStatements() {
