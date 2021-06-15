@@ -3,6 +3,7 @@ package de.benjaminaaron.ontoserver.model.suggestion;
 import de.benjaminaaron.ontoserver.model.suggestion.runthrough.CompareOneToAllStatementsRunThrough;
 import de.benjaminaaron.ontoserver.model.suggestion.runthrough.RunThrough;
 import de.benjaminaaron.ontoserver.model.suggestion.runthrough.task.CaseSensitivityTask;
+import lombok.SneakyThrows;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
 
@@ -25,6 +26,7 @@ public class SuggestionEngine {
         }
     }
 
+    @SneakyThrows
     public void startPostAddStatementChecks(StmtIterator iterator, Statement newStatement) {
         // go through all resources directly instead of statements?
         RunThrough runThrough = new CompareOneToAllStatementsRunThrough(iterator, newStatement);
@@ -33,6 +35,7 @@ public class SuggestionEngine {
         for (Suggestion sug : suggestions) {
             registerSuggestion(sug);
         }
+        Thread.sleep(3000);
         sendUnsentSuggestions();
     }
 

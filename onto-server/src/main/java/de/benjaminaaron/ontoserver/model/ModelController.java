@@ -27,6 +27,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.concurrent.CompletableFuture;
 
 import static de.benjaminaaron.ontoserver.model.Utils.*;
 
@@ -87,7 +88,7 @@ public class ModelController {
         response.setPredicateIsNew(!model.getGraph().contains(Node.ANY, pred.asNode(), Node.ANY));
         response.setObjectIsNew(!model.getGraph().contains(Node.ANY, Node.ANY, obj.asNode()));
         addStatement(statement);
-        suggestionEngine.startPostAddStatementChecks(model.listStatements(), statement);
+        CompletableFuture.runAsync(() -> suggestionEngine.startPostAddStatementChecks(model.listStatements(), statement));
         return response;
     }
 
