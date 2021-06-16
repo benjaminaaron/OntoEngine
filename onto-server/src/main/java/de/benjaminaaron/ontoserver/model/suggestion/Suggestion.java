@@ -6,11 +6,15 @@ import de.benjaminaaron.ontoserver.routing.websocket.messages.suggestion.Suggest
 public class Suggestion {
 
     private int id;
-    private final ReformulateUriSuggestionMessage message; // TODO use SuggestionBaseMessage
+    private ReformulateUriSuggestionMessage message; // TODO use SuggestionBaseMessage
     private boolean isSent = false;
 
-    public Suggestion(SuggestionBaseMessage message) {
+    public void setMessage(SuggestionBaseMessage message) {
         this.message = (ReformulateUriSuggestionMessage) message;
+    }
+
+    public ReformulateUriSuggestionMessage getMessage() {
+        return message;
     }
 
     public void setId(int id) {

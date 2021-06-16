@@ -14,6 +14,9 @@ const connect = () => {
         stompClient.subscribe('/topic/serverAddStatementResponse', messageObj => {
             console.log("AddStatementResponse from server: ", JSON.parse(messageObj.body));
         });
+        stompClient.subscribe('/topic/serverSuggestions', messageObj => {
+            console.log("serverSuggestions from server: ", JSON.parse(messageObj.body));
+        });
     });
     // stompClient.disconnect();
 };

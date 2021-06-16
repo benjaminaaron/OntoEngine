@@ -15,6 +15,7 @@ import org.apache.jena.system.Txn;
 import org.apache.jena.tdb.TDBFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -51,16 +52,16 @@ public class ModelController {
     @Value("classpath:graphdb_repo_template.json")
     private Path GRAPHDB_REPO_TEMPLATE;
 
+    @Autowired
+    private SuggestionEngine suggestionEngine;
     private Model model;
     private Graph graph;
-    private SuggestionEngine suggestionEngine;
 
     @PostConstruct
     private void init() {
         Dataset dataset = TDBFactory.createDataset(TBD_DIR.toString()) ;
         model = dataset.getDefaultModel();
         // graph = new Graph(model);
-        suggestionEngine = new SuggestionEngine();
         printStatements();
     }
 

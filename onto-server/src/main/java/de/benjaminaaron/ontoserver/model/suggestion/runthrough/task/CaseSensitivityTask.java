@@ -65,7 +65,9 @@ public class CaseSensitivityTask extends RunThroughTask {
 
     private void addIfNotEmpty(List<Suggestion> list, ReformulateUriSuggestionMessage message) {
         if (!message.getSuggestedUris().isEmpty()) {
-            list.add(new Suggestion(message));
+            Suggestion sug = new Suggestion();
+            sug.setMessage(message);
+            list.add(sug);
         }
     }
 }
