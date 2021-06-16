@@ -8,6 +8,8 @@ import lombok.SneakyThrows;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -16,6 +18,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
+@EnableAsync
 public class SuggestionEngine {
 
     private int counter = 0;
@@ -35,6 +38,7 @@ public class SuggestionEngine {
     }
 
     @SneakyThrows
+    @Async
     public void startPostAddStatementChecks(StmtIterator iterator, Statement newStatement) {
         // go through all resources directly instead of statements?
         RunThrough runThrough = new CompareOneToAllStatementsRunThrough(iterator, newStatement);
