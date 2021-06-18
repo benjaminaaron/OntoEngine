@@ -1,7 +1,7 @@
-package de.benjaminaaron.ontoserver.model.suggestion.runthrough;
+package de.benjaminaaron.ontoserver.model.suggestion.job;
 
 import de.benjaminaaron.ontoserver.model.suggestion.Suggestion;
-import de.benjaminaaron.ontoserver.model.suggestion.runthrough.task.RunThroughTask;
+import de.benjaminaaron.ontoserver.model.suggestion.job.task.JobTask;
 import org.apache.jena.rdf.model.Model;
 
 import java.time.Duration;
@@ -9,19 +9,19 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class RunThrough {
+public abstract class Job {
 
     final Model model;
     private Instant startTime;
     private Instant endTime;
 
-    public RunThrough(Model model) {
+    public Job(Model model) {
         this.model = model;
     }
 
-    List<RunThroughTask> tasks = new ArrayList<>();
+    List<JobTask> tasks = new ArrayList<>();
 
-    public void addTask(RunThroughTask task) {
+    public void addTask(JobTask task) {
         tasks.add(task);
     }
 

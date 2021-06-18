@@ -1,10 +1,10 @@
 package de.benjaminaaron.ontoserver.model.suggestion;
 
 import de.benjaminaaron.ontoserver.model.ModelController;
-import de.benjaminaaron.ontoserver.model.suggestion.runthrough.CompareOneToAllStatementsRunThrough;
-import de.benjaminaaron.ontoserver.model.suggestion.runthrough.LinearRunThrough;
-import de.benjaminaaron.ontoserver.model.suggestion.runthrough.RunThrough;
-import de.benjaminaaron.ontoserver.model.suggestion.runthrough.task.CaseSensitivityTask;
+import de.benjaminaaron.ontoserver.model.suggestion.job.CompareOneToAllStatementsJob;
+import de.benjaminaaron.ontoserver.model.suggestion.job.PoolAllUrisJob;
+import de.benjaminaaron.ontoserver.model.suggestion.job.Job;
+import de.benjaminaaron.ontoserver.model.suggestion.job.task.CaseSensitivityTask;
 import de.benjaminaaron.ontoserver.routing.websocket.WebSocketRouting;
 import lombok.SneakyThrows;
 import org.apache.jena.rdf.model.Model;
@@ -40,13 +40,12 @@ public class SuggestionEngine {
     @PostConstruct
     void init() {
         TaskSchedulingManager taskManager = new TaskSchedulingManager(this);
-        taskManager.schedulePeriodicJob("linearRunThrough", 5, 10);
+        taskManager.schedulePeriodicJob("poolAllUrisJob", 5, 10);
     }
 
-    public void linearRunThrough() {
-        logger.info("Starting linearRunThrough job");
-        System.out.println("linearRunTrough ...");
-        LinearRunThrough job = new LinearRunThrough(modelController.getModel());
+    public void poolAllUrisJob() {
+        logger.info("Starting PoolAllUrisJob");
+        PoolAllUrisJob job = new PoolAllUrisJob(modelController.getModel());
         job.execute();
     }
 
@@ -64,9 +63,9 @@ public class SuggestionEngine {
     @Async
     public void startPostAddStatementChecks(Model model, Statement newStatement) {
         // go through all resources directly instead of statements?
-        RunThrough runThrough = new CompareOneToAllStatementsRunThrough(model, newStatement);
-        runThrough.addTask(new CaseSensitivityTask(newStatement));
-        List<Suggestion> suggestions = runThrough.execute();
+        Job job = new CompareOneToAllStatementsJob(model, newStatement);
+        job.addTask(new CaseSensitivityTask(newStatement));
+        List<Suggestion> suggestions = job.execute();
         for (Suggestion sug : suggestions) {
             registerSuggestion(sug);
         }

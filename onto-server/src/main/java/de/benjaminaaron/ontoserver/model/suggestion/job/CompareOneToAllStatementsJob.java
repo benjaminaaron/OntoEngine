@@ -1,7 +1,7 @@
-package de.benjaminaaron.ontoserver.model.suggestion.runthrough;
+package de.benjaminaaron.ontoserver.model.suggestion.job;
 
 import de.benjaminaaron.ontoserver.model.suggestion.Suggestion;
-import de.benjaminaaron.ontoserver.model.suggestion.runthrough.task.RunThroughTask;
+import de.benjaminaaron.ontoserver.model.suggestion.job.task.JobTask;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
@@ -9,11 +9,11 @@ import org.apache.jena.rdf.model.StmtIterator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CompareOneToAllStatementsRunThrough extends RunThrough {
+public class CompareOneToAllStatementsJob extends Job {
 
     private final Statement statement;
 
-    public CompareOneToAllStatementsRunThrough(Model model, Statement statement) {
+    public CompareOneToAllStatementsJob(Model model, Statement statement) {
         super(model);
         this.statement = statement;
     }
@@ -27,11 +27,11 @@ public class CompareOneToAllStatementsRunThrough extends RunThrough {
             if (stmt.equals(statement)) {
                 continue;
             }
-            for (RunThroughTask task : tasks) {
-                task.evaluateStatement(stmt);
+            for (JobTask task : tasks) {
+                // task.evaluateStatement(stmt);
             }
         }
-        for (RunThroughTask task : tasks) {
+        for (JobTask task : tasks) {
             suggestions.addAll(task.collectSuggestions());
         }
         return suggestions;

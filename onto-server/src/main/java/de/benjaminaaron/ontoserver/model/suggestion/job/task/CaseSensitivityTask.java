@@ -1,4 +1,4 @@
-package de.benjaminaaron.ontoserver.model.suggestion.runthrough.task;
+package de.benjaminaaron.ontoserver.model.suggestion.job.task;
 
 import de.benjaminaaron.ontoserver.model.suggestion.Suggestion;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.suggestion.ReformulateUriSuggestionMessage;
@@ -7,7 +7,7 @@ import org.apache.jena.rdf.model.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CaseSensitivityTask extends RunThroughTask {
+public class CaseSensitivityTask extends JobTask {
 
     private final String sWord;
     private final String pWord;

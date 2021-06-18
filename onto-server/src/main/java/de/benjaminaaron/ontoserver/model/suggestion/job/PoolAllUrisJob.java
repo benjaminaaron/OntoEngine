@@ -1,13 +1,13 @@
-package de.benjaminaaron.ontoserver.model.suggestion.runthrough;
+package de.benjaminaaron.ontoserver.model.suggestion.job;
 
 import de.benjaminaaron.ontoserver.model.suggestion.Suggestion;
 import org.apache.jena.rdf.model.Model;
 
 import java.util.List;
 
-public class LinearRunThrough extends RunThrough {
+public class PoolAllUrisJob extends Job {
 
-    public LinearRunThrough(Model model) {
+    public PoolAllUrisJob(Model model) {
         super(model);
     }
 
