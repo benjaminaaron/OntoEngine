@@ -89,7 +89,7 @@ public class ModelController {
         response.setObjectIsNew(!model.getGraph().contains(Node.ANY, Node.ANY, obj.asNode()));
         addStatement(statement);
         // CompletableFuture.runAsync(() -> func());
-        suggestionEngine.startPostAddStatementChecks(model.listStatements(), statement);
+        // suggestionEngine.startPostAddStatementChecks(model.listStatements(), statement);
         return response;
     }
 
@@ -97,6 +97,10 @@ public class ModelController {
         logger.info("Statement added: " + statement.getSubject() + ", " + statement.getPredicate() + ", " + statement.getObject());
         model.add(statement);
         // graph.importStatement(statement);
+    }
+
+    public Model getModel() {
+        return model;
     }
 
     public void printStatements() {
