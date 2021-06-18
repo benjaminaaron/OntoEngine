@@ -19,8 +19,20 @@ public class PoolUniqueUrisAndTheirWordsJob extends Job {
         startTimer();
         Map<String, String> map = collect();
 
-        System.out.println(map);
-
+        // extract to CaseSensitivityTask?
+        Map<String, Set<String>> buckets = new HashMap<>();
+        map.forEach((uri, word) -> {
+            String key = word.toLowerCase();
+            buckets.putIfAbsent(key, new HashSet<>());
+            buckets.get(key).add(uri);
+        });
+        Map<String, Set<String>> multiBuckets = new HashMap<>();
+        buckets.forEach((key, uris) -> {
+            if (uris.size() > 1) {
+                multiBuckets.put(key, uris);
+            }
+        });
+        System.out.println(multiBuckets);
         // TODO
 
         endTimer();
