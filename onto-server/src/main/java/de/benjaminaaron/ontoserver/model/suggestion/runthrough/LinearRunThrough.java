@@ -13,7 +13,12 @@ public class LinearRunThrough extends RunThrough {
 
     @Override
     public List<Suggestion> execute() {
-        System.out.println("size: " + model.listStatements().toList().size());
+        startTimer();
+
+        // TODO
+
+        endTimer();
+        System.out.println(getJobDurationString());
         return null;
     }
 }
