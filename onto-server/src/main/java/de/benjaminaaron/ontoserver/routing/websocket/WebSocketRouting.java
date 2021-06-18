@@ -2,7 +2,7 @@ package de.benjaminaaron.ontoserver.routing.websocket;
 
 import de.benjaminaaron.ontoserver.routing.BaseRouting;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.*;
-import de.benjaminaaron.ontoserver.routing.websocket.messages.suggestion.ReformulateUriSuggestionMessage;
+import de.benjaminaaron.ontoserver.routing.websocket.messages.suggestion.SuggestionBaseMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -49,7 +49,7 @@ public class WebSocketRouting extends BaseRouting {
         return response;
     }
 
-    public void sendSuggestion(ReformulateUriSuggestionMessage message) {
+    public void sendSuggestion(SuggestionBaseMessage message) {
         this.template.convertAndSend("/topic/serverSuggestions", message);
     }
 }

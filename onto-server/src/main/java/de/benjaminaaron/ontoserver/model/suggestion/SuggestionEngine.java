@@ -50,10 +50,9 @@ public class SuggestionEngine {
     }
 
     public void sendUnsentSuggestions() {
-        System.out.println("unsend");
         List<Suggestion> unsent = suggestions.values().stream().filter(s -> !s.getIsSent()).collect(Collectors.toList());
         for (Suggestion sug : unsent) {
-            System.out.println(sug);
+            System.out.println(sug + " sent");
             router.sendSuggestion(sug.getMessage());
             sug.isSent();
         }

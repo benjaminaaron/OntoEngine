@@ -65,9 +65,9 @@ public class CaseSensitivityTask extends JobTask {
 
     private void addIfNotEmpty(List<Suggestion> list, ReformulateUriSuggestionMessage message) {
         if (!message.getSuggestedUris().isEmpty()) {
-            Suggestion sug = new Suggestion();
-            sug.setMessage(message);
-            list.add(sug);
+            // Suggestion sug = new Suggestion();
+            // sug.setMessage(message);
+            // list.add(sug);
         }
     }
 }

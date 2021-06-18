@@ -1,19 +1,18 @@
 package de.benjaminaaron.ontoserver.model.suggestion;
 
-import de.benjaminaaron.ontoserver.routing.websocket.messages.suggestion.ReformulateUriSuggestionMessage;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.suggestion.SuggestionBaseMessage;
 
 public class Suggestion {
 
     private int id;
-    private ReformulateUriSuggestionMessage message; // TODO use SuggestionBaseMessage
+    private SuggestionBaseMessage message;
     private boolean isSent = false;
 
-    public void setMessage(SuggestionBaseMessage message) {
-        this.message = (ReformulateUriSuggestionMessage) message;
+    public Suggestion(SuggestionBaseMessage message) {
+        this.message = message;
     }
 
-    public ReformulateUriSuggestionMessage getMessage() {
+    public SuggestionBaseMessage getMessage() {
         return message;
     }
 
@@ -36,6 +35,6 @@ public class Suggestion {
 
     @Override
     public String toString() {
-        return "Suggestion " + id + ": " + message.getCurrentUri() + " --> " + message.getSuggestedUris();
+        return "Suggestion " + id;
     }
 }
