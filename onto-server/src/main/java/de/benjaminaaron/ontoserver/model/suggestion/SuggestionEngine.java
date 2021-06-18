@@ -12,6 +12,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,17 @@ public class SuggestionEngine {
 
     @Autowired
     private WebSocketRouting router;
+
+    @SneakyThrows
+    @PostConstruct
+    void init() {
+        TaskSchedulingManager taskManager = new TaskSchedulingManager(this);
+        taskManager.schedulePeriodicJob("linearRunThrough", 5, 10);
+    }
+
+    public void linearRunThrough() {
+        System.out.println("linearRunTrough ...");
+    }
 
     public void sendUnsentSuggestions() {
         System.out.println("unsend");
