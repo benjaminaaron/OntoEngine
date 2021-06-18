@@ -46,7 +46,8 @@ public class SuggestionEngine {
     public void poolUniqueUrisAndTheirWordsJob() {
         logger.info("Starting PoolUniqueUrisAndTheirWordsJob");
         PoolUniqueUrisAndTheirWordsJob job = new PoolUniqueUrisAndTheirWordsJob(modelController.getModel());
-        job.execute();
+        job.execute().forEach(this::registerSuggestion);
+        sendUnsentSuggestions();
     }
 
     public void sendUnsentSuggestions() {
