@@ -2,7 +2,7 @@ package de.benjaminaaron.ontoserver.model.suggestion;
 
 import de.benjaminaaron.ontoserver.model.ModelController;
 import de.benjaminaaron.ontoserver.model.suggestion.job.CompareOneToAllStatementsJob;
-import de.benjaminaaron.ontoserver.model.suggestion.job.PoolAllUrisJob;
+import de.benjaminaaron.ontoserver.model.suggestion.job.PoolUniqueUrisAndTheirWordsJob;
 import de.benjaminaaron.ontoserver.model.suggestion.job.Job;
 import de.benjaminaaron.ontoserver.model.suggestion.job.task.CaseSensitivityTask;
 import de.benjaminaaron.ontoserver.routing.websocket.WebSocketRouting;
@@ -40,12 +40,12 @@ public class SuggestionEngine {
     @PostConstruct
     void init() {
         TaskSchedulingManager taskManager = new TaskSchedulingManager(this);
-        taskManager.schedulePeriodicJob("poolAllUrisJob", 5, 10);
+        taskManager.schedulePeriodicJob("poolUniqueUrisAndTheirWordsJob", 5, 10);
     }
 
-    public void poolAllUrisJob() {
-        logger.info("Starting PoolAllUrisJob");
-        PoolAllUrisJob job = new PoolAllUrisJob(modelController.getModel());
+    public void poolUniqueUrisAndTheirWordsJob() {
+        logger.info("Starting PoolUniqueUrisAndTheirWordsJob");
+        PoolUniqueUrisAndTheirWordsJob job = new PoolUniqueUrisAndTheirWordsJob(modelController.getModel());
         job.execute();
     }
 
