@@ -21,7 +21,6 @@ public class MergeSuggestionsJob extends Job {
         tasks.forEach(task -> suggestions.addAll(task.getSuggestions()));
 
         endTimer();
-        System.out.println(getJobDurationString());
         return suggestions;
     }
 

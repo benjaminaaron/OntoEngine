@@ -35,21 +35,22 @@ public class SuggestionEngine {
     @PostConstruct
     void init() {
         TaskSchedulingManager taskManager = new TaskSchedulingManager(this);
-        taskManager.schedulePeriodicJob("poolUniqueUrisAndTheirWordsJob", 5, 10);
+        taskManager.schedulePeriodicJob("mergeSuggestionsJob", 5, 30);
     }
 
-    public void poolUniqueUrisAndTheirWordsJob() {
-        logger.info("Starting PoolUniqueUrisAndTheirWordsJob");
+    public void mergeSuggestionsJob() {
         MergeSuggestionsJob job = new MergeSuggestionsJob(modelController.getModel());
+        logger.info("Starting " + job.getJobName());
         job.addTask(new CaseSensitivityTask());
-        job.execute().forEach(this::registerSuggestion);
+        List<Suggestion> list = job.execute();
+        logger.info(job.getJobDurationString());
+        list.forEach(this::registerSuggestion);
         sendUnsentSuggestions();
     }
 
     public void sendUnsentSuggestions() {
         List<Suggestion> unsent = suggestions.values().stream().filter(s -> !s.getIsSent()).collect(Collectors.toList());
         for (Suggestion sug : unsent) {
-            System.out.println(sug + " sent");
             router.sendSuggestion(sug.getMessage());
             sug.isSent();
         }

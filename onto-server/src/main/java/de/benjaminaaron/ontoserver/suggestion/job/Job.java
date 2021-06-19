@@ -35,7 +35,11 @@ public abstract class Job {
         endTime = Instant.now();
     }
 
-    String getJobDurationString() {
-        return "The job ran from " + startTime + " to " + endTime + ": " + Duration.between(startTime, endTime);
+    public String getJobName() {
+        return this.getClass().getSimpleName();
+    }
+
+    public String getJobDurationString() {
+        return getJobName() + " job ran from " + startTime + " to " + endTime + ": " + Duration.between(startTime, endTime);
     }
 }

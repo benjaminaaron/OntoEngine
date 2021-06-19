@@ -37,7 +37,6 @@ public abstract class BaseRouting {
     protected void handleCommand(CommandMessage command) {
         List<String> args = new LinkedList<>(Arrays.asList(command.getCommand().split(" ")));
         String commandStr = args.remove(0);
-        System.out.println("handleCommand: \"" + commandStr + "\", args \"" + args + "\"");
         String arg0;
         switch (commandStr) {
             case "print":
