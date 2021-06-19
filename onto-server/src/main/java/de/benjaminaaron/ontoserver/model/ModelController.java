@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -82,6 +83,28 @@ public class ModelController {
     }
 
     public void replaceUris(Set<String> from, String to) {
+        List<Statement> deletionList = new ArrayList<>();
+        List<Statement> insertionList = new ArrayList<>();
+        int replaceCount = 0;
+        StmtIterator iter = model.listStatements();
+        while (iter.hasNext()) {
+            Statement statement = iter.nextStatement();
+            boolean replaceSubject = from.contains(statement.getSubject().getURI());
+            boolean replacePredicate = from.contains(statement.getPredicate().getURI());
+            boolean replaceObject = statement.getObject().isResource() && from.contains(statement.getObject().asResource().getURI());
+            if (replaceSubject || replacePredicate || replaceObject) {
+                deletionList.add(statement);
+                Resource sub = replaceSubject ? model.createResource(to) : statement.getSubject();
+                Property pred = replacePredicate ? model.createProperty(to) : statement.getPredicate();
+                RDFNode obj = replaceObject ? model.createResource(to) : statement.getObject();
+                insertionList.add(ResourceFactory.createStatement(sub, pred, obj));
+                replaceCount += (replaceSubject ? 1 : 0) + (replacePredicate ? 1 : 0) + (replaceObject ? 1 : 0);
+            }
+        }
+        assert deletionList.size() == insertionList.size();
+        model.remove(deletionList);
+        model.add(insertionList);
+        router.sendMessage(replaceCount + " URIs in " + insertionList.size() + " statements replaced");
     }
 
     public Model getModel() {
