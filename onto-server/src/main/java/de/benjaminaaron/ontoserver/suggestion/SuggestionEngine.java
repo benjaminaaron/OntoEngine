@@ -1,14 +1,13 @@
 package de.benjaminaaron.ontoserver.suggestion;
 
 import de.benjaminaaron.ontoserver.model.ModelController;
-import de.benjaminaaron.ontoserver.suggestion.job.MergeSuggestionsJob;
 import de.benjaminaaron.ontoserver.routing.websocket.WebSocketRouting;
+import de.benjaminaaron.ontoserver.suggestion.job.MergeSuggestionsJob;
 import de.benjaminaaron.ontoserver.suggestion.job.task.CaseSensitivityTask;
 import lombok.SneakyThrows;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -18,7 +17,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
-@EnableAsync
+// @EnableAsync
 public class SuggestionEngine {
 
     private final Logger logger = LogManager.getLogger(SuggestionEngine.class);

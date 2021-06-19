@@ -76,11 +76,10 @@ public class Utils {
 
     public static String setToCompactArrayString(Set<String> set) {
         StringBuilder sb = new StringBuilder();
-        sb.append("[");
         for (String entry : set) {
             sb.append(entry).append(",");
         }
         String str = sb.toString();
-        return str.substring(0, sb.length() - 1) + "]";
+        return str.substring(0, sb.length() - 1);
     }
 }

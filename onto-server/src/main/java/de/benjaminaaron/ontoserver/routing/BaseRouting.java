@@ -62,9 +62,7 @@ public abstract class BaseRouting {
                 if (!args.get(1).equalsIgnoreCase("with")) {
                     return "no 'WITH' found";
                 }
-                modelController.replaceUris(
-                        Arrays.asList(args.get(0).substring(1, args.get(0).length() - 1).split(",")),
-                        args.get(2));
+                modelController.replaceUris(Arrays.asList(args.get(0).split(",")), args.get(2));
                 break;
             default:
                 break;

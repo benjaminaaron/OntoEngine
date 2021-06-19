@@ -1,6 +1,7 @@
 package de.benjaminaaron.ontoserver.model;
 
 import de.benjaminaaron.ontoserver.model.graph.Graph;
+import de.benjaminaaron.ontoserver.routing.websocket.WebSocketRouting;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementMessage;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementResponse;
 import de.benjaminaaron.ontoserver.suggestion.SuggestionEngine;
@@ -30,6 +31,8 @@ public class ModelController {
     @Value("${jena.tdb.directory}")
     private Path TBD_DIR;
 
+    @Autowired
+    private WebSocketRouting router;
     @Autowired
     private SuggestionEngine suggestionEngine;
     private Model model;
@@ -80,6 +83,7 @@ public class ModelController {
     public void replaceUris(List<String> from, String to) {
         System.out.println(from + " --> " + to);
         // TODO
+        router.sendMessage("URIs replaced");
     }
 
     public Model getModel() {

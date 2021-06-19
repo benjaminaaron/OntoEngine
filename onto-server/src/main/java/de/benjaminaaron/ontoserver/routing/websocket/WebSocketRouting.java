@@ -47,7 +47,7 @@ public class WebSocketRouting extends BaseRouting {
     @MessageMapping("/serverReceiveCommand")
     @SendTo("/topic/serverBroadcasting")
     public ServerToClientMessage receiveCommand(CommandMessage commandMessage) {
-        logger.info("Received command " + commandMessage);
+        logger.info("Received " + commandMessage);
         String response = handleCommand(commandMessage);
         ServerToClientMessage responseMessage = new ServerToClientMessage();
         if (response == null) {
@@ -61,5 +61,11 @@ public class WebSocketRouting extends BaseRouting {
     public void sendSuggestion(SuggestionBaseMessage message) {
         this.template.convertAndSend("/topic/serverSuggestions", message);
         logger.info("Suggestion " + message.getSuggestionId() + " sent");
+    }
+
+    public void sendMessage(String str) {
+        ServerToClientMessage message = new ServerToClientMessage();
+        message.setMessage(str);
+        this.template.convertAndSend("/topic/serverBroadcasting", message);
     }
 }
