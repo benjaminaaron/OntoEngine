@@ -48,10 +48,14 @@ public class WebSocketRouting extends BaseRouting {
     @SendTo("/topic/serverBroadcasting")
     public ServerToClientMessage receiveCommand(CommandMessage commandMessage) {
         logger.info("Received command " + commandMessage);
-        handleCommand(commandMessage);
-        ServerToClientMessage response = new ServerToClientMessage();
-        response.setMessage("Command received");
-        return response;
+        String response = handleCommand(commandMessage);
+        ServerToClientMessage responseMessage = new ServerToClientMessage();
+        if (response == null) {
+            responseMessage.setMessage("Command received");
+        } else {
+            responseMessage.setMessage("Command failed: " + response);
+        }
+        return responseMessage;
     }
 
     public void sendSuggestion(SuggestionBaseMessage message) {

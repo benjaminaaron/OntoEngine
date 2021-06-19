@@ -33,7 +33,10 @@ public class RestRouting extends BaseRouting {
         CommandMessage commandMessage = new CommandMessage();
         String commandStr = params.get("command") + " " + String.join(" ", params.get("args").split(","));
         commandMessage.setCommand(commandStr);
-        handleCommand(commandMessage);
-        return "Command received";
+        String response = handleCommand(commandMessage);
+        if (response == null) {
+            return "Command received";
+        }
+        return "Command failed: " + response;
     }
 }

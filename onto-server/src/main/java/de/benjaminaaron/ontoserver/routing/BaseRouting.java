@@ -34,16 +34,15 @@ public abstract class BaseRouting {
         return addStatement(message).toString();
     }
 
-    protected void handleCommand(CommandMessage command) {
-        List<String> args = new LinkedList<>(Arrays.asList(command.getCommand().split(" ")));
-        String commandStr = args.remove(0).toLowerCase();
-        String arg0;
-        switch (commandStr) {
+    protected String handleCommand(CommandMessage commandMessage) {
+        List<String> args = new LinkedList<>(Arrays.asList(commandMessage.getCommand().split(" ")));
+        String command = args.remove(0).toLowerCase();
+        switch (command) {
             case "print":
                 modelController.printStatements();
                 break;
             case "export":
-                arg0 = args.get(0).toLowerCase();
+                String arg0 = args.get(0).toLowerCase();
                 if (arg0.equals("rdf")) {
                     exporter.exportRDF();
                 }
@@ -55,12 +54,14 @@ public abstract class BaseRouting {
                 }
                 break;
             case "import":
-                arg0 = args.get(0).toLowerCase();
-                if (arg0.equals("graphdb")) {
+                if (args.get(0).equalsIgnoreCase("graphdb")) {
                     importer.importFromGraphDB(args.get(1));
                 }
                 break;
             case "replace":
+                if (!args.get(1).equalsIgnoreCase("with")) {
+                    return "no 'WITH' found";
+                }
                 modelController.replaceUris(
                         Arrays.asList(args.get(0).substring(1, args.get(0).length() - 1).split(",")),
                         args.get(2));
@@ -68,5 +69,6 @@ public abstract class BaseRouting {
             default:
                 break;
         }
+        return null;
     }
 }
