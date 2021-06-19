@@ -1,7 +1,7 @@
 package de.benjaminaaron.ontoserver.model.suggestion;
 
 import de.benjaminaaron.ontoserver.model.ModelController;
-import de.benjaminaaron.ontoserver.model.suggestion.job.PoolUniqueUrisAndTheirWordsJob;
+import de.benjaminaaron.ontoserver.model.suggestion.job.MergeSuggestionsJob;
 import de.benjaminaaron.ontoserver.routing.websocket.WebSocketRouting;
 import lombok.SneakyThrows;
 import org.apache.logging.log4j.LogManager;
@@ -39,7 +39,7 @@ public class SuggestionEngine {
 
     public void poolUniqueUrisAndTheirWordsJob() {
         logger.info("Starting PoolUniqueUrisAndTheirWordsJob");
-        PoolUniqueUrisAndTheirWordsJob job = new PoolUniqueUrisAndTheirWordsJob(modelController.getModel());
+        MergeSuggestionsJob job = new MergeSuggestionsJob(modelController.getModel());
         job.execute().forEach(this::registerSuggestion);
         sendUnsentSuggestions();
     }

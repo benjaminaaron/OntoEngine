@@ -6,9 +6,9 @@ import org.apache.jena.rdf.model.*;
 
 import java.util.*;
 
-public class PoolUniqueUrisAndTheirWordsJob extends Job {
+public class MergeSuggestionsJob extends Job {
 
-    public PoolUniqueUrisAndTheirWordsJob(Model model) {
+    public MergeSuggestionsJob(Model model) {
         super(model);
     }
 
