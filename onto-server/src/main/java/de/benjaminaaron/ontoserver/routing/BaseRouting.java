@@ -1,6 +1,8 @@
 package de.benjaminaaron.ontoserver.routing;
 
 import de.benjaminaaron.ontoserver.model.ModelController;
+import de.benjaminaaron.ontoserver.model.io.Exporter;
+import de.benjaminaaron.ontoserver.model.io.Importer;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementMessage;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.CommandMessage;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementResponse;
@@ -14,6 +16,10 @@ public abstract class BaseRouting {
 
     @Autowired
     protected ModelController modelController;
+    @Autowired
+    private Importer importer;
+    @Autowired
+    private Exporter exporter;
 
     protected AddStatementResponse addStatement(AddStatementMessage statementMsg) {
         return modelController.addStatement(statementMsg);
@@ -40,19 +46,19 @@ public abstract class BaseRouting {
             case "export":
                 arg0 = args.get(0).toLowerCase();
                 if (arg0.equals("rdf")) {
-                    modelController.exportRDF();
+                    exporter.exportRDF();
                 }
                 if (arg0.equals("graphml")) {
-                    modelController.exportGraphml(args.size() >= 2 && args.get(1).equalsIgnoreCase("full"));
+                    exporter.exportGraphml(args.size() >= 2 && args.get(1).equalsIgnoreCase("full"));
                 }
                 if (arg0.equals("graphdb")) {
-                    modelController.exportToGraphDB();
+                    exporter.exportToGraphDB();
                 }
                 break;
             case "import":
                 arg0 = args.get(0).toLowerCase();
                 if (arg0.equals("graphdb")) {
-                    modelController.importFromGraphDB(args.get(1));
+                    importer.importFromGraphDB(args.get(1));
                 }
                 break;
             default:
