@@ -12,6 +12,7 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Set;
 
 public class Utils {
 
@@ -71,5 +72,15 @@ public class Utils {
             return "\"" + literal + "\"";
         }
         return "\"" + getValueFromLiteral(literal) + "\"^^<" + literal.getDatatypeURI() + ">";
+    }
+
+    public static String setToCompactArrayString(Set<String> set) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        for (String entry : set) {
+            sb.append(entry).append(",");
+        }
+        String str = sb.toString();
+        return str.substring(0, sb.length() - 1) + "]";
     }
 }

@@ -6,4 +6,5 @@ import lombok.Data;
 public abstract class SuggestionBaseMessage {
     private int suggestionId;
     private String reason;
+    private String achievingCommand;
 }

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.nio.file.Path;
+import java.util.List;
 
 import static de.benjaminaaron.ontoserver.model.Utils.detectLiteralType;
 import static de.benjaminaaron.ontoserver.model.Utils.ensureUri;
@@ -76,6 +77,11 @@ public class ModelController {
         // graph.importStatement(statement);
     }
 
+    public void replaceUris(List<String> from, String to) {
+        System.out.println(from + " --> " + to);
+        // TODO
+    }
+
     public Model getModel() {
         return model;
     }
@@ -87,5 +93,4 @@ public class ModelController {
     public void printStatements() {
         model.listStatements().toList().forEach(System.out::println);
     }
-
 }

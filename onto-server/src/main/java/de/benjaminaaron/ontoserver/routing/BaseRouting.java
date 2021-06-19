@@ -36,7 +36,7 @@ public abstract class BaseRouting {
 
     protected void handleCommand(CommandMessage command) {
         List<String> args = new LinkedList<>(Arrays.asList(command.getCommand().split(" ")));
-        String commandStr = args.remove(0);
+        String commandStr = args.remove(0).toLowerCase();
         String arg0;
         switch (commandStr) {
             case "print":
@@ -59,6 +59,11 @@ public abstract class BaseRouting {
                 if (arg0.equals("graphdb")) {
                     importer.importFromGraphDB(args.get(1));
                 }
+                break;
+            case "replace":
+                modelController.replaceUris(
+                        Arrays.asList(args.get(0).substring(1, args.get(0).length() - 1).split(",")),
+                        args.get(2));
                 break;
             default:
                 break;

@@ -1,10 +1,14 @@
 package de.benjaminaaron.ontoserver.suggestion.job.task;
 
+import de.benjaminaaron.ontoserver.model.Utils;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.suggestion.MergeWordsSuggestionMessage;
 import de.benjaminaaron.ontoserver.suggestion.Suggestion;
 import de.benjaminaaron.ontoserver.suggestion.job.UriStats;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class CaseSensitivityTask extends JobTask {
 
@@ -37,11 +41,14 @@ public class CaseSensitivityTask extends JobTask {
                     uriMaxUsed = uri;
                 }
             }
+            final String suggestedMergeUri = uriMaxUsed;
             message.setUrisToMergeAndTheirTotalUsage(urisWithStats);
-            message.setSuggestedUri(uriMaxUsed);
-
+            message.setSuggestedUri(suggestedMergeUri);
+            Set<String> set = urisWithStats.keySet();
+            set.remove(suggestedMergeUri);
+            message.setAchievingCommand("REPLACE " + Utils.setToCompactArrayString(set)
+                    + " WITH " + suggestedMergeUri);
             suggestions.add(new Suggestion(message));
         });
     }
-
 }
