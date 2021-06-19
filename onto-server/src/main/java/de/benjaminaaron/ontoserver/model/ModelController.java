@@ -89,7 +89,6 @@ public class ModelController {
         response.setObjectIsNew(!model.getGraph().contains(Node.ANY, Node.ANY, obj.asNode()));
         addStatement(statement);
         // CompletableFuture.runAsync(() -> func());
-        // suggestionEngine.startPostAddStatementChecks(model.listStatements(), statement);
         return response;
     }
 

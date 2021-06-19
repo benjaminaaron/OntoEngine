@@ -1,18 +1,12 @@
 package de.benjaminaaron.ontoserver.model.suggestion;
 
 import de.benjaminaaron.ontoserver.model.ModelController;
-import de.benjaminaaron.ontoserver.model.suggestion.job.CompareOneToAllStatementsJob;
 import de.benjaminaaron.ontoserver.model.suggestion.job.PoolUniqueUrisAndTheirWordsJob;
-import de.benjaminaaron.ontoserver.model.suggestion.job.Job;
-import de.benjaminaaron.ontoserver.model.suggestion.job.task.CaseSensitivityTask;
 import de.benjaminaaron.ontoserver.routing.websocket.WebSocketRouting;
 import lombok.SneakyThrows;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.Statement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Component;
 
@@ -57,20 +51,6 @@ public class SuggestionEngine {
             router.sendSuggestion(sug.getMessage());
             sug.isSent();
         }
-    }
-
-    @SneakyThrows
-    @Async
-    public void startPostAddStatementChecks(Model model, Statement newStatement) {
-        // go through all resources directly instead of statements?
-        Job job = new CompareOneToAllStatementsJob(model, newStatement);
-        job.addTask(new CaseSensitivityTask(newStatement));
-        List<Suggestion> suggestions = job.execute();
-        for (Suggestion sug : suggestions) {
-            registerSuggestion(sug);
-        }
-        Thread.sleep(3000);
-        sendUnsentSuggestions();
     }
 
     private void registerSuggestion(Suggestion suggestion) {
