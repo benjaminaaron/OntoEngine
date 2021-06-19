@@ -1,7 +1,7 @@
-package de.benjaminaaron.ontoserver.model.suggestion;
+package de.benjaminaaron.ontoserver.suggestion;
 
 import de.benjaminaaron.ontoserver.model.ModelController;
-import de.benjaminaaron.ontoserver.model.suggestion.job.MergeSuggestionsJob;
+import de.benjaminaaron.ontoserver.suggestion.job.MergeSuggestionsJob;
 import de.benjaminaaron.ontoserver.routing.websocket.WebSocketRouting;
 import lombok.SneakyThrows;
 import org.apache.logging.log4j.LogManager;

@@ -1,4 +1,4 @@
-package de.benjaminaaron.ontoserver.model.suggestion;
+package de.benjaminaaron.ontoserver.suggestion;
 
 import de.benjaminaaron.ontoserver.routing.websocket.messages.suggestion.SuggestionBaseMessage;
 

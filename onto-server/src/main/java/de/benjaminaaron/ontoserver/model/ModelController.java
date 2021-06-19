@@ -1,7 +1,7 @@
 package de.benjaminaaron.ontoserver.model;
 
 import de.benjaminaaron.ontoserver.model.graph.Graph;
-import de.benjaminaaron.ontoserver.model.suggestion.SuggestionEngine;
+import de.benjaminaaron.ontoserver.suggestion.SuggestionEngine;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementMessage;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementResponse;
 import lombok.SneakyThrows;

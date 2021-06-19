@@ -1,6 +1,6 @@
-package de.benjaminaaron.ontoserver.model.suggestion.job.task;
+package de.benjaminaaron.ontoserver.suggestion.job.task;
 
-import de.benjaminaaron.ontoserver.model.suggestion.Suggestion;
+import de.benjaminaaron.ontoserver.suggestion.Suggestion;
 
 import java.util.Collections;
 import java.util.List;

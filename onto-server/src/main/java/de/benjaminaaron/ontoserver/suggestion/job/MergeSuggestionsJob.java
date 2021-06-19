@@ -1,6 +1,6 @@
-package de.benjaminaaron.ontoserver.model.suggestion.job;
+package de.benjaminaaron.ontoserver.suggestion.job;
 
-import de.benjaminaaron.ontoserver.model.suggestion.Suggestion;
+import de.benjaminaaron.ontoserver.suggestion.Suggestion;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.suggestion.MergeWordsSuggestionMessage;
 import org.apache.jena.rdf.model.*;
 

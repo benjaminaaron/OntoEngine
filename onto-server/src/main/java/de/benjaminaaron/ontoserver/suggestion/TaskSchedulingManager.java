@@ -1,4 +1,4 @@
-package de.benjaminaaron.ontoserver.model.suggestion;
+package de.benjaminaaron.ontoserver.suggestion;
 
 import lombok.SneakyThrows;
 import org.apache.logging.log4j.LogManager;
