@@ -19,14 +19,31 @@ public class Utils {
     final static String DEFAULT_NAMESPACE = "http://onto.de/";
     final static Slugify slugifier = new Slugify().withLowerCase(false);
 
-    public static String ensureUri(String fullUriOrJustLocalName) {
-        fullUriOrJustLocalName = slugifier.slugify(fullUriOrJustLocalName);
-        try {
-            new URL(fullUriOrJustLocalName).toURI();
-        } catch (URISyntaxException | MalformedURLException e) {
-            return DEFAULT_NAMESPACE + fullUriOrJustLocalName;
+    public static String ensureUri(String str) {
+        // str = full URI or just local name (= word)
+        str = slugifier.slugify(str);
+        if (isValidUri(str)) {
+            return str;
         }
-        return fullUriOrJustLocalName;
+        return DEFAULT_NAMESPACE + str;
+    }
+
+    public static boolean isValidUri(String str) {
+        try {
+            new URL(str).toURI();
+            return true;
+        } catch (URISyntaxException | MalformedURLException e) {
+            return false;
+        }
+    }
+
+    public static boolean containsOnlyValidUris(Set<String> set) {
+        for (String str : set) {
+            if (!isValidUri(str)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public static String pathFromUri(String uri) {

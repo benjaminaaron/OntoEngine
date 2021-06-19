@@ -19,6 +19,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Set;
 
 import static de.benjaminaaron.ontoserver.model.Utils.detectLiteralType;
 import static de.benjaminaaron.ontoserver.model.Utils.ensureUri;
@@ -80,10 +81,7 @@ public class ModelController {
         // graph.importStatement(statement);
     }
 
-    public void replaceUris(List<String> from, String to) {
-        System.out.println(from + " --> " + to);
-        // TODO
-        router.sendMessage("URIs replaced");
+    public void replaceUris(Set<String> from, String to) {
     }
 
     public Model getModel() {

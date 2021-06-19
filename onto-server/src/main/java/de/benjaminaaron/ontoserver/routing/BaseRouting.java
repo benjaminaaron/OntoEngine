@@ -1,16 +1,18 @@
 package de.benjaminaaron.ontoserver.routing;
 
 import de.benjaminaaron.ontoserver.model.ModelController;
+import de.benjaminaaron.ontoserver.model.Utils;
 import de.benjaminaaron.ontoserver.model.io.Exporter;
 import de.benjaminaaron.ontoserver.model.io.Importer;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementMessage;
-import de.benjaminaaron.ontoserver.routing.websocket.messages.CommandMessage;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementResponse;
+import de.benjaminaaron.ontoserver.routing.websocket.messages.CommandMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 public abstract class BaseRouting {
 
@@ -35,7 +37,7 @@ public abstract class BaseRouting {
     }
 
     protected String handleCommand(CommandMessage commandMessage) {
-        List<String> args = new LinkedList<>(Arrays.asList(commandMessage.getCommand().split(" ")));
+        List<String> args = new ArrayList<>(Arrays.asList(commandMessage.getCommand().split(" ")));
         String command = args.remove(0).toLowerCase();
         switch (command) {
             case "print":
@@ -60,9 +62,14 @@ public abstract class BaseRouting {
                 break;
             case "replace":
                 if (!args.get(1).equalsIgnoreCase("with")) {
-                    return "no 'WITH' found";
+                    return "no 'WITH' keyword found";
                 }
-                modelController.replaceUris(Arrays.asList(args.get(0).split(",")), args.get(2));
+                Set<String> from = Set.of(args.get(0).split(","));
+                String to = args.get(2);
+                if (!Utils.containsOnlyValidUris(from) || !Utils.isValidUri(to)) {
+                    return "contains invalid URIs";
+                }
+                modelController.replaceUris(from, to);
                 break;
             default:
                 break;
