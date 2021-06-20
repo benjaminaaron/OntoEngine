@@ -39,8 +39,21 @@ const sendCommand = () => {
     stompClient.send("/app/serverReceiveCommand", {}, JSON.stringify(command));
 };
 
+const onEnter = (element, func) => {
+    $("#" + element).on('keypress', e => {
+        if (e.which === 13) {
+            func();
+        }
+    });
+}
+
 $(() => {
     connect();
     $("#addStatementBtn").click(() => { addStatement(); });
     $("#sendCommandBtn").click(() => { sendCommand(); });
+    onEnter("subjectTextField", () => $("#predicateTextField").focus());
+    onEnter("predicateTextField", () => $("#objectTextField").focus());
+    onEnter("objectTextField", addStatement);
+    onEnter("commandTextField", sendCommand);
+    $("#subjectTextField").focus();
 });
