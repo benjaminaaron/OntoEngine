@@ -64,4 +64,12 @@ public class SuggestionEngine {
         suggestion.setId(id);
         suggestions.put(id, suggestion);
     }
+
+    public boolean suggestionExists(String id) {
+        return suggestions.containsKey(id);
+    }
+
+    public String accept(String id) {
+        return suggestions.get(id).getMessage().getAchievingCommand();
+    }
 }

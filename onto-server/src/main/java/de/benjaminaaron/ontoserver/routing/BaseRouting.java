@@ -7,6 +7,7 @@ import de.benjaminaaron.ontoserver.model.io.Importer;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementMessage;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementResponse;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.CommandMessage;
+import de.benjaminaaron.ontoserver.suggestion.SuggestionEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -18,6 +19,8 @@ public abstract class BaseRouting {
 
     @Autowired
     protected ModelController modelController;
+    @Autowired
+    protected SuggestionEngine suggestionEngine;
     @Autowired
     private Importer importer;
     @Autowired
@@ -37,7 +40,11 @@ public abstract class BaseRouting {
     }
 
     protected String handleCommand(CommandMessage commandMessage) {
-        List<String> args = new ArrayList<>(Arrays.asList(commandMessage.getCommand().split(" ")));
+        return handleCommand(commandMessage.getCommand());
+    }
+
+    protected String handleCommand(String commandStr) {
+        List<String> args = new ArrayList<>(Arrays.asList(commandStr.split(" ")));
         String command = args.remove(0).toLowerCase();
         switch (command) {
             case "print":
@@ -70,6 +77,13 @@ public abstract class BaseRouting {
                     return "contains invalid URIs";
                 }
                 modelController.replaceUris(from, to);
+                break;
+            case "accept":
+                String id = args.get(0);
+                if (!suggestionEngine.suggestionExists(id)) {
+                    return "no suggestion with id " + id + " found";
+                }
+                handleCommand(suggestionEngine.accept(id));
                 break;
             default:
                 break;
