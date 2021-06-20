@@ -17,15 +17,16 @@ import java.util.UUID;
 
 public class Utils {
 
-    final static String DEFAULT_NAMESPACE = "http://onto.de/";
-    final static Slugify slugifier = new Slugify().withLowerCase(false);
+    public static String DEFAULT_URI_NAMESPACE;
+    public static String DEFAULT_URI_SEPARATOR;
+    private final static Slugify slugifier = new Slugify().withLowerCase(false);
 
     public static String ensureUri(String str) {
         // str = full URI or just local name (= word)
         if (isValidUri(str)) {
             return str;
         }
-        return DEFAULT_NAMESPACE + slugifier.slugify(str);
+        return DEFAULT_URI_NAMESPACE + DEFAULT_URI_SEPARATOR + slugifier.slugify(str);
     }
 
     public static boolean isValidUri(String str) {

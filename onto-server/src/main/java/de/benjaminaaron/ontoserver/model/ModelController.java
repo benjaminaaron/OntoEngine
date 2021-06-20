@@ -36,6 +36,16 @@ public class ModelController {
     private Model model;
     private Graph graph;
 
+    @Value("${uri.default.namespace}")
+    public void setUriDefaultNamespace(String ns) {
+        Utils.DEFAULT_URI_NAMESPACE = ns;
+    }
+
+    @Value("${uri.default.separator}")
+    public void setUriDefaultSeparator(String sep) {
+        Utils.DEFAULT_URI_SEPARATOR = sep;
+    }
+
     @PostConstruct
     private void init() {
         Dataset dataset = TDBFactory.createDataset(TBD_DIR.toString()) ;
