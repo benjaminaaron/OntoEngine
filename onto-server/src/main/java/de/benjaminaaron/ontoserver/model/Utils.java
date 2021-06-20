@@ -22,11 +22,10 @@ public class Utils {
 
     public static String ensureUri(String str) {
         // str = full URI or just local name (= word)
-        str = slugifier.slugify(str);
         if (isValidUri(str)) {
             return str;
         }
-        return DEFAULT_NAMESPACE + str;
+        return DEFAULT_NAMESPACE + slugifier.slugify(str);
     }
 
     public static boolean isValidUri(String str) {
