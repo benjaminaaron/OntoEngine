@@ -86,7 +86,7 @@ public abstract class BaseRouting {
                 handleCommand(suggestionEngine.accept(id));
                 break;
             default:
-                break;
+                return "Unknown command";
         }
         return null;
     }
