@@ -4,7 +4,6 @@ import de.benjaminaaron.ontoserver.model.graph.Graph;
 import de.benjaminaaron.ontoserver.routing.websocket.WebSocketRouting;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementMessage;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementResponse;
-import de.benjaminaaron.ontoserver.suggestion.SuggestionEngine;
 import org.apache.jena.graph.Node;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.rdf.model.*;
@@ -32,11 +31,8 @@ public class ModelController {
 
     @Value("${jena.tdb.directory}")
     private Path TBD_DIR;
-
     @Autowired
     private WebSocketRouting router;
-    @Autowired
-    private SuggestionEngine suggestionEngine;
     private Model model;
     private Graph graph;
 

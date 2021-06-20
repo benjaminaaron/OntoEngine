@@ -23,7 +23,7 @@ public class Importer {
         Model model = modelController.getModel();
         try (RDFConnection conn = RDFConnectionFactory.connect(GRAPHDB_GET_URL.replace("<repository>", repository))) {
             Txn.executeRead(conn, () -> {
-                String queryStr = "SELECT ?s ?p ?o WHERE { ?s ?p ?o } LIMIT 5";
+                String queryStr = "SELECT ?s ?p ?o WHERE { ?s ?p ?o }"; // LIMIT 5
                 conn.querySelect(QueryFactory.create(queryStr), qs -> {
                     Resource subj = qs.getResource("s");
                     Property pred = model.createProperty(qs.get("p").toString());

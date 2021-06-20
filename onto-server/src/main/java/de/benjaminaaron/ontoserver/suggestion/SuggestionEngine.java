@@ -34,7 +34,7 @@ public class SuggestionEngine {
     @PostConstruct
     void init() {
         TaskSchedulingManager taskManager = new TaskSchedulingManager(this);
-        taskManager.schedulePeriodicJob("mergeSuggestionsJob", 5, 10);
+        taskManager.schedulePeriodicJob("mergeSuggestionsJob", 5, 30);
     }
 
     public void mergeSuggestionsJob() {
