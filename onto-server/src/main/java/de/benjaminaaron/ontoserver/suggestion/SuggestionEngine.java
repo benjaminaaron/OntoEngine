@@ -34,7 +34,7 @@ public class SuggestionEngine {
     @PostConstruct
     void init() {
         TaskSchedulingManager taskManager = new TaskSchedulingManager(this);
-        taskManager.schedulePeriodicJob("mergeSuggestionsJob", 5, 30);
+        taskManager.schedulePeriodicJob("mergeSuggestionsJob", 5, 10);
     }
 
     public void mergeSuggestionsJob() {
@@ -43,7 +43,7 @@ public class SuggestionEngine {
         job.addTask(new CaseSensitivityTask());
         List<Suggestion> list = job.execute();
         logger.info(job.getJobDurationString());
-        list.forEach(this::registerSuggestion);
+        list.forEach(this::registerSuggestionIfNew);
         sendUnsentSuggestions();
     }
 
@@ -55,7 +55,11 @@ public class SuggestionEngine {
         }
     }
 
-    private void registerSuggestion(Suggestion suggestion) {
+    private void registerSuggestionIfNew(Suggestion suggestion) {
+        if (suggestions.containsValue(suggestion)) {
+            // more refined logic required to decide when a new suggestion should replace an old one TODO
+            return;
+        }
         String id = Utils.generateRandomId();
         suggestion.setId(id);
         suggestions.put(id, suggestion);
