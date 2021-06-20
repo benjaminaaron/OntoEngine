@@ -3,21 +3,24 @@
 <head>
     <title>OntoEngine Browser Client</title>
     <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/app.css" rel="stylesheet">
     <script src="/webjars/jquery/jquery.min.js"></script>
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
     <script src="/app.js"></script>
 </head>
 <body>
-    <br>
-    <input type="text" id="subjectTextField" size="40">
-    <input type="text" id="predicateTextField" size="40">
-    <input type="text" id="objectTextField" size="40">
-    <input type="checkbox" id="literalCheckBox">
-    <br/><br/>
-    <button id="addStatementBtn" type="submit">Add statement</button>
-    <br/><br/><br/>
-    <input type="text" id="commandTextField" size="120">
-    <button id="sendCommandBtn" type="submit">Send command</button>
+    <div style="padding: 40px">
+        <input type="text" id="subjectTextField" size="38">
+        <input type="text" id="predicateTextField" size="38">
+        <input type="text" id="objectTextField" size="38">
+        <input type="checkbox" id="literalCheckBox">
+        <br/><br/>
+        <button id="addStatementBtn" type="submit">Add statement</button>
+        <br/><br/><br/>
+        <input type="text" id="commandTextField" size="120">
+        <br/><br/>
+        <button id="sendCommandBtn" type="submit">Send command</button>
+    </div>
 </body>
 </html>
