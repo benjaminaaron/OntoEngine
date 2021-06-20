@@ -1,6 +1,7 @@
 package de.benjaminaaron.ontoserver.suggestion;
 
 import de.benjaminaaron.ontoserver.model.ModelController;
+import de.benjaminaaron.ontoserver.model.Utils;
 import de.benjaminaaron.ontoserver.routing.websocket.WebSocketRouting;
 import de.benjaminaaron.ontoserver.suggestion.job.MergeSuggestionsJob;
 import de.benjaminaaron.ontoserver.suggestion.job.task.CaseSensitivityTask;
@@ -21,8 +22,7 @@ import java.util.stream.Collectors;
 public class SuggestionEngine {
 
     private final Logger logger = LogManager.getLogger(SuggestionEngine.class);
-    private int counter = 0;
-    private final Map<Integer, Suggestion> suggestions = new HashMap<>();
+    private final Map<String, Suggestion> suggestions = new HashMap<>();
 
     @Autowired
     private WebSocketRouting router;
@@ -56,7 +56,7 @@ public class SuggestionEngine {
     }
 
     private void registerSuggestion(Suggestion suggestion) {
-        int id = ++ counter;
+        String id = Utils.generateRandomId();
         suggestion.setId(id);
         suggestions.put(id, suggestion);
     }

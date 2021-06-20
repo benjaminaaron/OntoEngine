@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Set;
+import java.util.UUID;
 
 public class Utils {
 
@@ -98,5 +99,9 @@ public class Utils {
         }
         String str = sb.toString();
         return str.substring(0, sb.length() - 1);
+    }
+
+    public static String generateRandomId() {
+        return UUID.randomUUID().toString().substring(0, 8);
     }
 }

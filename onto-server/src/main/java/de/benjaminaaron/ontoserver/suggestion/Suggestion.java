@@ -4,7 +4,7 @@ import de.benjaminaaron.ontoserver.routing.websocket.messages.suggestion.Suggest
 
 public class Suggestion {
 
-    private int id;
+    private String id;
     private SuggestionBaseMessage message;
     private boolean isSent = false;
 
@@ -16,12 +16,12 @@ public class Suggestion {
         return message;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
         message.setSuggestionId(id);
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
