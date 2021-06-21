@@ -4,7 +4,6 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Statement;
-import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.nio.Attribute;
 import org.jgrapht.nio.DefaultAttribute;
 import org.jgrapht.nio.graphml.GraphMLExporter;
@@ -18,13 +17,13 @@ import java.util.Map;
 
 public class Graph {
 
-    private final DefaultDirectedGraph<Node, Edge> graph;
+    private final DirectedMultigraphWithSelfLoops<Node, Edge> graph;
     private final Map<RDFNode, Node> nodesMap = new HashMap<>();
 
     // integrate more tightly with the Jena Graph?
     // https://github.com/SmartDataAnalytics/SubgraphIsomorphismIndex/blob/master/jena-jgrapht-bindings/src/main/java/org/aksw/commons/jena/jgrapht/PseudoGraphJenaGraph.java
     public Graph(Model model) {
-        graph = new DefaultDirectedGraph<>(Edge.class);
+        graph = new DirectedMultigraphWithSelfLoops<>(Edge.class);
         model.listStatements().toList().forEach(this::importStatement);
     }
 
