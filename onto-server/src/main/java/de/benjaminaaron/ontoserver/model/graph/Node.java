@@ -1,8 +1,7 @@
 package de.benjaminaaron.ontoserver.model.graph;
 
+import de.benjaminaaron.ontoserver.model.Utils;
 import org.apache.jena.rdf.model.RDFNode;
-
-import static de.benjaminaaron.ontoserver.model.Utils.pathFromUri;
 
 public class Node {
 
@@ -12,8 +11,14 @@ public class Node {
         this.rdfNode = rdfNode;
     }
 
-    public String getPathFromUri() {
-        return pathFromUri(toString());
+    public String getLocalNameFromUri() {
+        if (rdfNode.isResource()) {
+            return rdfNode.asResource().getLocalName();
+        }
+        if (rdfNode.isLiteral()) {
+            return Utils.getValueFromLiteral(rdfNode.asLiteral());
+        }
+        return rdfNode.toString();
     }
 
     @Override

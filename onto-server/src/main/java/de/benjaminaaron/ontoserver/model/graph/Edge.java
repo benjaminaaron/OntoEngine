@@ -2,8 +2,6 @@ package de.benjaminaaron.ontoserver.model.graph;
 
 import org.apache.jena.rdf.model.Property;
 
-import static de.benjaminaaron.ontoserver.model.Utils.pathFromUri;
-
 public class Edge {
 
     Property property;
@@ -12,8 +10,8 @@ public class Edge {
         this.property = property;
     }
 
-    public String getPathFromUri() {
-        return pathFromUri(toString());
+    public String getLocalNameFromUri() {
+        return property.getLocalName();
     }
 
     @Override

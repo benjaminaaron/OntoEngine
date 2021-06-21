@@ -50,7 +50,7 @@ public class Graph {
 
         exporter.setVertexAttributeProvider(vertex -> {
             Map<String, Attribute> map = new LinkedHashMap<>();
-            map.put("label", DefaultAttribute.createAttribute(fullUri ? vertex.toString() : vertex.getPathFromUri()));
+            map.put("label", DefaultAttribute.createAttribute(fullUri ? vertex.toString() : vertex.getLocalNameFromUri()));
             return map;
         });
 
@@ -59,7 +59,7 @@ public class Graph {
 
         exporter.setEdgeAttributeProvider(edge -> {
             Map<String, Attribute> map = new LinkedHashMap<>();
-            map.put("label", DefaultAttribute.createAttribute(fullUri ? edge.toString() : edge.getPathFromUri()));
+            map.put("label", DefaultAttribute.createAttribute(fullUri ? edge.toString() : edge.getLocalNameFromUri()));
             return map;
         });
         exporter.setEdgeLabelAttributeName("label");

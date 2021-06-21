@@ -6,7 +6,6 @@ import org.apache.jena.rdf.model.RDFNode;
 
 import java.io.File;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
@@ -45,11 +44,6 @@ public class Utils {
             }
         }
         return true;
-    }
-
-    public static String pathFromUri(String uri) {
-        // TODO doesn't work with multiple "/"s
-        return URI.create(uri).getPath().substring(1);
     }
 
     public static String getTimestamp() {
