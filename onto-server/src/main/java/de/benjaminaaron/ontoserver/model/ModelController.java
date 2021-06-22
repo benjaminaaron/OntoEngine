@@ -1,10 +1,10 @@
 package de.benjaminaaron.ontoserver.model;
 
+import de.benjaminaaron.ontoserver.model.MetaHandler.StatementOrigin;
 import de.benjaminaaron.ontoserver.model.graph.Graph;
 import de.benjaminaaron.ontoserver.routing.websocket.WebSocketRouting;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementMessage;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementResponse;
-import org.apache.jena.graph.Node;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.tdb.TDBFactory;
@@ -39,6 +39,7 @@ public class ModelController {
     private WebSocketRouting router;
     private Model mainModel, metaModel;
     private Graph graph;
+    private MetaHandler metaHandler;
 
     @Value("${uri.default.namespace}")
     public void setUriDefaultNamespace(String ns) {
@@ -55,6 +56,7 @@ public class ModelController {
         Dataset dataset = TDBFactory.createDataset(TBD_DIR.toString()) ;
         mainModel = dataset.getNamedModel(MAIN_MODEL_NAME);
         metaModel = dataset.getNamedModel(META_MODEL_NAME);
+        metaHandler = new MetaHandler(mainModel, metaModel);
         graph = new Graph(mainModel);
         printStatements();
     }
@@ -62,6 +64,7 @@ public class ModelController {
     @PreDestroy
     private void close() {
         mainModel.close();
+        metaModel.close();
     }
 
     public AddStatementResponse addStatement(AddStatementMessage statementMsg) {
@@ -78,17 +81,12 @@ public class ModelController {
         if (mainModel.contains(statement)) {
             return response;
         }
-        response.setStatementAdded(true);
-        response.setSubjectIsNew(!mainModel.getGraph().contains(sub.asNode(), Node.ANY, Node.ANY));
-        response.setPredicateIsNew(!mainModel.getGraph().contains(Node.ANY, pred.asNode(), Node.ANY));
-        response.setObjectIsNew(!mainModel.getGraph().contains(Node.ANY, Node.ANY, obj.asNode()));
-        addStatement(statement);
-        // CompletableFuture.runAsync(() -> func());
+        addStatement(statement, StatementOrigin.ADD, "client", response);
         return response;
     }
 
-    public void addStatement(Statement statement) {
-        logger.info("Statement added: " + statement.getSubject() + ", " + statement.getPredicate() + ", " + statement.getObject());
+    public void addStatement(Statement statement, StatementOrigin origin, String details, AddStatementResponse response) {
+        metaHandler.logAddStatement(statement, origin, details, response);
         mainModel.add(statement);
         graph.importStatement(statement);
     }
