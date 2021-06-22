@@ -42,7 +42,7 @@ public class Exporter {
 
     public void exportRDF() {
         try(FileOutputStream fos = new FileOutputStream(getExportFile(EXPORT_DIRECTORY, "model", "rdf"))) {
-            modelController.getModel().write(fos, "RDF/XML");
+            modelController.getMainModel().write(fos, "RDF/XML");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -78,10 +78,10 @@ public class Exporter {
         }
         http.disconnect();
 
-        Model model = modelController.getModel();
+        Model mainModel = modelController.getMainModel();
         try (RDFConnection conn = RDFConnectionFactory.connect(GRAPHDB_INSERT_URL.replace("<repository>", GRAPHDB_DEFAULT_REPOSITORY))) {
             Txn.executeWrite(conn, () -> {
-                StmtIterator iterator = model.listStatements();
+                StmtIterator iterator = mainModel.listStatements();
                 while (iterator.hasNext()) {
                     Statement statement = iterator.nextStatement();
                     String sUri = statement.getSubject().getURI();

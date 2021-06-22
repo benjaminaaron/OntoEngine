@@ -31,9 +31,13 @@ public class ModelController {
 
     @Value("${jena.tdb.directory}")
     private Path TBD_DIR;
+    @Value("${jena.tdb.model.main.name}")
+    private String MAIN_MODEL_NAME;
+    @Value("${jena.tdb.model.meta.name}")
+    private String META_MODEL_NAME;
     @Autowired
     private WebSocketRouting router;
-    private Model model;
+    private Model mainModel, metaModel;
     private Graph graph;
 
     @Value("${uri.default.namespace}")
@@ -49,34 +53,35 @@ public class ModelController {
     @PostConstruct
     private void init() {
         Dataset dataset = TDBFactory.createDataset(TBD_DIR.toString()) ;
-        model = dataset.getDefaultModel();
-        graph = new Graph(model);
+        mainModel = dataset.getNamedModel(MAIN_MODEL_NAME);
+        metaModel = dataset.getNamedModel(META_MODEL_NAME);
+        graph = new Graph(mainModel);
         printStatements();
     }
 
     @PreDestroy
     private void close() {
-        model.close();
+        mainModel.close();
     }
 
     public AddStatementResponse addStatement(AddStatementMessage statementMsg) {
-        Resource sub = model.createResource(ensureUri(statementMsg.getSubject()));
-        Property pred = model.createProperty(ensureUri(statementMsg.getPredicate()));
+        Resource sub = mainModel.createResource(ensureUri(statementMsg.getSubject()));
+        Property pred = mainModel.createProperty(ensureUri(statementMsg.getPredicate()));
         RDFNode obj;
         if (statementMsg.isObjectIsLiteral()) {
-            obj = model.createTypedLiteral(detectLiteralType(statementMsg.getObject()));
+            obj = mainModel.createTypedLiteral(detectLiteralType(statementMsg.getObject()));
         } else {
-            obj = model.createResource(ensureUri(statementMsg.getObject()));
+            obj = mainModel.createResource(ensureUri(statementMsg.getObject()));
         }
         Statement statement = ResourceFactory.createStatement(sub, pred, obj);
         AddStatementResponse response = new AddStatementResponse();
-        if (model.contains(statement)) {
+        if (mainModel.contains(statement)) {
             return response;
         }
         response.setStatementAdded(true);
-        response.setSubjectIsNew(!model.getGraph().contains(sub.asNode(), Node.ANY, Node.ANY));
-        response.setPredicateIsNew(!model.getGraph().contains(Node.ANY, pred.asNode(), Node.ANY));
-        response.setObjectIsNew(!model.getGraph().contains(Node.ANY, Node.ANY, obj.asNode()));
+        response.setSubjectIsNew(!mainModel.getGraph().contains(sub.asNode(), Node.ANY, Node.ANY));
+        response.setPredicateIsNew(!mainModel.getGraph().contains(Node.ANY, pred.asNode(), Node.ANY));
+        response.setObjectIsNew(!mainModel.getGraph().contains(Node.ANY, Node.ANY, obj.asNode()));
         addStatement(statement);
         // CompletableFuture.runAsync(() -> func());
         return response;
@@ -84,7 +89,7 @@ public class ModelController {
 
     public void addStatement(Statement statement) {
         logger.info("Statement added: " + statement.getSubject() + ", " + statement.getPredicate() + ", " + statement.getObject());
-        model.add(statement);
+        mainModel.add(statement);
         graph.importStatement(statement);
     }
 
@@ -92,7 +97,7 @@ public class ModelController {
         List<Statement> deletionList = new ArrayList<>();
         List<Statement> insertionList = new ArrayList<>();
         int replaceCount = 0;
-        StmtIterator iter = model.listStatements();
+        StmtIterator iter = mainModel.listStatements();
         while (iter.hasNext()) {
             Statement statement = iter.nextStatement();
             boolean replaceSubject = from.contains(statement.getSubject().getURI());
@@ -100,21 +105,21 @@ public class ModelController {
             boolean replaceObject = statement.getObject().isResource() && from.contains(statement.getObject().asResource().getURI());
             if (replaceSubject || replacePredicate || replaceObject) {
                 deletionList.add(statement);
-                Resource sub = replaceSubject ? model.createResource(to) : statement.getSubject();
-                Property pred = replacePredicate ? model.createProperty(to) : statement.getPredicate();
-                RDFNode obj = replaceObject ? model.createResource(to) : statement.getObject();
+                Resource sub = replaceSubject ? mainModel.createResource(to) : statement.getSubject();
+                Property pred = replacePredicate ? mainModel.createProperty(to) : statement.getPredicate();
+                RDFNode obj = replaceObject ? mainModel.createResource(to) : statement.getObject();
                 insertionList.add(ResourceFactory.createStatement(sub, pred, obj));
                 replaceCount += (replaceSubject ? 1 : 0) + (replacePredicate ? 1 : 0) + (replaceObject ? 1 : 0);
             }
         }
         assert deletionList.size() == insertionList.size();
-        model.remove(deletionList);
-        model.add(insertionList);
+        mainModel.remove(deletionList);
+        mainModel.add(insertionList);
         router.sendMessage(replaceCount + " URIs in " + insertionList.size() + " statements replaced");
     }
 
-    public Model getModel() {
-        return model;
+    public Model getMainModel() {
+        return mainModel;
     }
 
     public Graph getGraph() {
@@ -122,6 +127,6 @@ public class ModelController {
     }
 
     public void printStatements() {
-        model.listStatements().toList().forEach(System.out::println);
+        mainModel.listStatements().toList().forEach(System.out::println);
     }
 }

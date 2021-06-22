@@ -38,7 +38,7 @@ public class SuggestionEngine {
     }
 
     public void mergeSuggestionsJob() {
-        MergeSuggestionsJob job = new MergeSuggestionsJob(modelController.getModel());
+        MergeSuggestionsJob job = new MergeSuggestionsJob(modelController.getMainModel());
         logger.info("Starting " + job.getJobName());
         job.addTask(new CaseSensitivityTask());
         List<Suggestion> list = job.execute();
