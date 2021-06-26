@@ -53,7 +53,11 @@ public abstract class BaseRouting {
             case "export":
                 String arg0 = args.get(0).toLowerCase();
                 if (arg0.equals("rdf")) {
-                    exporter.exportRDF();
+                    if (args.size() > 1 && args.get(1).equalsIgnoreCase("meta")) {
+                        exporter.exportRDF("meta");
+                    } else {
+                        exporter.exportRDF("main");
+                    }
                 }
                 if (arg0.equals("graphml")) {
                     exporter.exportGraphml(args.size() >= 2 && args.get(1).equalsIgnoreCase("full"));

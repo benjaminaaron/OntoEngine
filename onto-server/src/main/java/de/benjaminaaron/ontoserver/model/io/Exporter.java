@@ -40,9 +40,21 @@ public class Exporter {
     @Autowired
     private ModelController modelController;
 
-    public void exportRDF() {
-        try(FileOutputStream fos = new FileOutputStream(getExportFile(EXPORT_DIRECTORY, "model", "rdf"))) {
-            modelController.getMainModel().write(fos, "RDF/XML");
+    public void exportRDF(String modelName) {
+        Model model = null;
+        String extension = "rdf";
+        switch (modelName) {
+            case "main":
+                model = modelController.getMainModel();
+                break;
+            case "meta":
+                model = modelController.getMetaHandler().getMetaDataModel();
+                extension = "owl";
+                break;
+        }
+        try(FileOutputStream fos = new FileOutputStream(getExportFile(EXPORT_DIRECTORY, modelName, extension))) {
+            assert model != null;
+            model.write(fos, "RDF/XML");
         } catch (IOException e) {
             e.printStackTrace();
         }

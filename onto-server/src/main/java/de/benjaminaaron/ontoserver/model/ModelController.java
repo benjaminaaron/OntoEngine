@@ -131,6 +131,10 @@ public class ModelController {
         return mainModel;
     }
 
+    public MetaHandler getMetaHandler() {
+        return metaHandler;
+    }
+
     public Graph getGraph() {
         return graph;
     }
