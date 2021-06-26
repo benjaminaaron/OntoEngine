@@ -11,20 +11,22 @@ import org.jgrapht.nio.graphml.GraphMLExporter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Graph {
 
     private final DirectedMultigraphWithSelfLoops<Node, Edge> graph;
-    private final Map<RDFNode, Node> nodesMap = new HashMap<>();
+    private final Map<RDFNode, Node> nodes = new HashMap<>();
+    private final Map<Property, Edge> edges = new HashMap<>();
+    private final Model mainModel;
 
     // integrate more tightly with the Jena Graph?
     // https://github.com/SmartDataAnalytics/SubgraphIsomorphismIndex/blob/master/jena-jgrapht-bindings/src/main/java/org/aksw/commons/jena/jgrapht/PseudoGraphJenaGraph.java
-    public Graph(Model model) {
+    public Graph(Model mainModel) {
+        this.mainModel = mainModel;
         graph = new DirectedMultigraphWithSelfLoops<>(Edge.class);
-        model.listStatements().toList().forEach(this::importStatement);
+        mainModel.listStatements().toList().forEach(this::importStatement);
     }
 
     public void importStatement(Statement statement) {
@@ -32,17 +34,62 @@ public class Graph {
         Property predicate = statement.getPredicate();
         RDFNode object = statement.getObject();
         Edge edge = graph.addEdge(getOrAdd(subject), getOrAdd(object));
-        edge.setProperty(predicate);
+        edge.property = predicate;
+        edges.put(predicate, edge);
     }
 
     private Node getOrAdd(RDFNode rdfNode) {
-        if (nodesMap.containsKey(rdfNode)) {
-            return nodesMap.get(rdfNode);
+        if (nodes.containsKey(rdfNode)) {
+            return nodes.get(rdfNode);
         }
         Node node = new Node(rdfNode);
-        nodesMap.put(rdfNode, node);
+        nodes.put(rdfNode, node);
         graph.addVertex(node);
         return node;
+    }
+
+    public void replaceUris(Set<String> from, String to) {
+        // combine more logic with ModelController.replaceUris() ?
+        List<RDFNode> nodesToBeChanged = nodes.keySet().stream().filter(rdfNode ->
+                !rdfNode.isLiteral() && from.contains(rdfNode.asResource().getURI())).collect(Collectors.toList());
+        if (!nodesToBeChanged.isEmpty()) {
+            Node toNode = getOrAdd(mainModel.createResource(to));
+            for (RDFNode fromRdfNode : nodesToBeChanged) {
+                Node fromNode = nodes.get(fromRdfNode);
+                for (Edge oldEdge : graph.outgoingEdgesOf(fromNode)) {
+                    edges.remove(oldEdge.property);
+                    Node target = graph.getEdgeTarget(oldEdge);
+                    if (!graph.containsEdge(toNode, target)) {
+                        Edge edge = graph.addEdge(toNode, target);
+                        edge.property = oldEdge.property;
+                        edges.put(edge.property, edge);
+                    }
+                }
+                for (Edge oldEdge : graph.incomingEdgesOf(fromNode)) {
+                    edges.remove(oldEdge.property);
+                    Node source = graph.getEdgeSource(oldEdge);
+                    if (!graph.containsEdge(source, toNode)) {
+                        Edge edge = graph.addEdge(source, toNode);
+                        edge.property = oldEdge.property;
+                        edges.put(edge.property, edge);
+                    }
+                }
+                graph.removeVertex(fromNode);
+                nodes.remove(fromRdfNode);
+            }
+        }
+
+        List<Property> edgesToBeChanged = edges.keySet().stream().filter(property ->
+                from.contains(property.getURI())).collect(Collectors.toList());
+        if (!edgesToBeChanged.isEmpty()) {
+            Property toProperty = mainModel.createProperty(to);
+            for (Property oldProperty : edgesToBeChanged) {
+                Edge edge = edges.get(oldProperty);
+                edge.property = toProperty;
+                edges.remove(oldProperty);
+                edges.put(toProperty, edge);
+            }
+        }
     }
 
     public void exportGraphml(File file, boolean fullUri) {

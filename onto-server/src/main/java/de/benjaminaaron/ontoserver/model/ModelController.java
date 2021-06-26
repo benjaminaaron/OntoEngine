@@ -58,11 +58,11 @@ public class ModelController {
     private void init() {
         Dataset dataset = TDBFactory.createDataset(TBD_DIR.toString()) ;
         if (!dataset.containsNamedModel(MAIN_MODEL_NAME)) {
-            logger.info("Creating " + MAIN_MODEL_NAME + "-model in TDB location " + TBD_DIR);
+            logger.info("Creating " + MAIN_MODEL_NAME + "-model in TDB location '" + TBD_DIR + "'");
         }
         mainModel = dataset.getNamedModel(MAIN_MODEL_NAME);
         if (!dataset.containsNamedModel(META_MODEL_NAME)) {
-            logger.info("Creating " + META_MODEL_NAME + "-model in TDB location " + TBD_DIR);
+            logger.info("Creating " + META_MODEL_NAME + "-model in TDB location '" + TBD_DIR + "'");
         }
         metaModel = dataset.getNamedModel(META_MODEL_NAME);
         metaModel.setNsPrefix("meta", MetaHandler.META_NS + "#");
@@ -102,6 +102,7 @@ public class ModelController {
     }
 
     public void replaceUris(Set<String> from, String to) {
+        // simpler approach?
         List<Statement> deletionList = new ArrayList<>();
         List<Statement> insertionList = new ArrayList<>();
         int replaceCount = 0;
@@ -113,6 +114,7 @@ public class ModelController {
             boolean replaceObject = statement.getObject().isResource() && from.contains(statement.getObject().asResource().getURI());
             if (replaceSubject || replacePredicate || replaceObject) {
                 deletionList.add(statement);
+                // extract the to-resources once for all before the loop?
                 Resource sub = replaceSubject ? mainModel.createResource(to) : statement.getSubject();
                 Property pred = replacePredicate ? mainModel.createProperty(to) : statement.getPredicate();
                 RDFNode obj = replaceObject ? mainModel.createResource(to) : statement.getObject();
@@ -123,6 +125,7 @@ public class ModelController {
         assert deletionList.size() == insertionList.size();
         mainModel.remove(deletionList);
         mainModel.add(insertionList);
+        graph.replaceUris(from, to);
         metaHandler.storeUrisRenameEvent(from, to, "client");
         router.sendMessage(replaceCount + " URIs in " + insertionList.size() + " statements replaced");
     }

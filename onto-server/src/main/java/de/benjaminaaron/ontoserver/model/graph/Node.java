@@ -11,6 +11,10 @@ public class Node {
         this.rdfNode = rdfNode;
     }
 
+    public boolean isLiteralNode() {
+        return rdfNode.isLiteral();
+    }
+
     public String getLocalNameFromUri() {
         if (rdfNode.isResource()) {
             return rdfNode.asResource().getLocalName();
