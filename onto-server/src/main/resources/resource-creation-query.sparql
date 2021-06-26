@@ -1,0 +1,18 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX meta: <http://onto.de/meta.owl#>
+
+SELECT ?timestamp ?entity WHERE {
+	?event rdf:type meta:NewTripleEvent .
+    ?event meta:hasTimestamp ?timestamp .
+    ?event meta:hasTriple ?triple .
+    {
+        ?triple meta:subjectUri ?entity .
+        ?triple meta:subjectIsNew true .
+    } UNION {
+        ?triple meta:predicateUri ?entity .
+    	?triple meta:predicateIsNew true .
+    } UNION {
+        ?triple meta:objectUri ?entity .
+    	?triple meta:objectIsNew true .
+    }
+} ORDER BY ASC(?timestamp)
