@@ -86,6 +86,16 @@ public class Utils {
         return "\"" + getValueFromLiteral(literal) + "\"^^<" + literal.getDatatypeURI() + ">";
     }
 
+    public static String getValueFromRdfNode(RDFNode rdfNode, boolean fullUri) {
+        if (rdfNode.isResource()) {
+            return fullUri ? rdfNode.asResource().getURI() : rdfNode.asResource().getLocalName();
+        }
+        if (rdfNode.isLiteral()) {
+            return fullUri ? rdfNodeToGraphDatabaseEntryString(rdfNode) : getValueFromLiteral(rdfNode.asLiteral());
+        }
+        return rdfNode.toString();
+    }
+
     public static String setToCompactArrayString(Set<String> set) {
         StringBuilder sb = new StringBuilder();
         for (String entry : set) {

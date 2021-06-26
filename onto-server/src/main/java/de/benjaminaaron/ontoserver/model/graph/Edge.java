@@ -6,12 +6,7 @@ public class Edge {
 
     Property property;
 
-    public String getLocalNameFromUri() {
-        return property.getLocalName();
-    }
-
-    @Override
-    public String toString() {
-        return property == null ? "no-property" : property.toString();
+    public Edge(Property property) {
+        this.property = property;
     }
 }
