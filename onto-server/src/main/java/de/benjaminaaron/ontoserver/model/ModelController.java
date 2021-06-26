@@ -124,6 +124,7 @@ public class ModelController {
         assert deletionList.size() == insertionList.size();
         mainModel.remove(deletionList);
         mainModel.add(insertionList);
+        metaHandler.storeUrisRenameEvent(from, to, "client");
         router.sendMessage(replaceCount + " URIs in " + insertionList.size() + " statements replaced");
     }
 

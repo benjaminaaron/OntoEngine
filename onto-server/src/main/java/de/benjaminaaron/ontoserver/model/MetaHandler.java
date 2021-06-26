@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.nio.file.Path;
 import java.time.Instant;
 import java.util.Objects;
+import java.util.Set;
 
 public class MetaHandler {
 
@@ -99,7 +100,15 @@ public class MetaHandler {
         newTripleEvent.addLiteral(hasOrigin, origin.toString());
         newTripleEvent.addLiteral(hasInfo, info);
         newTripleEvent.addProperty(hasTriple, triple);
-        newTripleEvent.addProperty(hasTimestamp, String.valueOf(Instant.now()), XSDDatatype.XSDdateTime);
+        addTimestamp(newTripleEvent);
+    }
+
+    public void storeUrisRenameEvent(Set<String> from, String to, String info) {
+        Individual urisRenameEvent = createIndividual(UrisRenameEvent);
+        addTimestamp(urisRenameEvent);
+        urisRenameEvent.addLiteral(hasInfo, info);
+        from.forEach(uri -> urisRenameEvent.addLiteral(renamedFrom, uri));
+        urisRenameEvent.addLiteral(renamedTo, to);
     }
 
     private Individual createIndividual(OntClass ontClass) {
@@ -107,6 +116,10 @@ public class MetaHandler {
         Individual individual = metaDataModel.createIndividual(ontClass.getURI() + id, ontClass);
         individual.addRDFType(OWL2.NamedIndividual);
         return individual;
+    }
+
+    private void addTimestamp(Individual individual) {
+        individual.addProperty(hasTimestamp, String.valueOf(Instant.now()), XSDDatatype.XSDdateTime);
     }
 
     public OntModel getMetaDataModel() {
