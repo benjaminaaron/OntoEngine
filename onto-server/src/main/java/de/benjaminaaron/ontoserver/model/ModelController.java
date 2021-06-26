@@ -51,12 +51,23 @@ public class ModelController {
         Utils.DEFAULT_URI_SEPARATOR = sep;
     }
 
+    @Value("classpath:meta.owl")
+    private Path META_OWL;
+
     @PostConstruct
     private void init() {
         Dataset dataset = TDBFactory.createDataset(TBD_DIR.toString()) ;
+        if (!dataset.containsNamedModel(MAIN_MODEL_NAME)) {
+            logger.info("Creating " + MAIN_MODEL_NAME + "-model in TDB location " + TBD_DIR);
+        }
         mainModel = dataset.getNamedModel(MAIN_MODEL_NAME);
+        boolean metaModelInitialized = dataset.containsNamedModel(META_MODEL_NAME);
         metaModel = dataset.getNamedModel(META_MODEL_NAME);
-        metaHandler = new MetaHandler(mainModel, metaModel);
+        if (!metaModelInitialized) {
+            metaModel.setNsPrefix("meta", MetaHandler.META_NS + "#");
+            logger.info("Creating " + META_MODEL_NAME + "-model in TDB location " + TBD_DIR);
+        }
+        metaHandler = new MetaHandler(mainModel, metaModel, META_OWL);
         graph = new Graph(mainModel);
         printStatements();
     }
@@ -85,8 +96,8 @@ public class ModelController {
         return response;
     }
 
-    public void addStatement(Statement statement, StatementOrigin origin, String details, AddStatementResponse response) {
-        metaHandler.logAddStatement(statement, origin, details, response);
+    public void addStatement(Statement statement, StatementOrigin origin, String info, AddStatementResponse response) {
+        metaHandler.storeNewTripleEvent(statement, origin, info, response);
         mainModel.add(statement);
         graph.importStatement(statement);
     }
