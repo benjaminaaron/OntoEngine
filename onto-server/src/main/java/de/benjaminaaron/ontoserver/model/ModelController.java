@@ -61,12 +61,11 @@ public class ModelController {
             logger.info("Creating " + MAIN_MODEL_NAME + "-model in TDB location " + TBD_DIR);
         }
         mainModel = dataset.getNamedModel(MAIN_MODEL_NAME);
-        boolean metaModelInitialized = dataset.containsNamedModel(META_MODEL_NAME);
-        metaModel = dataset.getNamedModel(META_MODEL_NAME);
-        if (!metaModelInitialized) {
-            metaModel.setNsPrefix("meta", MetaHandler.META_NS + "#");
+        if (!dataset.containsNamedModel(META_MODEL_NAME)) {
             logger.info("Creating " + META_MODEL_NAME + "-model in TDB location " + TBD_DIR);
         }
+        metaModel = dataset.getNamedModel(META_MODEL_NAME);
+        metaModel.setNsPrefix("meta", MetaHandler.META_NS + "#");
         metaHandler = new MetaHandler(mainModel, metaModel, META_OWL);
         graph = new Graph(mainModel);
         printStatements();
