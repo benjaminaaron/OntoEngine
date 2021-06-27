@@ -42,6 +42,7 @@ public class Graph {
                 .filter(vertex -> from.contains(vertex.asResource().getURI())).collect(Collectors.toList());
         if (!verticesToBeChanged.isEmpty()) {
             RDFNode toVertex = mainModel.createResource(to);
+            graph.addVertex(toVertex);
             for (RDFNode fromVertex : verticesToBeChanged) {
                 graph.outgoingEdgesOf(fromVertex).forEach(oldEdge ->
                         addEdgeIfAbsent(toVertex, graph.getEdgeTarget(oldEdge), oldEdge.property));
