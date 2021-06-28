@@ -45,7 +45,20 @@ const onEnter = (element, func) => {
             func();
         }
     });
-}
+};
+
+let graph;
+let nodes = [{id: 0}, {id: 1}, {id: 2}];
+let edges = [{source: 0, target: 1, label: "edge1"}, {source: 0, target:2, label: "edge2"}];
+
+const buildGraph = () => {
+    graph = ForceGraph()(document.getElementById('graph'))
+        .graphData({ nodes: nodes, links: edges })
+        .nodeLabel('id')
+        .linkLabel('label')
+        .linkDirectionalArrowLength(6)
+        .linkDirectionalArrowRelPos(1);
+};
 
 $(() => {
     connect();
@@ -56,4 +69,5 @@ $(() => {
     onEnter("objectTextField", addStatement);
     onEnter("commandTextField", sendCommand);
     $("#subjectTextField").focus();
+    buildGraph();
 });

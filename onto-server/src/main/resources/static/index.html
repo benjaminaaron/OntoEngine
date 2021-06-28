@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>OntoEngine Browser Client</title>
     <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="/app.css" rel="stylesheet">
@@ -8,19 +9,19 @@
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
     <script src="/app.js"></script>
+    <script src="//unpkg.com/force-graph"></script>
 </head>
 <body>
     <div style="padding: 40px">
-        <input type="text" id="subjectTextField" size="38">
-        <input type="text" id="predicateTextField" size="38">
-        <input type="text" id="objectTextField" size="38">
+        <input type="text" id="subjectTextField" size="20">
+        <input type="text" id="predicateTextField" size="20">
+        <input type="text" id="objectTextField" size="20">
         <input type="checkbox" id="literalCheckBox">
-        <br/><br/>
         <button id="addStatementBtn" type="submit">Add statement</button>
-        <br/><br/><br/>
-        <input type="text" id="commandTextField" size="120">
         <br/><br/>
+        <input type="text" id="commandTextField" size="74">
         <button id="sendCommandBtn" type="submit">Send command</button>
     </div>
+    <div id="graph"></div>
 </body>
 </html>
