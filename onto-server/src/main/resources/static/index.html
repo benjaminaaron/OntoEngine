@@ -10,6 +10,7 @@
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
     <script src="/app.js"></script>
     <script src="//unpkg.com/force-graph"></script>
+    <script src="//unpkg.com/3d-force-graph"></script>
 </head>
 <body>
     <div style="padding: 40px">
@@ -21,6 +22,13 @@
         <br/><br/>
         <input type="text" id="commandTextField" size="74">
         <button id="sendCommandBtn" type="submit">Send command</button>
+        <br/><br/>
+        <input type="radio" id="visu-none" name="visu" value="None" onChange="visuChange(this.value)">
+        <label for="visu-none">None</label>
+        <input type="radio" id="visu-2d" name="visu" value="2D" onChange="visuChange(this.value)">
+        <label for="visu-2d">2D</label>
+        <input type="radio" id="visu-3d" name="visu" value="3D" onChange="visuChange(this.value)">
+        <label for="visu-3d">3D</label>
     </div>
     <div id="graph"></div>
 </body>

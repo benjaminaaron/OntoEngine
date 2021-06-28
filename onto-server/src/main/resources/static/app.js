@@ -51,13 +51,30 @@ let graph;
 let nodes = [{id: 0}, {id: 1}, {id: 2}];
 let edges = [{source: 0, target: 1, label: "edge1"}, {source: 0, target:2, label: "edge2"}];
 
-const buildGraph = () => {
-    graph = ForceGraph()(document.getElementById('graph'))
-        .graphData({ nodes: nodes, links: edges })
+const buildGraph = visuType => {
+    let graphDiv = document.getElementById("graph");
+    while (graphDiv.firstChild) {
+        graphDiv.removeChild(graphDiv.lastChild);
+    }
+    switch (visuType) {
+        case "None":
+            return;
+        case "2D":
+            graph = ForceGraph()(graphDiv);
+            break;
+        case "3D":
+            graph = ForceGraph3D()(graphDiv);
+            break;
+    }
+    graph.graphData({ nodes: nodes, links: edges })
         .nodeLabel('id')
         .linkLabel('label')
         .linkDirectionalArrowLength(6)
         .linkDirectionalArrowRelPos(1);
+};
+
+const visuChange = visuType => {
+    buildGraph(visuType);
 };
 
 $(() => {
@@ -69,5 +86,6 @@ $(() => {
     onEnter("objectTextField", addStatement);
     onEnter("commandTextField", sendCommand);
     $("#subjectTextField").focus();
-    buildGraph();
+    $("#visu-2d").prop("checked", true);
+    buildGraph("2D");
 });
