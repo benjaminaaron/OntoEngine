@@ -1,8 +1,12 @@
 package de.benjaminaaron.ontoserver.routing.websocket;
 
+import de.benjaminaaron.ontoserver.model.ModelController;
+import de.benjaminaaron.ontoserver.model.Utils;
 import de.benjaminaaron.ontoserver.routing.BaseRouting;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.*;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.suggestion.SuggestionBaseMessage;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +16,9 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Controller
 public class WebSocketRouting extends BaseRouting {
 
@@ -19,6 +26,9 @@ public class WebSocketRouting extends BaseRouting {
 
     @Autowired
     private SimpMessagingTemplate template;
+
+    @Autowired
+    private ModelController modelController;
 
     @SubscribeMapping("/subscribe")
     public ServerToClientMessage oneTimeMessageUponSubscribe() {
@@ -67,5 +77,35 @@ public class WebSocketRouting extends BaseRouting {
         ServerToClientMessage message = new ServerToClientMessage();
         message.setMessage(str);
         this.template.convertAndSend("/topic/serverBroadcasting", message);
+    }
+
+    // Broadcasting of initial and new triples
+
+    @SubscribeMapping("/initial-triples")
+    public InitialTriplesMessage initialTriples() {
+        logger.info("Transferring initial-triples");
+        InitialTriplesMessage initialTriplesMessage = new InitialTriplesMessage();
+        List<AddStatementMessage> triples = new ArrayList<>();
+        StmtIterator iter = modelController.getMainModel().listStatements();
+        while (iter.hasNext()) {
+            Statement statement = iter.nextStatement();
+            AddStatementMessage triple = new AddStatementMessage();
+            triple.setSubject(statement.getSubject().getURI());
+            triple.setPredicate(statement.getPredicate().getURI());
+            if (statement.getObject().isLiteral()) {
+                triple.setObject(Utils.getValueFromLiteral(statement.getObject().asLiteral()));
+                triple.setObjectIsLiteral(true);
+            } else {
+                triple.setObject(statement.getObject().asResource().getURI());
+                triple.setObjectIsLiteral(false);
+            }
+            triples.add(triple);
+        }
+        initialTriplesMessage.setTriples(triples);
+        return initialTriplesMessage;
+    }
+
+    public void sendNewTripleEvent(AddStatementMessage statementMsg) {
+        this.template.convertAndSend("/topic/new-triple-event", statementMsg);
     }
 }

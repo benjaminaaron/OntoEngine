@@ -17,6 +17,13 @@ const connect = () => {
         stompClient.subscribe('/topic/serverSuggestions', messageObj => {
             console.log("serverSuggestions from server: ", JSON.parse(messageObj.body));
         });
+        stompClient.subscribe('/app/initial-triples', messageObj => {
+            addInitialTriplesToGraph(JSON.parse(messageObj.body));
+        });
+        stompClient.subscribe('/topic/new-triple-event', messageObj => {
+            let json = JSON.parse(messageObj.body);
+            addNewTripleToGraph(json.subject, json.predicate, json.object, json.objectIsLiteral);
+        });
     });
     // stompClient.disconnect();
 };
@@ -71,6 +78,14 @@ const buildGraph = visuType => {
         .linkLabel('label')
         .linkDirectionalArrowLength(6)
         .linkDirectionalArrowRelPos(1);
+};
+
+const addInitialTriplesToGraph = messageObj => {
+    console.log("addInitialTriplesToGraph", messageObj);
+};
+
+const addNewTripleToGraph = (subject, predicate, object, objectIsLiteral) => {
+    console.log("addNewTripleToGraph", subject, predicate, object, objectIsLiteral);
 };
 
 const visuChange = visuType => {

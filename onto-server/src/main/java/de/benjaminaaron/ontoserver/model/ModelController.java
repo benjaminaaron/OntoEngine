@@ -92,6 +92,7 @@ public class ModelController {
             return response;
         }
         addStatement(statement, StatementOrigin.ADD, "client", response);
+        router.sendNewTripleEvent(statementMsg);
         return response;
     }
 
