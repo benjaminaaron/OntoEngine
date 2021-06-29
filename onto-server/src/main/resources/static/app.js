@@ -18,11 +18,13 @@ const connect = () => {
             console.log("serverSuggestions from server: ", JSON.parse(messageObj.body));
         });
         stompClient.subscribe('/app/initial-triples', messageObj => {
-            addInitialTriplesToGraph(JSON.parse(messageObj.body));
+            for (let triple of JSON.parse(messageObj.body).triples) {
+                addNewTripleToGraph(triple.subjectUri, triple.predicateUri, triple.objectUriOrLiteralValue, triple.objectIsLiteral);
+            }
         });
         stompClient.subscribe('/topic/new-triple-event', messageObj => {
             let json = JSON.parse(messageObj.body);
-            addNewTripleToGraph(json.subject, json.predicate, json.object, json.objectIsLiteral);
+            addNewTripleToGraph(json.subjectUri, json.predicateUri, json.objectUriOrLiteralValue, json.objectIsLiteral);
         });
     });
     // stompClient.disconnect();
@@ -55,8 +57,6 @@ const onEnter = (element, func) => {
 };
 
 let graph;
-let nodes = [{id: 0}, {id: 1}, {id: 2}];
-let edges = [{source: 0, target: 1, label: "edge1"}, {source: 0, target:2, label: "edge2"}];
 
 const buildGraph = visuType => {
     let graphDiv = document.getElementById("graph");
@@ -73,19 +73,39 @@ const buildGraph = visuType => {
             graph = ForceGraph3D()(graphDiv);
             break;
     }
-    graph.graphData({ nodes: nodes, links: edges })
+    graph.graphData({ nodes: [], links: [] })
         .nodeLabel('id')
         .linkLabel('label')
         .linkDirectionalArrowLength(6)
         .linkDirectionalArrowRelPos(1);
 };
 
-const addInitialTriplesToGraph = messageObj => {
-    console.log("addInitialTriplesToGraph", messageObj);
-};
+let nodesMap = {};
+let edgesMap = {};
 
 const addNewTripleToGraph = (subject, predicate, object, objectIsLiteral) => {
     console.log("addNewTripleToGraph", subject, predicate, object, objectIsLiteral);
+    if (!nodesMap[subject]) {
+        nodesMap[subject] = {id: subject};
+    }
+    let objectId = object;
+    if (objectIsLiteral) {
+        objectId =  appendRandomStr(object);
+        nodesMap[objectId] = {id: objectId};
+    } else if (!nodesMap[object]) {
+        nodesMap[object] = {id: object};
+    }
+    edgesMap[appendRandomStr(predicate)] = {source: subject, target: objectId, label: predicate};
+    let nodes = [];
+    let edges = [];
+    Object.keys(nodesMap).forEach(key => nodes.push(nodesMap[key]));
+    Object.keys(edgesMap).forEach(key => edges.push(edgesMap[key]));
+    // TODO build initial load and add them all at once instead of updating the graph for each
+    graph.graphData({ nodes: nodes, links: edges });
+};
+
+const appendRandomStr = str => {
+    return str + "_" + Math.random().toString(36).substr(2, 5);
 };
 
 const visuChange = visuType => {
