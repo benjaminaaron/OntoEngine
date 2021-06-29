@@ -5,7 +5,6 @@ import de.benjaminaaron.ontoserver.model.graph.Graph;
 import de.benjaminaaron.ontoserver.routing.websocket.WebSocketRouting;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementMessage;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementResponse;
-import org.apache.jena.fuseki.main.FusekiServer;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.tdb.TDBFactory;
@@ -41,7 +40,6 @@ public class ModelController {
     private Model mainModel, metaModel;
     private Graph graph;
     private MetaHandler metaHandler;
-    private FusekiServer fusekiServer;
 
     @Value("${uri.default.namespace}")
     public void setUriDefaultNamespace(String ns) {
@@ -59,7 +57,6 @@ public class ModelController {
     @PostConstruct
     private void init() {
         Dataset dataset = TDBFactory.createDataset(TBD_DIR.toString()) ;
-
         if (!dataset.containsNamedModel(MAIN_MODEL_NAME)) {
             logger.info("Creating " + MAIN_MODEL_NAME + "-model in TDB location '" + TBD_DIR + "'");
         }
@@ -71,19 +68,6 @@ public class ModelController {
         metaModel.setNsPrefix("meta", MetaHandler.META_NS + "#");
         metaHandler = new MetaHandler(mainModel, metaModel, META_OWL);
         graph = new Graph(mainModel);
-
-        // Dataset dataset = DatasetFactory.createTxnMem() ;
-        dataset.getDefaultModel().add(mainModel);
-        fusekiServer = FusekiServer.create()
-                .add("/dataset", dataset)
-                .build();
-        fusekiServer.start();
-        // SELECT * WHERE {
-        //    SERVICE <http://localhost:3330/dataset/query> {
-        //        ?s ?p ?o .
-        //    }
-        // }
-
         printStatements();
     }
 
@@ -91,7 +75,6 @@ public class ModelController {
     private void close() {
         mainModel.close();
         metaModel.close();
-        fusekiServer.stop();
     }
 
     public AddStatementResponse addStatement(AddStatementMessage statementMsg) {
