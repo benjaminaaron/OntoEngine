@@ -21,10 +21,12 @@ const connect = () => {
             for (let triple of JSON.parse(messageObj.body).triples) {
                 addNewTripleToGraph(triple.subjectUri, triple.predicateUri, triple.objectUriOrLiteralValue, triple.objectIsLiteral);
             }
+            updateGraph();
         });
         stompClient.subscribe('/topic/new-triple-event', messageObj => {
             let json = JSON.parse(messageObj.body);
             addNewTripleToGraph(json.subjectUri, json.predicateUri, json.objectUriOrLiteralValue, json.objectIsLiteral);
+            updateGraph();
         });
     });
     // stompClient.disconnect();
@@ -78,10 +80,19 @@ const buildGraph = visuType => {
         .linkLabel('label')
         .linkDirectionalArrowLength(6)
         .linkDirectionalArrowRelPos(1);
+    updateGraph();
 };
 
 let nodesMap = {};
 let edgesMap = {};
+
+const updateGraph = () => {
+    let nodes = [];
+    let edges = [];
+    Object.keys(nodesMap).forEach(key => nodes.push(nodesMap[key]));
+    Object.keys(edgesMap).forEach(key => edges.push(edgesMap[key]));
+    graph.graphData({ nodes: nodes, links: edges });
+};
 
 const addNewTripleToGraph = (subject, predicate, object, objectIsLiteral) => {
     console.log("addNewTripleToGraph", subject, predicate, object, objectIsLiteral);
@@ -96,12 +107,6 @@ const addNewTripleToGraph = (subject, predicate, object, objectIsLiteral) => {
         nodesMap[object] = {id: object};
     }
     edgesMap[appendRandomStr(predicate)] = {source: subject, target: objectId, label: predicate};
-    let nodes = [];
-    let edges = [];
-    Object.keys(nodesMap).forEach(key => nodes.push(nodesMap[key]));
-    Object.keys(edgesMap).forEach(key => edges.push(edgesMap[key]));
-    // TODO build initial load and add them all at once instead of updating the graph for each
-    graph.graphData({ nodes: nodes, links: edges });
 };
 
 const appendRandomStr = str => {
