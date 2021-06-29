@@ -1,8 +1,10 @@
 package de.benjaminaaron.ontoserver.model;
 
 import com.github.slugify.Slugify;
+import de.benjaminaaron.ontoserver.routing.websocket.messages.TripleMessage;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Statement;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -107,5 +109,19 @@ public class Utils {
 
     public static String generateRandomId() {
         return UUID.randomUUID().toString().substring(0, 8);
+    }
+
+    public static TripleMessage buildTripleMessageFromStatement(Statement statement) {
+        TripleMessage triple = new TripleMessage();
+        triple.setSubjectUri(statement.getSubject().getURI());
+        triple.setPredicateUri(statement.getPredicate().getURI());
+        if (statement.getObject().isLiteral()) {
+            triple.setObjectUriOrLiteralValue(Utils.getValueFromLiteral(statement.getObject().asLiteral()));
+            triple.setObjectIsLiteral(true);
+        } else {
+            triple.setObjectUriOrLiteralValue(statement.getObject().asResource().getURI());
+            triple.setObjectIsLiteral(false);
+        }
+        return triple;
     }
 }

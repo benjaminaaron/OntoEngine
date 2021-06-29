@@ -7,5 +7,5 @@ import java.util.List;
 
 @Data
 public class InitialTriplesMessage {
-    List<AddStatementMessage> triples = new ArrayList<>();
+    List<TripleMessage> triples = new ArrayList<>();
 }

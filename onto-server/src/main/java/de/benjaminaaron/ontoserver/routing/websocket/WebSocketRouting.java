@@ -85,27 +85,16 @@ public class WebSocketRouting extends BaseRouting {
     public InitialTriplesMessage initialTriples() {
         logger.info("Transferring initial-triples");
         InitialTriplesMessage initialTriplesMessage = new InitialTriplesMessage();
-        List<AddStatementMessage> triples = new ArrayList<>();
+        List<TripleMessage> triples = new ArrayList<>();
         StmtIterator iter = modelController.getMainModel().listStatements();
         while (iter.hasNext()) {
-            Statement statement = iter.nextStatement();
-            AddStatementMessage triple = new AddStatementMessage();
-            triple.setSubject(statement.getSubject().getURI());
-            triple.setPredicate(statement.getPredicate().getURI());
-            if (statement.getObject().isLiteral()) {
-                triple.setObject(Utils.getValueFromLiteral(statement.getObject().asLiteral()));
-                triple.setObjectIsLiteral(true);
-            } else {
-                triple.setObject(statement.getObject().asResource().getURI());
-                triple.setObjectIsLiteral(false);
-            }
-            triples.add(triple);
+            triples.add(Utils.buildTripleMessageFromStatement(iter.nextStatement()));
         }
         initialTriplesMessage.setTriples(triples);
         return initialTriplesMessage;
     }
 
-    public void sendNewTripleEvent(AddStatementMessage statementMsg) {
-        this.template.convertAndSend("/topic/new-triple-event", statementMsg);
+    public void sendNewTripleEvent(Statement statement) {
+        this.template.convertAndSend("/topic/new-triple-event", Utils.buildTripleMessageFromStatement(statement));
     }
 }
