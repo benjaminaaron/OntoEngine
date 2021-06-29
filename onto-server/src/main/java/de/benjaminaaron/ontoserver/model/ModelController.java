@@ -5,6 +5,7 @@ import de.benjaminaaron.ontoserver.model.graph.Graph;
 import de.benjaminaaron.ontoserver.routing.websocket.WebSocketRouting;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementMessage;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementResponse;
+import de.benjaminaaron.ontoserver.suggestion.VocabularyManager;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.tdb.TDBFactory;
@@ -35,11 +36,14 @@ public class ModelController {
     private String MAIN_MODEL_NAME;
     @Value("${jena.tdb.model.meta.name}")
     private String META_MODEL_NAME;
+    @Value("${jena.tdb.model.vocabulary-sources.name}")
+    private String VOCABULARY_SOURCES_MODEL_NAME;
     @Autowired
     private WebSocketRouting router;
-    private Model mainModel, metaModel;
+    private Model mainModel, metaModel, vocabularySourcesModel;
     private Graph graph;
     private MetaHandler metaHandler;
+    private VocabularyManager vocabularyManager;
 
     @Value("${uri.default.namespace}")
     public void setUriDefaultNamespace(String ns) {
@@ -56,17 +60,27 @@ public class ModelController {
 
     @PostConstruct
     private void init() {
-        Dataset dataset = TDBFactory.createDataset(TBD_DIR.toString()) ;
+        Dataset dataset = TDBFactory.createDataset(TBD_DIR.toString());
+
+        // Main Model
         if (!dataset.containsNamedModel(MAIN_MODEL_NAME)) {
             logger.info("Creating " + MAIN_MODEL_NAME + "-model in TDB location '" + TBD_DIR + "'");
         }
         mainModel = dataset.getNamedModel(MAIN_MODEL_NAME);
+        // Meta Model
         if (!dataset.containsNamedModel(META_MODEL_NAME)) {
             logger.info("Creating " + META_MODEL_NAME + "-model in TDB location '" + TBD_DIR + "'");
         }
         metaModel = dataset.getNamedModel(META_MODEL_NAME);
         metaModel.setNsPrefix("meta", MetaHandler.META_NS + "#");
         metaHandler = new MetaHandler(mainModel, metaModel, META_OWL);
+        // Vocabulary Sources Model
+        if (!dataset.containsNamedModel(VOCABULARY_SOURCES_MODEL_NAME)) {
+            logger.info("Creating " + VOCABULARY_SOURCES_MODEL_NAME + "-model in TDB location '" + TBD_DIR + "'");
+        }
+        vocabularySourcesModel = dataset.getNamedModel(VOCABULARY_SOURCES_MODEL_NAME);
+        vocabularyManager = new VocabularyManager(vocabularySourcesModel);
+
         graph = new Graph(mainModel);
         printStatements();
     }
@@ -75,6 +89,7 @@ public class ModelController {
     private void close() {
         mainModel.close();
         metaModel.close();
+        vocabularySourcesModel.close();
     }
 
     public AddStatementResponse addStatement(AddStatementMessage statementMsg) {
