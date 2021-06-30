@@ -47,8 +47,8 @@ public class SuggestionEngine {
         sendUnsentSuggestions();
     }
 
-    public void runNewStatementJob(Statement statement) {
-        VocabularySuggestionsJob job = new VocabularySuggestionsJob(modelController.getMainModel(), statement);
+    public void runNewStatementJob(Statement statement, VocabularyManager vocabularyManager) {
+        VocabularySuggestionsJob job = new VocabularySuggestionsJob(modelController.getMainModel(), statement, vocabularyManager);
         job.getFuture().whenComplete((suggestions, ex) -> suggestions.forEach(this::registerSuggestionIfNew));
         taskManager.scheduleOneTimeJobNow(job);
     }

@@ -113,7 +113,7 @@ public class ModelController {
         }
         addStatement(statement, StatementOrigin.ADD, "client", response);
         router.sendNewTripleEvent(statement);
-        suggestionEngine.runNewStatementJob(statement);
+        suggestionEngine.runNewStatementJob(statement, vocabularyManager);
         return response;
     }
 

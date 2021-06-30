@@ -124,4 +124,8 @@ public class Utils {
         }
         return triple;
     }
+
+    public enum ResourceType {
+        SUBJECT, PREDICATE, OBJECT;
+    }
 }
