@@ -13,14 +13,12 @@ public class MergeSuggestionsJob extends Job {
 
     @Override
     public List<Suggestion> execute() {
-        startTimer();
+        start();
         Map<String, UriStats> map = collect();
-
         tasks.forEach(task -> task.execute(map));
         List<Suggestion> suggestions = new ArrayList<>();
         tasks.forEach(task -> suggestions.addAll(task.getSuggestions()));
-
-        endTimer();
+        stop();
         return suggestions;
     }
 

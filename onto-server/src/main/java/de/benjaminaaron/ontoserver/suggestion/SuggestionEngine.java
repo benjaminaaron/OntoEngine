@@ -29,21 +29,19 @@ public class SuggestionEngine {
 
     @Autowired
     private ModelController modelController;
+    private TaskSchedulingManager taskManager;
 
     @SneakyThrows
     @PostConstruct
     void init() {
-        TaskSchedulingManager taskManager = new TaskSchedulingManager(this);
+        taskManager = new TaskSchedulingManager(this);
         taskManager.schedulePeriodicJob("mergeSuggestionsJob", 5, 30);
     }
 
     public void mergeSuggestionsJob() {
         MergeSuggestionsJob job = new MergeSuggestionsJob(modelController.getMainModel());
-        logger.info("Starting " + job.getJobName());
         job.addTask(new CaseSensitivityTask());
-        List<Suggestion> list = job.execute();
-        logger.info(job.getJobDurationString());
-        list.forEach(this::registerSuggestionIfNew);
+        job.execute().forEach(this::registerSuggestionIfNew);
         sendUnsentSuggestions();
     }
 
