@@ -18,9 +18,7 @@ public class VocabularySuggestionsJob extends RunnableJob {
     @Override
     public List<Suggestion> execute() {
         start();
-
-        // TODO
-
+        // this should be done in a JobTask, not here directly TODO
         stop();
         return suggestions;
     }
