@@ -16,6 +16,7 @@ public abstract class Job {
     private final Logger logger = LogManager.getLogger(Job.class);
 
     final Model model;
+    List<Suggestion> suggestions = new ArrayList<>();
     private Instant startTime;
     private Instant endTime;
 

@@ -4,7 +4,6 @@ import de.benjaminaaron.ontoserver.suggestion.Suggestion;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Statement;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class VocabularySuggestionsJob extends RunnableJob {
@@ -19,7 +18,6 @@ public class VocabularySuggestionsJob extends RunnableJob {
     @Override
     public List<Suggestion> execute() {
         start();
-        List<Suggestion> suggestions = new ArrayList<>();
 
         // TODO
 
