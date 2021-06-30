@@ -4,8 +4,11 @@ import de.benjaminaaron.ontoserver.model.ModelController;
 import de.benjaminaaron.ontoserver.model.Utils;
 import de.benjaminaaron.ontoserver.routing.websocket.WebSocketRouting;
 import de.benjaminaaron.ontoserver.suggestion.job.MergeSuggestionsJob;
+import de.benjaminaaron.ontoserver.suggestion.job.VocabularySuggestionsJob;
 import de.benjaminaaron.ontoserver.suggestion.job.task.CaseSensitivityTask;
+import de.benjaminaaron.ontoserver.suggestion.job.task.LocalVocabularyNewStatementTask;
 import lombok.SneakyThrows;
+import org.apache.jena.rdf.model.Statement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +46,13 @@ public class SuggestionEngine {
         job.addTask(new CaseSensitivityTask());
         job.execute().forEach(this::registerSuggestionIfNew);
         sendUnsentSuggestions();
+    }
+
+    public void runNewStatementJob(Statement statement) {
+        VocabularySuggestionsJob job = new VocabularySuggestionsJob(modelController.getMainModel(), statement);
+        job.addTask(new LocalVocabularyNewStatementTask());
+        job.getFuture().whenComplete((suggestions, ex) -> suggestions.forEach(this::registerSuggestionIfNew));
+        taskManager.scheduleOneTimeJobNow(job);
     }
 
     public void sendUnsentSuggestions() {

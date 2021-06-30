@@ -5,6 +5,7 @@ import de.benjaminaaron.ontoserver.model.graph.Graph;
 import de.benjaminaaron.ontoserver.routing.websocket.WebSocketRouting;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementMessage;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementResponse;
+import de.benjaminaaron.ontoserver.suggestion.SuggestionEngine;
 import de.benjaminaaron.ontoserver.suggestion.VocabularyManager;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.rdf.model.*;
@@ -38,8 +39,12 @@ public class ModelController {
     private String META_MODEL_NAME;
     @Value("${jena.tdb.model.vocabulary-sources.name}")
     private String VOCABULARY_SOURCES_MODEL_NAME;
+
     @Autowired
     private WebSocketRouting router;
+    @Autowired
+    private SuggestionEngine suggestionEngine;
+
     private Model mainModel, metaModel, vocabularySourcesModel;
     private Graph graph;
     private MetaHandler metaHandler;
@@ -108,6 +113,7 @@ public class ModelController {
         }
         addStatement(statement, StatementOrigin.ADD, "client", response);
         router.sendNewTripleEvent(statement);
+        suggestionEngine.runNewStatementJob(statement);
         return response;
     }
 

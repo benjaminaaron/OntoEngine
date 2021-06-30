@@ -25,6 +25,10 @@ public class TaskSchedulingManager extends ThreadPoolTaskScheduler {
         this.suggestionEngine = suggestionEngine;
     }
 
+    public void scheduleOneTimeJobNow(Runnable job) {
+        schedule(job, Instant.now());
+    }
+
     @SneakyThrows
     public void schedulePeriodicJob(String methodName, int startDelayInSeconds, int intervalInSeconds) {
         scheduleAtFixedRate(
