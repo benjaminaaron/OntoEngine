@@ -1,6 +1,5 @@
 package de.benjaminaaron.ontoserver.suggestion.job;
 
-import de.benjaminaaron.ontoserver.routing.websocket.messages.suggestion.SuggestionBaseMessage;
 import de.benjaminaaron.ontoserver.suggestion.Suggestion;
 import de.benjaminaaron.ontoserver.suggestion.job.task.JobTask;
 import org.apache.jena.rdf.model.Model;
@@ -11,7 +10,6 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public abstract class Job {
 
@@ -33,12 +31,6 @@ public abstract class Job {
     }
 
     public abstract List<Suggestion> execute();
-
-    void addSuggestionIfNotNull(SuggestionBaseMessage message) {
-        if (!Objects.isNull(message)) {
-            suggestions.add(new Suggestion(message));
-        }
-    }
 
     void start() {
         logger.info("Starting " + getJobName());
