@@ -3,18 +3,13 @@ package de.benjaminaaron.ontoserver.suggestion.job.task;
 import de.benjaminaaron.ontoserver.model.Utils;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.suggestion.MergeWordsSuggestionMessage;
 import de.benjaminaaron.ontoserver.suggestion.Suggestion;
+import de.benjaminaaron.ontoserver.suggestion.job.task.base.JobModelTask;
+import de.benjaminaaron.ontoserver.suggestion.job.task.base.UriStats;
 import org.apache.jena.rdf.model.*;
 
 import java.util.*;
 
-public class CaseSensitivityTask extends JobTask {
-
-    private Model mainModel;
-
-    @Override
-    public void setMainModel(Model mainModel) {
-        this.mainModel = mainModel;
-    }
+public class CaseSensitivityTask extends JobModelTask {
 
     @Override
     public List<Suggestion> execute() {
@@ -88,6 +83,7 @@ public class CaseSensitivityTask extends JobTask {
                 map.get(oUri).usedAsObject ++;
             }
         }
+
         return map;
     }
 }

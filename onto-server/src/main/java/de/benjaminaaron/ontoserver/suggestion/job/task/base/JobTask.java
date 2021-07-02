@@ -1,4 +1,4 @@
-package de.benjaminaaron.ontoserver.suggestion.job.task;
+package de.benjaminaaron.ontoserver.suggestion.job.task.base;
 
 import de.benjaminaaron.ontoserver.suggestion.Suggestion;
 import org.apache.jena.rdf.model.Model;
@@ -9,7 +9,7 @@ import java.util.List;
 
 public abstract class JobTask {
 
-    List<Suggestion> suggestions = new ArrayList<>();
+    protected List<Suggestion> suggestions = new ArrayList<>();
 
     public abstract List<Suggestion> execute();
 

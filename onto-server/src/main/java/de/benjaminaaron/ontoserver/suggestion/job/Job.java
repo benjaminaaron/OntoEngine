@@ -1,7 +1,7 @@
 package de.benjaminaaron.ontoserver.suggestion.job;
 
 import de.benjaminaaron.ontoserver.suggestion.Suggestion;
-import de.benjaminaaron.ontoserver.suggestion.job.task.JobTask;
+import de.benjaminaaron.ontoserver.suggestion.job.task.base.JobTask;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
