@@ -55,6 +55,7 @@ public abstract class Job {
     }
 
     public String getJobDurationString() {
-        return getJobName() + " job ran from " + startTime + " to " + endTime + ": " + Duration.between(startTime, endTime);
+        return getJobName() + " job ran from " + startTime + " to " + endTime + ": " + Duration.between(startTime, endTime)
+                + " and generated " + suggestions.size() + " new or existing suggestion" + (suggestions.size() == 1 ? "" : "s");
     }
 }
