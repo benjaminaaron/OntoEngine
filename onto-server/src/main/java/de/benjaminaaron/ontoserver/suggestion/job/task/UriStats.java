@@ -1,4 +1,4 @@
-package de.benjaminaaron.ontoserver.suggestion.job;
+package de.benjaminaaron.ontoserver.suggestion.job.task;
 
 public class UriStats {
     public String uri;

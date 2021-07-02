@@ -6,6 +6,7 @@ import de.benjaminaaron.ontoserver.routing.websocket.WebSocketRouting;
 import de.benjaminaaron.ontoserver.suggestion.job.MergeSuggestionsJob;
 import de.benjaminaaron.ontoserver.suggestion.job.VocabularySuggestionsJob;
 import de.benjaminaaron.ontoserver.suggestion.job.task.CaseSensitivityTask;
+import de.benjaminaaron.ontoserver.suggestion.job.task.LocalVocabularyMatchingTask;
 import lombok.SneakyThrows;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.logging.log4j.LogManager;
@@ -46,7 +47,8 @@ public class SuggestionEngine {
     }
 
     public void runNewStatementJob(Statement statement, LocalVocabularyManager localVocabularyManager) {
-        VocabularySuggestionsJob job = new VocabularySuggestionsJob(modelController.getMainModel(), statement, localVocabularyManager);
+        VocabularySuggestionsJob job = new VocabularySuggestionsJob(statement);
+        job.addTask(new LocalVocabularyMatchingTask(localVocabularyManager));
         job.getFuture().whenComplete((_suggestions, ex) -> handleNewSuggestions(_suggestions));
         taskManager.scheduleOneTimeJobNow(job);
     }

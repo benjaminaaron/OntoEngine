@@ -1,19 +1,19 @@
 package de.benjaminaaron.ontoserver.suggestion.job.task;
 
 import de.benjaminaaron.ontoserver.suggestion.Suggestion;
-import de.benjaminaaron.ontoserver.suggestion.job.UriStats;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Statement;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public abstract class JobTask {
 
     List<Suggestion> suggestions = new ArrayList<>();
 
-    public List<Suggestion> getSuggestions() {
-        return suggestions;
-    }
+    public abstract List<Suggestion> execute();
 
-    public void execute(Map<String, UriStats> map) {}
+    public void setMainModel(Model mainModel) {}
+
+    public void setStatement(Statement statement) {}
 }

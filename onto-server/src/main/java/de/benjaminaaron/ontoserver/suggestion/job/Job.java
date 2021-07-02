@@ -2,7 +2,6 @@ package de.benjaminaaron.ontoserver.suggestion.job;
 
 import de.benjaminaaron.ontoserver.suggestion.Suggestion;
 import de.benjaminaaron.ontoserver.suggestion.job.task.JobTask;
-import org.apache.jena.rdf.model.Model;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,14 +14,9 @@ public abstract class Job {
 
     private final Logger logger = LogManager.getLogger(Job.class);
 
-    final Model model;
     List<Suggestion> suggestions = new ArrayList<>();
     private Instant startTime;
     private Instant endTime;
-
-    public Job(Model model) {
-        this.model = model;
-    }
 
     List<JobTask> tasks = new ArrayList<>();
 

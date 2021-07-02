@@ -3,17 +3,22 @@ package de.benjaminaaron.ontoserver.suggestion.job.task;
 import de.benjaminaaron.ontoserver.model.Utils;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.suggestion.MergeWordsSuggestionMessage;
 import de.benjaminaaron.ontoserver.suggestion.Suggestion;
-import de.benjaminaaron.ontoserver.suggestion.job.UriStats;
+import org.apache.jena.rdf.model.*;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class CaseSensitivityTask extends JobTask {
 
+    private Model mainModel;
+
     @Override
-    public void execute(Map<String, UriStats> map) {
+    public void setMainModel(Model mainModel) {
+        this.mainModel = mainModel;
+    }
+
+    @Override
+    public List<Suggestion> execute() {
+        Map<String, UriStats> map = collect();
         Map<String, Set<String>> buckets = new HashMap<>();
         map.forEach((uri, stats) -> {
             String key = stats.word.toLowerCase();
@@ -51,5 +56,38 @@ public class CaseSensitivityTask extends JobTask {
             message.setInfo("These URIs were found to use the same word when compared case insensitive, consider merging them");
             suggestions.add(new Suggestion(message));
         });
+
+        return suggestions;
+    }
+
+    private Map<String, UriStats> collect() {
+        // ResIterator sIter = model.listSubjects();
+        // ExtendedIterator<Node> pIter = GraphUtil.listPredicates(model.getGraph(), Node.ANY, Node.ANY);
+        // NodeIterator oIter = model.listObjects();
+        // Iter.asStream(model.getGraph().find(null, null, null)).count()
+        Map<String, UriStats> map = new HashMap<>();
+
+        StmtIterator stmtIterator = mainModel.listStatements();
+        while (stmtIterator.hasNext()) {
+            Statement statement = stmtIterator.next();
+
+            Resource subject = statement.getSubject();
+            String sUri = subject.getURI();
+            map.putIfAbsent(sUri, new UriStats(sUri, subject.getLocalName()));
+            map.get(sUri).usedAsSubject ++;
+
+            Property predicate = statement.getPredicate();
+            String pUri = predicate.getURI();
+            map.putIfAbsent(pUri, new UriStats(pUri, predicate.getLocalName()));
+            map.get(pUri).usedAsPredicate ++;
+
+            RDFNode object = statement.getObject();
+            if (object.isResource()) {
+                String oUri = object.asResource().getURI();
+                map.putIfAbsent(oUri, new UriStats(oUri, object.asResource().getLocalName()));
+                map.get(oUri).usedAsObject ++;
+            }
+        }
+        return map;
     }
 }

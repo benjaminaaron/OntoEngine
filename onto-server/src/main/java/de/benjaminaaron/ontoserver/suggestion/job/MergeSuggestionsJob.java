@@ -7,48 +7,20 @@ import java.util.*;
 
 public class MergeSuggestionsJob extends Job {
 
-    public MergeSuggestionsJob(Model model) {
-        super(model);
+    private final Model mainModel;
+
+    public MergeSuggestionsJob(Model mainModel) {
+        this.mainModel = mainModel;
     }
 
     @Override
     public List<Suggestion> execute() {
         start();
-        Map<String, UriStats> map = collect();
-        tasks.forEach(task -> task.execute(map));
-        tasks.forEach(task -> suggestions.addAll(task.getSuggestions()));
+        tasks.forEach(task -> {
+            task.setMainModel(mainModel);
+            suggestions.addAll(task.execute());
+        });
         stop();
         return suggestions;
-    }
-
-    private Map<String, UriStats> collect() {
-        // ResIterator sIter = model.listSubjects();
-        // ExtendedIterator<Node> pIter = GraphUtil.listPredicates(model.getGraph(), Node.ANY, Node.ANY);
-        // NodeIterator oIter = model.listObjects();
-        // Iter.asStream(model.getGraph().find(null, null, null)).count()
-        Map<String, UriStats> map = new HashMap<>();
-
-        StmtIterator stmtIterator = model.listStatements();
-        while (stmtIterator.hasNext()) {
-            Statement statement = stmtIterator.next();
-
-            Resource subject = statement.getSubject();
-            String sUri = subject.getURI();
-            map.putIfAbsent(sUri, new UriStats(sUri, subject.getLocalName()));
-            map.get(sUri).usedAsSubject ++;
-
-            Property predicate = statement.getPredicate();
-            String pUri = predicate.getURI();
-            map.putIfAbsent(pUri, new UriStats(pUri, predicate.getLocalName()));
-            map.get(pUri).usedAsPredicate ++;
-
-            RDFNode object = statement.getObject();
-            if (object.isResource()) {
-                String oUri = object.asResource().getURI();
-                map.putIfAbsent(oUri, new UriStats(oUri, object.asResource().getLocalName()));
-                map.get(oUri).usedAsObject ++;
-            }
-        }
-        return map;
     }
 }
