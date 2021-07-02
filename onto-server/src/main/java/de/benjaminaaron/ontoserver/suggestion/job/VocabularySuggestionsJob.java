@@ -2,7 +2,7 @@ package de.benjaminaaron.ontoserver.suggestion.job;
 
 import de.benjaminaaron.ontoserver.model.Utils.ResourceType;
 import de.benjaminaaron.ontoserver.suggestion.Suggestion;
-import de.benjaminaaron.ontoserver.suggestion.VocabularyManager;
+import de.benjaminaaron.ontoserver.suggestion.LocalVocabularyManager;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
@@ -14,12 +14,12 @@ import static de.benjaminaaron.ontoserver.model.Utils.ResourceType.*;
 public class VocabularySuggestionsJob extends RunnableJob {
 
     private final Statement statement;
-    private final VocabularyManager vocabularyManager;
+    private final LocalVocabularyManager localVocabularyManager;
 
-    public VocabularySuggestionsJob(Model model, Statement statement, VocabularyManager vocabularyManager) {
+    public VocabularySuggestionsJob(Model model, Statement statement, LocalVocabularyManager localVocabularyManager) {
         super(model);
         this.statement = statement;
-        this.vocabularyManager = vocabularyManager;
+        this.localVocabularyManager = localVocabularyManager;
     }
 
     @Override
@@ -36,7 +36,7 @@ public class VocabularySuggestionsJob extends RunnableJob {
     }
 
     private void check(Resource resource, ResourceType resourceType) {
-        vocabularyManager.checkForMatches(resource, resourceType).forEach(msg -> suggestions.add(new Suggestion(msg)));
+        localVocabularyManager.checkForMatches(resource, resourceType).forEach(msg -> suggestions.add(new Suggestion(msg)));
     }
 
 }

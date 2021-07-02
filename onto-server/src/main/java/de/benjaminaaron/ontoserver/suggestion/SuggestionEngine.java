@@ -45,8 +45,8 @@ public class SuggestionEngine {
         handleNewSuggestions(job.execute());
     }
 
-    public void runNewStatementJob(Statement statement, VocabularyManager vocabularyManager) {
-        VocabularySuggestionsJob job = new VocabularySuggestionsJob(modelController.getMainModel(), statement, vocabularyManager);
+    public void runNewStatementJob(Statement statement, LocalVocabularyManager localVocabularyManager) {
+        VocabularySuggestionsJob job = new VocabularySuggestionsJob(modelController.getMainModel(), statement, localVocabularyManager);
         job.getFuture().whenComplete((_suggestions, ex) -> handleNewSuggestions(_suggestions));
         taskManager.scheduleOneTimeJobNow(job);
     }

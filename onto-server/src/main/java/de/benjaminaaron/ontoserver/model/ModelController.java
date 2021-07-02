@@ -6,7 +6,7 @@ import de.benjaminaaron.ontoserver.routing.websocket.WebSocketRouting;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementMessage;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementResponse;
 import de.benjaminaaron.ontoserver.suggestion.SuggestionEngine;
-import de.benjaminaaron.ontoserver.suggestion.VocabularyManager;
+import de.benjaminaaron.ontoserver.suggestion.LocalVocabularyManager;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.tdb.TDBFactory;
@@ -48,7 +48,7 @@ public class ModelController {
     private Model mainModel, metaModel, vocabularySourcesModel;
     private Graph graph;
     private MetaHandler metaHandler;
-    private VocabularyManager vocabularyManager;
+    private LocalVocabularyManager localVocabularyManager;
 
     @Value("${uri.default.namespace}")
     public void setUriDefaultNamespace(String ns) {
@@ -84,7 +84,7 @@ public class ModelController {
             logger.info("Creating " + VOCABULARY_SOURCES_MODEL_NAME + "-model in TDB location '" + TBD_DIR + "'");
         }
         vocabularySourcesModel = dataset.getNamedModel(VOCABULARY_SOURCES_MODEL_NAME);
-        vocabularyManager = new VocabularyManager(vocabularySourcesModel);
+        localVocabularyManager = new LocalVocabularyManager(vocabularySourcesModel);
 
         graph = new Graph(mainModel);
         printStatements();
@@ -113,7 +113,7 @@ public class ModelController {
         }
         addStatement(statement, StatementOrigin.ADD, "client", response);
         router.sendNewTripleEvent(statement);
-        suggestionEngine.runNewStatementJob(statement, vocabularyManager);
+        suggestionEngine.runNewStatementJob(statement, localVocabularyManager);
         return response;
     }
 

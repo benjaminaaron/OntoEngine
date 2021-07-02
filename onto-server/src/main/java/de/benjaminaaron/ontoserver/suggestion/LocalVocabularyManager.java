@@ -15,7 +15,7 @@ import java.util.*;
 
 import static de.benjaminaaron.ontoserver.model.Utils.ResourceType.PREDICATE;
 
-public class VocabularyManager {
+public class LocalVocabularyManager {
 
     private final Model model;
     private static final Set<String> sourceUris = Set.of(
@@ -23,7 +23,7 @@ public class VocabularyManager {
             //"https://www.w3.org/2002/07/owl"
     );
 
-    public VocabularyManager(Model model) {
+    public LocalVocabularyManager(Model model) {
         this.model = model;
         sourceUris.forEach(model::read);
         // model.write(System.out);
