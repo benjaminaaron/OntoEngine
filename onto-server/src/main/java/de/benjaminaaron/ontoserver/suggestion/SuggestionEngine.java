@@ -17,7 +17,6 @@ import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Component
 // @EnableAsync
@@ -43,22 +42,21 @@ public class SuggestionEngine {
     public void mergeSuggestionsJob() {
         MergeSuggestionsJob job = new MergeSuggestionsJob(modelController.getMainModel());
         job.addTask(new CaseSensitivityTask());
-        job.execute().forEach(this::registerSuggestionIfNew);
-        sendUnsentSuggestions();
+        handleNewSuggestions(job.execute());
     }
 
     public void runNewStatementJob(Statement statement, VocabularyManager vocabularyManager) {
         VocabularySuggestionsJob job = new VocabularySuggestionsJob(modelController.getMainModel(), statement, vocabularyManager);
-        job.getFuture().whenComplete((suggestions, ex) -> suggestions.forEach(this::registerSuggestionIfNew));
+        job.getFuture().whenComplete((_suggestions, ex) -> handleNewSuggestions(_suggestions));
         taskManager.scheduleOneTimeJobNow(job);
     }
 
-    public void sendUnsentSuggestions() {
-        List<Suggestion> unsent = suggestions.values().stream().filter(s -> !s.getIsSent()).collect(Collectors.toList());
-        for (Suggestion sug : unsent) {
-            router.sendSuggestion(sug.getMessage());
-            sug.isSent();
-        }
+    public void handleNewSuggestions(List<Suggestion> _suggestions) {
+        _suggestions.forEach(this::registerSuggestionIfNew);
+        suggestions.values().stream().filter(s -> !s.getIsSent()).forEach(suggestion -> {
+            router.sendSuggestion(suggestion.getMessage());
+            suggestion.markAsSent();
+        });
     }
 
     private void registerSuggestionIfNew(Suggestion suggestion) {

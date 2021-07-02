@@ -30,7 +30,7 @@ public class Suggestion {
         return isSent;
     }
 
-    public void isSent() {
+    public void markAsSent() {
         this.isSent = true;
     }
 
