@@ -1,6 +1,5 @@
 package de.benjaminaaron.ontoserver.suggestion;
 
-import de.benjaminaaron.ontoserver.model.Utils;
 import de.benjaminaaron.ontoserver.model.Utils.ResourceType;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.suggestion.VocabularySuggestionMessage;
 import org.apache.jena.query.QueryExecution;
@@ -41,7 +40,7 @@ public class LocalVocabularyManager {
                     + "' was found in an existing vocabulary, consider using " + target.getURI() + " instead");
             attributes.forEach((p, o) -> {
                 String pShort = model.shortForm(p.getURI());
-                String oShort = o.isResource() ? model.shortForm(o.asResource().getURI()) : Utils.getValueFromLiteral(o.asLiteral());
+                String oShort = o.isResource() ? model.shortForm(o.asResource().getURI()) : o.toString();
                 if ("rdf:type".equals(pShort)) {
                     info.add("RDF Type: " + oShort);
                 }
