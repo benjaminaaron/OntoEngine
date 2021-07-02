@@ -48,6 +48,7 @@ public class CaseSensitivityTask extends JobTask {
             set.remove(suggestedMergeUri);
             message.setAchievingCommand("REPLACE " + Utils.setToCompactArrayString(set)
                     + " WITH " + suggestedMergeUri);
+            message.setInfo("These URIs were found to use the same word when compared case insensitive, consider merging them");
             suggestions.add(new Suggestion(message));
         });
     }
