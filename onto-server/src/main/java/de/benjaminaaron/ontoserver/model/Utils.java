@@ -22,12 +22,16 @@ public class Utils {
     public static String DEFAULT_URI_SEPARATOR;
     private final static Slugify slugifier = new Slugify().withLowerCase(false);
 
+    public static String buildDefaultNsUri(String word) {
+        return DEFAULT_URI_NAMESPACE + DEFAULT_URI_SEPARATOR + slugifier.slugify(word);
+    }
+
     public static String ensureUri(String str) {
         // str = full URI or just local name (= word)
         if (isValidUri(str)) {
             return str;
         }
-        return DEFAULT_URI_NAMESPACE + DEFAULT_URI_SEPARATOR + slugifier.slugify(str);
+        return buildDefaultNsUri(str);
     }
 
     public static boolean isValidUri(String str) {
