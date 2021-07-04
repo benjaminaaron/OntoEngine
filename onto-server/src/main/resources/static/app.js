@@ -12,10 +12,13 @@ const connect = () => {
             console.log("Server says: ", JSON.parse(messageObj.body).message);
         });
         stompClient.subscribe('/topic/serverAddStatementResponse', messageObj => {
-            console.log("AddStatementResponse from server: ", JSON.parse(messageObj.body));
+            console.log("serverAddStatementResponse: ", JSON.parse(messageObj.body));
         });
         stompClient.subscribe('/topic/serverSuggestions', messageObj => {
-            console.log("serverSuggestions from server: ", JSON.parse(messageObj.body));
+            console.log("serverSuggestions: ", JSON.parse(messageObj.body));
+        });
+        stompClient.subscribe('/topic/whileTypingSuggestionsResponse', messageObj => {
+            console.log("whileTypingSuggestionsResponse: ", JSON.parse(messageObj.body));
         });
         stompClient.subscribe('/app/initial-triples', messageObj => {
             for (let triple of JSON.parse(messageObj.body).triples) {
@@ -50,10 +53,17 @@ const sendCommand = () => {
     stompClient.send("/app/serverReceiveCommand", {}, JSON.stringify(command));
 };
 
-const onEnter = (element, func) => {
-    $("#" + element).on('keypress', e => {
+const onKeypress = (element, onEnter, resourceType) => {
+    let el = $("#" + element);
+    el.on('keyup', e => {
         if (e.which === 13) {
-            func();
+            onEnter();
+        } else if (resourceType !== null) {
+            let message = {
+                resourceType: resourceType,
+                value: el.val()
+            };
+            stompClient.send("/app/requestWhileTypingSuggestions", {}, JSON.stringify(message));
         }
     });
 };
@@ -121,10 +131,10 @@ $(() => {
     connect();
     $("#addStatementBtn").click(() => { addStatement(); });
     $("#sendCommandBtn").click(() => { sendCommand(); });
-    onEnter("subjectTextField", () => $("#predicateTextField").focus());
-    onEnter("predicateTextField", () => $("#objectTextField").focus());
-    onEnter("objectTextField", addStatement);
-    onEnter("commandTextField", sendCommand);
+    onKeypress("subjectTextField", () => $("#predicateTextField").focus(), "SUBJECT");
+    onKeypress("predicateTextField", () => $("#objectTextField").focus(), "PREDICATE");
+    onKeypress("objectTextField", addStatement, "OBJECT");
+    onKeypress("commandTextField", sendCommand, null);
     $("#subjectTextField").focus();
     $("#visu-2d").prop("checked", true);
     buildGraph("2D");

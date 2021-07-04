@@ -68,6 +68,13 @@ public class WebSocketRouting extends BaseRouting {
         return responseMessage;
     }
 
+    @MessageMapping("/requestWhileTypingSuggestions")
+    @SendTo("/topic/whileTypingSuggestionsResponse")
+    public WhileTypingSuggestionsMessage whileTypingSuggestions(WhileTypingSuggestionsMessage message) {
+        suggestionEngine.generateWhileTypingSuggestions(message);
+        return message;
+    }
+
     public void sendSuggestion(SuggestionBaseMessage message) {
         this.template.convertAndSend("/topic/serverSuggestions", message);
         logger.info("Suggestion " + message.getSuggestionId() + " sent");

@@ -3,13 +3,16 @@ package de.benjaminaaron.ontoserver.suggestion;
 import de.benjaminaaron.ontoserver.model.ModelController;
 import de.benjaminaaron.ontoserver.model.Utils;
 import de.benjaminaaron.ontoserver.routing.websocket.WebSocketRouting;
-import de.benjaminaaron.ontoserver.suggestion.job.PeriodicJob;
+import de.benjaminaaron.ontoserver.routing.websocket.messages.WhileTypingSuggestionsMessage;
 import de.benjaminaaron.ontoserver.suggestion.job.NewStatementJob;
+import de.benjaminaaron.ontoserver.suggestion.job.PeriodicJob;
 import de.benjaminaaron.ontoserver.suggestion.job.task.CaseSensitivityTask;
 import de.benjaminaaron.ontoserver.suggestion.job.task.LocalVocabularyMatchingTask;
 import de.benjaminaaron.ontoserver.suggestion.job.task.WikidataMatchingTask;
 import lombok.SneakyThrows;
+import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,8 @@ import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static de.benjaminaaron.ontoserver.model.Utils.ResourceType.PREDICATE;
 
 @Component
 // @EnableAsync
@@ -79,5 +84,30 @@ public class SuggestionEngine {
 
     public String accept(String id) {
         return suggestions.get(id).getMessage().getAchievingCommand();
+    }
+
+    public void generateWhileTypingSuggestions(WhileTypingSuggestionsMessage message) {
+        String value = message.getValue().toLowerCase();
+        Map<String, String> matches = new HashMap<>();
+        StmtIterator iter = modelController.getMainModel().listStatements();
+        while (iter.hasNext()) {
+            Statement statement = iter.nextStatement();
+            if (PREDICATE == message.getResourceType()) {
+                checkMatch(value, statement.getPredicate(), matches);
+                continue;
+            }
+            checkMatch(value, statement.getSubject(), matches);
+            if (statement.getObject().isResource()) {
+                checkMatch(value, statement.getObject().asResource(), matches);
+            }
+        }
+        message.setMatches(matches);
+    }
+
+    private void checkMatch(String value, Resource resource, Map<String, String> matches) {
+        String word = resource.getLocalName();
+        if (word.toLowerCase().contains(value)) {
+            matches.put(word, resource.getURI());
+        }
     }
 }
