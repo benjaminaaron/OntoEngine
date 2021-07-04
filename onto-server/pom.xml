@@ -95,6 +95,13 @@
             <artifactId>slugify</artifactId>
             <version>2.5</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.wikidata.wdtk/wdtk-wikibaseapi -->
+        <dependency>
+            <groupId>org.wikidata.wdtk</groupId>
+            <artifactId>wdtk-wikibaseapi</artifactId>
+            <version>0.12.1</version>
+        </dependency>
     </dependencies>
 
     <build>
