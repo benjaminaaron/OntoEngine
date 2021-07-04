@@ -5,11 +5,11 @@ import org.apache.jena.rdf.model.*;
 
 import java.util.*;
 
-public class MergeSuggestionsJob extends Job {
+public class PeriodicJob extends Job {
 
     private final Model mainModel;
 
-    public MergeSuggestionsJob(Model mainModel) {
+    public PeriodicJob(Model mainModel) {
         this.mainModel = mainModel;
     }
 

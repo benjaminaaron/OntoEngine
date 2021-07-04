@@ -5,11 +5,11 @@ import org.apache.jena.rdf.model.Statement;
 
 import java.util.List;
 
-public class VocabularySuggestionsJob extends RunnableJob {
+public class NewStatementJob extends RunnableJob {
 
     private final Statement statement;
 
-    public VocabularySuggestionsJob(Statement statement) {
+    public NewStatementJob(Statement statement) {
         this.statement = statement;
     }
 
@@ -23,7 +23,4 @@ public class VocabularySuggestionsJob extends RunnableJob {
         stop();
         return suggestions;
     }
-
-
-
 }

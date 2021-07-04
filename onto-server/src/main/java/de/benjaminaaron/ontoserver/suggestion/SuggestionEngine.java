@@ -3,8 +3,8 @@ package de.benjaminaaron.ontoserver.suggestion;
 import de.benjaminaaron.ontoserver.model.ModelController;
 import de.benjaminaaron.ontoserver.model.Utils;
 import de.benjaminaaron.ontoserver.routing.websocket.WebSocketRouting;
-import de.benjaminaaron.ontoserver.suggestion.job.MergeSuggestionsJob;
-import de.benjaminaaron.ontoserver.suggestion.job.VocabularySuggestionsJob;
+import de.benjaminaaron.ontoserver.suggestion.job.PeriodicJob;
+import de.benjaminaaron.ontoserver.suggestion.job.NewStatementJob;
 import de.benjaminaaron.ontoserver.suggestion.job.task.CaseSensitivityTask;
 import de.benjaminaaron.ontoserver.suggestion.job.task.LocalVocabularyMatchingTask;
 import de.benjaminaaron.ontoserver.suggestion.job.task.WikidataMatchingTask;
@@ -38,17 +38,17 @@ public class SuggestionEngine {
     @PostConstruct
     void init() {
         taskManager = new TaskSchedulingManager(this);
-        taskManager.schedulePeriodicJob("mergeSuggestionsJob", 5, 30);
+        taskManager.schedulePeriodicJob("runPeriodicJob", 5, 30);
     }
 
-    public void mergeSuggestionsJob() {
-        MergeSuggestionsJob job = new MergeSuggestionsJob(modelController.getMainModel());
+    public void runPeriodicJob() {
+        PeriodicJob job = new PeriodicJob(modelController.getMainModel());
         job.addTask(new CaseSensitivityTask());
         handleNewSuggestions(job.execute());
     }
 
     public void runNewStatementJob(Statement statement, LocalVocabularyManager localVocabularyManager) {
-        VocabularySuggestionsJob job = new VocabularySuggestionsJob(statement);
+        NewStatementJob job = new NewStatementJob(statement);
         job.addTask(new LocalVocabularyMatchingTask(localVocabularyManager));
         job.addTask(new WikidataMatchingTask());
         job.getFuture().whenComplete((_suggestions, ex) -> handleNewSuggestions(_suggestions));
