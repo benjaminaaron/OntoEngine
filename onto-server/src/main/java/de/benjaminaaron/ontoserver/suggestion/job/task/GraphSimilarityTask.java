@@ -4,12 +4,15 @@ import de.benjaminaaron.ontoserver.model.graph.DirectedMultigraphWithSelfLoops;
 import de.benjaminaaron.ontoserver.model.graph.Edge;
 import de.benjaminaaron.ontoserver.suggestion.Suggestion;
 import de.benjaminaaron.ontoserver.suggestion.job.task.base.JobGraphTask;
+import org.apache.jena.ext.com.google.common.collect.Sets;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class GraphSimilarityTask extends JobGraphTask {
 
@@ -24,11 +27,32 @@ public class GraphSimilarityTask extends JobGraphTask {
         logger.info("GraphSimilarityTask: comparing " + n + " pairs, formed from " + vertices.size() + " vertices");
         for (int a = 0; a < vertices.size() - 1; a++) {
             RDFNode vertexA = vertices.get(a);
+            Set<Edge> incomingA = graph.incomingEdgesOf(vertexA);
+            Set<Edge> outgoingA = graph.outgoingEdgesOf(vertexA);
+            Set<RDFNode> firstDegreeVerticesFromIncomingA = incomingA.stream().map(graph::getEdgeSource).collect(Collectors.toSet());
+            Set<RDFNode> firstDegreeVerticesFromOutgoingA = outgoingA.stream().map(graph::getEdgeTarget).collect(Collectors.toSet());
+            
+            int score = 0;
             for (int b = a + 1; b < vertices.size(); b++) {
                 RDFNode vertexB = vertices.get(b);
-                System.out.println(vertexA + " <--> " + vertexB);
+                Set<Edge> incomingB = graph.incomingEdgesOf(vertexB);
+                Set<Edge> outgoingB = graph.outgoingEdgesOf(vertexB);
+                Set<RDFNode> firstDegreeVerticesFromIncomingB = incomingB.stream().map(graph::getEdgeSource).collect(Collectors.toSet());
+                Set<RDFNode> firstDegreeVerticesFromOutgoingB = outgoingB.stream().map(graph::getEdgeTarget).collect(Collectors.toSet());
 
-                // TODO
+                Sets.SetView<Edge> sharedEdgesIncoming = Sets.intersection(incomingA, incomingB);
+                Sets.SetView<Edge> sharedEdgesOutgoing = Sets.intersection(outgoingA, outgoingB);
+                Sets.SetView<RDFNode> sharedFirstDegreeVerticesFromIncoming = Sets.intersection(firstDegreeVerticesFromIncomingA, firstDegreeVerticesFromIncomingB);
+                Sets.SetView<RDFNode> sharedFirstDegreeVerticesFromOutgoing = Sets.intersection(firstDegreeVerticesFromOutgoingA, firstDegreeVerticesFromOutgoingB);
+
+                score = sharedEdgesIncoming.size() + sharedEdgesOutgoing.size() + sharedFirstDegreeVerticesFromIncoming.size() + sharedFirstDegreeVerticesFromOutgoing.size();
+
+                System.out.println(vertexA + " <--> " + vertexB + " __ " + score);
+                System.out.println("sharedEdgesIncoming: " + sharedEdgesIncoming);
+                System.out.println("sharedEdgesOutgoing: " + sharedEdgesOutgoing);
+                System.out.println("sharedFirstDegreeVerticesFromIncoming: " + sharedFirstDegreeVerticesFromIncoming);
+                System.out.println("sharedFirstDegreeVerticesFromOutgoing: " + sharedFirstDegreeVerticesFromOutgoing);
+                System.out.println();
             }
         }
         // suggestions.add(new Suggestion(null));
