@@ -63,7 +63,7 @@ const onKeypress = (element, onEnter, resourceType) => {
                 resourceType: resourceType,
                 value: el.val()
             };
-            stompClient.send("/app/requestWhileTypingSuggestions", {}, JSON.stringify(message));
+            // stompClient.send("/app/requestWhileTypingSuggestions", {}, JSON.stringify(message));
         }
     });
 };
