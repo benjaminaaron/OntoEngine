@@ -1,23 +1,24 @@
 package de.benjaminaaron.ontoserver.suggestion.job;
 
+import de.benjaminaaron.ontoserver.model.ModelController;
 import de.benjaminaaron.ontoserver.suggestion.Suggestion;
-import org.apache.jena.rdf.model.*;
 
-import java.util.*;
+import java.util.List;
 
 public class PeriodicJob extends Job {
 
-    private final Model mainModel;
+    private final ModelController modelController;
 
-    public PeriodicJob(Model mainModel) {
-        this.mainModel = mainModel;
+    public PeriodicJob(ModelController modelController) {
+        this.modelController = modelController;
     }
 
     @Override
     public List<Suggestion> execute() {
         start();
         tasks.forEach(task -> {
-            task.setMainModel(mainModel);
+            task.setMainModel(modelController.getMainModel());
+            task.setGraphManager(modelController.getGraph());
             suggestions.addAll(task.execute());
         });
         stop();

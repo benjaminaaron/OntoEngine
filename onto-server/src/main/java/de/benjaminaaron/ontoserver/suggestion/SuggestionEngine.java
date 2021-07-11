@@ -7,6 +7,7 @@ import de.benjaminaaron.ontoserver.routing.websocket.messages.WhileTypingSuggest
 import de.benjaminaaron.ontoserver.suggestion.job.NewStatementJob;
 import de.benjaminaaron.ontoserver.suggestion.job.PeriodicJob;
 import de.benjaminaaron.ontoserver.suggestion.job.task.CaseSensitivityTask;
+import de.benjaminaaron.ontoserver.suggestion.job.task.GraphSimilarityTask;
 import de.benjaminaaron.ontoserver.suggestion.job.task.LocalVocabularyMatchingTask;
 import de.benjaminaaron.ontoserver.suggestion.job.task.WikidataMatchingTask;
 import lombok.SneakyThrows;
@@ -47,8 +48,9 @@ public class SuggestionEngine {
     }
 
     public void runPeriodicJob() {
-        PeriodicJob job = new PeriodicJob(modelController.getMainModel());
+        PeriodicJob job = new PeriodicJob(modelController);
         job.addTask(new CaseSensitivityTask());
+        job.addTask(new GraphSimilarityTask());
         handleNewSuggestions(job.execute());
     }
 
