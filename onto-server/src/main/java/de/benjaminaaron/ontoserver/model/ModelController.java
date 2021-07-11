@@ -1,7 +1,7 @@
 package de.benjaminaaron.ontoserver.model;
 
 import de.benjaminaaron.ontoserver.model.MetaHandler.StatementOrigin;
-import de.benjaminaaron.ontoserver.model.graph.Graph;
+import de.benjaminaaron.ontoserver.model.graph.GraphManager;
 import de.benjaminaaron.ontoserver.routing.websocket.WebSocketRouting;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementMessage;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementResponse;
@@ -46,7 +46,7 @@ public class ModelController {
     private SuggestionEngine suggestionEngine;
 
     private Model mainModel, metaModel, vocabularySourcesModel;
-    private Graph graph;
+    private GraphManager graphManager;
     private MetaHandler metaHandler;
     private LocalVocabularyManager localVocabularyManager;
 
@@ -86,7 +86,7 @@ public class ModelController {
         vocabularySourcesModel = dataset.getNamedModel(VOCABULARY_SOURCES_MODEL_NAME);
         localVocabularyManager = new LocalVocabularyManager(vocabularySourcesModel);
 
-        graph = new Graph(mainModel);
+        graphManager = new GraphManager(mainModel);
         printStatements();
     }
 
@@ -120,7 +120,7 @@ public class ModelController {
     public void addStatement(Statement statement, StatementOrigin origin, String info, AddStatementResponse response) {
         metaHandler.storeNewTripleEvent(statement, origin, info, response);
         mainModel.add(statement);
-        graph.importStatement(statement);
+        graphManager.importStatement(statement);
     }
 
     public void replaceUris(Set<String> from, String to) {
@@ -147,7 +147,7 @@ public class ModelController {
         assert deletionList.size() == insertionList.size();
         mainModel.remove(deletionList);
         mainModel.add(insertionList);
-        graph.replaceUris(from, to);
+        graphManager.replaceUris(from, to);
         metaHandler.storeUrisRenameEvent(from, to, "client");
         router.sendMessage(replaceCount + " URIs in " + insertionList.size() + " statements replaced");
     }
@@ -160,8 +160,8 @@ public class ModelController {
         return metaHandler;
     }
 
-    public Graph getGraph() {
-        return graph;
+    public GraphManager getGraph() {
+        return graphManager;
     }
 
     public void printStatements() {

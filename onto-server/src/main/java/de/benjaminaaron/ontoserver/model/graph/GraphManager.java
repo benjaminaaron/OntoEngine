@@ -18,14 +18,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class Graph {
+public class GraphManager {
 
     private final DirectedMultigraphWithSelfLoops<RDFNode, Edge> graph;
     private final Model mainModel;
 
     // integrate more tightly with the Jena Graph?
     // https://github.com/SmartDataAnalytics/SubgraphIsomorphismIndex/blob/master/jena-jgrapht-bindings/src/main/java/org/aksw/commons/jena/jgrapht/PseudoGraphJenaGraph.java
-    public Graph(Model mainModel) {
+    public GraphManager(Model mainModel) {
         this.mainModel = mainModel;
         graph = new DirectedMultigraphWithSelfLoops<>(Edge.class);
         mainModel.listStatements().toList().forEach(this::importStatement);
@@ -94,5 +94,9 @@ public class Graph {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public DirectedMultigraphWithSelfLoops<RDFNode, Edge> getGraph() {
+        return graph;
     }
 }
