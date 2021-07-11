@@ -27,6 +27,10 @@ public class WikidataMatchingTask extends JobStatementTask {
         wbdf = new WikibaseDataFetcher(
                 FixedBasicApiConnection.getWikidataApiConnection(),
                 Datamodel.SITE_WIKIDATA);
+        // https://www.wikidata.org/wiki/Wikidata:Tools/For_programmers
+        // https://www.mediawiki.org/wiki/Wikibase/Indexing/RDF_Dump_Format#Full_list_of_prefixes
+        // https://www.wikidata.org/wiki/Help:Basic_membership_properties
+        // https://www.wikidata.org/wiki/Wikidata:SPARQL_tutorial
     }
 
     @Override
