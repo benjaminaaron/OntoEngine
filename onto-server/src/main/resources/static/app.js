@@ -86,37 +86,98 @@ const buildGraph = visuType => {
             break;
     }
     graph.graphData({ nodes: [], links: [] })
-        .nodeLabel('id')
+        .nodeLabel('label')
         .linkLabel('label')
         .linkDirectionalArrowLength(6)
-        .linkDirectionalArrowRelPos(1);
+        .linkDirectionalArrowRelPos(1)
+        .linkCurvature('curvature');
     updateGraph();
 };
 
 let nodesMap = {};
-let edgesMap = {};
+let edgesArr = [];
+const curvatureMinMax = 0.5;
 
 const updateGraph = () => {
     let nodes = [];
-    let edges = [];
     Object.keys(nodesMap).forEach(key => nodes.push(nodesMap[key]));
-    Object.keys(edgesMap).forEach(key => edges.push(edgesMap[key]));
+
+    let edges = [];
+    let selfLoopEdges = {};
+    let vertexPairEdges = {}; // edges between the same two vertices, indifferent of their direction
+
+    const add = (map, edge) => {
+        if (!map[edge.vertexPairId]) {
+            map[edge.vertexPairId] = [];
+        }
+        map[edge.vertexPairId].push(edge);
+    };
+
+    edgesArr.forEach(edge => {
+        edges.push(edge);
+        add(edge.sourceId === edge.targetId ? selfLoopEdges : vertexPairEdges, edge);
+    });
+
+    // self loops
+    Object.keys(selfLoopEdges).forEach(vpId => {
+        let edges = selfLoopEdges[vpId];
+        edges[edges.length - 1].curvature = 1;
+        for (let i = 0; i < edges.length - 1; i++) {
+            edges[i].curvature = curvatureMinMax + ((1 - curvatureMinMax) / (edges.length - 1)) * i;
+        }
+    });
+
+    // multiple edges in either direction between two vertices
+    Object.keys(vertexPairEdges).filter(vpId => vertexPairEdges[vpId].length > 1).forEach(vpId => {
+        let vpEdges = vertexPairEdges[vpId];
+        vpEdges[vpEdges.length - 1].curvature = curvatureMinMax;
+        let refSourceId = vpEdges[vpEdges.length - 1].sourceId;
+        for (let i = 0; i < vpEdges.length - 1; i++) {
+            vpEdges[i].curvature = - curvatureMinMax + i * (2 * curvatureMinMax / (vpEdges.length - 1));
+            if (refSourceId !== vpEdges[i].sourceId) {
+                vpEdges[i].curvature *= -1; // flip it
+            }
+        }
+    });
+
     graph.graphData({ nodes: nodes, links: edges });
 };
 
-const addNewTripleToGraph = (subject, predicate, object, objectIsLiteral) => {
-    console.log("addNewTripleToGraph", subject, predicate, object, objectIsLiteral);
-    if (!nodesMap[subject]) {
-        nodesMap[subject] = {id: subject};
+const nextId = () => {
+  return Object.keys(nodesMap).length;
+};
+
+const addNewTripleToGraph = (subjectUri, predicateUri, object, objectIsLiteral) => {
+    console.log("addNewTripleToGraph", subjectUri, predicateUri, object, objectIsLiteral);
+
+    if (!nodesMap[subjectUri]) {
+        nodesMap[subjectUri] = {id: nextId(), label: subjectUri};
     }
-    let objectId = object;
+    let sVertex = nodesMap[subjectUri];
+
+    let oVertex;
     if (objectIsLiteral) {
-        objectId =  appendRandomStr(object);
-        nodesMap[objectId] = {id: objectId};
-    } else if (!nodesMap[object]) {
-        nodesMap[object] = {id: object};
+        oVertex = {id: nextId(), label: object};
+        nodesMap[appendRandomStr(object)] = oVertex;
+    } else {
+        let objectUri = object;
+        if (!nodesMap[objectUri]) {
+            nodesMap[objectUri] = {id: nextId(), label: objectUri};
+        }
+        oVertex = nodesMap[objectUri];
     }
-    edgesMap[appendRandomStr(predicate)] = {source: subject, target: objectId, label: predicate};
+
+    let vertexPairId = sVertex.id <= oVertex.id ? (sVertex.id + "_" + oVertex.id) : (oVertex.id + "_" + sVertex.id); // indifferent to the direction of an edge
+
+    edgesArr.push({
+        source: sVertex,
+        target: oVertex,
+        sourceId: sVertex.id,
+        targetId: oVertex.id,
+        label: predicateUri,
+        vertexPairId: vertexPairId,
+        curvature: 0
+    });
 };
 
 const appendRandomStr = str => {
