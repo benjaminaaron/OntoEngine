@@ -1,5 +1,6 @@
 package de.benjaminaaron.ontoserver.suggestion.job.task.base;
 
+import de.benjaminaaron.ontoserver.model.graph.GraphManager;
 import de.benjaminaaron.ontoserver.suggestion.Suggestion;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Statement;
@@ -16,4 +17,6 @@ public abstract class JobTask {
     public void setMainModel(Model mainModel) {}
 
     public void setStatement(Statement statement) {}
+
+    public void setGraphManager(GraphManager graphManager) {}
 }
