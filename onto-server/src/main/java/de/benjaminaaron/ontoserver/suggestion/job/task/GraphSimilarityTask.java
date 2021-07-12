@@ -45,11 +45,18 @@ public class GraphSimilarityTask extends JobGraphTask {
                 Sets.SetView<RDFNode> sharedFirstDegreeVerticesFromIncoming = Sets.intersection(firstDegreeVerticesFromIncomingA, firstDegreeVerticesFromIncomingB);
                 Sets.SetView<RDFNode> sharedFirstDegreeVerticesFromOutgoing = Sets.intersection(firstDegreeVerticesFromOutgoingA, firstDegreeVerticesFromOutgoingB);
 
-                score = sharedEdgesIncoming.size() + sharedEdgesOutgoing.size() + sharedFirstDegreeVerticesFromIncoming.size() + sharedFirstDegreeVerticesFromOutgoing.size();
+                Set<Edge> exactSharedEdgesIncoming = incomingA.stream().filter(edge -> containsWithSameSource(edge, incomingB, graph)).collect(Collectors.toSet());
+                Set<Edge> exactSharedEdgesOutgoing = outgoingA.stream().filter(edge -> containsWithSameTarget(edge, outgoingB, graph)).collect(Collectors.toSet());
+
+                score = sharedEdgesIncoming.size() + sharedEdgesOutgoing.size() +
+                        sharedFirstDegreeVerticesFromIncoming.size() + sharedFirstDegreeVerticesFromOutgoing.size() +
+                        exactSharedEdgesIncoming.size() + exactSharedEdgesOutgoing.size();
 
                 System.out.println(vertexA + " <--> " + vertexB + " __ " + score);
                 System.out.println("sharedEdgesIncoming: " + sharedEdgesIncoming);
+                System.out.println("exactSharedEdgesIncoming: " + exactSharedEdgesIncoming);
                 System.out.println("sharedEdgesOutgoing: " + sharedEdgesOutgoing);
+                System.out.println("exactSharedEdgesOutgoing: " + exactSharedEdgesOutgoing);
                 System.out.println("sharedFirstDegreeVerticesFromIncoming: " + sharedFirstDegreeVerticesFromIncoming);
                 System.out.println("sharedFirstDegreeVerticesFromOutgoing: " + sharedFirstDegreeVerticesFromOutgoing);
                 System.out.println();
@@ -58,5 +65,21 @@ public class GraphSimilarityTask extends JobGraphTask {
         // suggestions.add(new Suggestion(null));
         // compare n pairs of edges too?
         return suggestions;
+    }
+
+    private boolean containsWithSameSource(Edge edgeToCheck, Set<Edge> set, Graph<RDFNode, Edge> graph) {
+        if (!set.contains(edgeToCheck)) {
+            return false;
+        }
+        RDFNode source = graph.getEdgeSource(edgeToCheck);
+        return set.stream().anyMatch(edge -> source.equals(graph.getEdgeSource(edge)));
+    }
+
+    private boolean containsWithSameTarget(Edge edgeToCheck, Set<Edge> set, Graph<RDFNode, Edge> graph) {
+        if (!set.contains(edgeToCheck)) {
+            return false;
+        }
+        RDFNode target = graph.getEdgeTarget(edgeToCheck);
+        return set.stream().anyMatch(edge -> target.equals(graph.getEdgeTarget(edge)));
     }
 }
