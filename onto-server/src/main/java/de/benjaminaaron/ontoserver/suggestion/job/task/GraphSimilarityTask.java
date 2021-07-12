@@ -1,6 +1,5 @@
 package de.benjaminaaron.ontoserver.suggestion.job.task;
 
-import de.benjaminaaron.ontoserver.model.graph.DirectedMultigraphWithSelfLoops;
 import de.benjaminaaron.ontoserver.model.graph.Edge;
 import de.benjaminaaron.ontoserver.suggestion.Suggestion;
 import de.benjaminaaron.ontoserver.suggestion.job.task.base.JobGraphTask;
@@ -8,6 +7,7 @@ import org.apache.jena.ext.com.google.common.collect.Sets;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jgrapht.Graph;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ public class GraphSimilarityTask extends JobGraphTask {
 
     @Override
     public List<Suggestion> execute() {
-        DirectedMultigraphWithSelfLoops<RDFNode, Edge> graph = graphManager.getGraph();
+        Graph<RDFNode, Edge> graph = graphManager.getGraph();
         List<RDFNode> vertices = new ArrayList<>(graph.vertexSet());
         int n = vertices.size();
         n = n * (n - 1) / 2;

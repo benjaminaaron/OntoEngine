@@ -5,6 +5,7 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Statement;
+import org.jgrapht.Graph;
 import org.jgrapht.nio.Attribute;
 import org.jgrapht.nio.DefaultAttribute;
 import org.jgrapht.nio.graphml.GraphMLExporter;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 
 public class GraphManager {
 
-    private final DirectedMultigraphWithSelfLoops<RDFNode, Edge> graph;
+    private final Graph<RDFNode, Edge> graph;
     private final Model mainModel;
 
     // integrate more tightly with the Jena Graph?
@@ -96,7 +97,7 @@ public class GraphManager {
         }
     }
 
-    public DirectedMultigraphWithSelfLoops<RDFNode, Edge> getGraph() {
+    public Graph<RDFNode, Edge> getGraph() {
         return graph;
     }
 }
