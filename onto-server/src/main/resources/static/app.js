@@ -74,21 +74,7 @@ let inputEdges = [];
 
 const buildInputGraph = () => {
     let inputGraphDiv = document.getElementById("graphInput");
-    inputGraph = ForceGraph()(inputGraphDiv);
-    let canvasEl = inputGraphDiv.firstChild.firstChild;
-    canvasEl.style.border = "1px solid silver";
-    canvasEl.addEventListener('click', event => {
-        let rect = canvasEl.getBoundingClientRect();
-        let screenX = event.x - rect.left; // stackoverflow.com/questions/17130395/real-mouse-position-in-canvas
-        let screenY = event.y - rect.top;
-        let graphCoords = inputGraph.screen2GraphCoords(screenX, screenY);
-        newNodePrompt({ id: inputNodes.length, x: graphCoords.x, y: graphCoords.y });
-    }, false);
-    updateInputGraph();
-};
-
-const updateInputGraph = () => {
-    inputGraph.graphData({ nodes: inputNodes, links: inputEdges })
+    inputGraph = ForceGraph()(inputGraphDiv)
         .width(400)
         .height(300)
         .nodeLabel('label')
@@ -112,8 +98,23 @@ const updateInputGraph = () => {
             newEdgeInterim = { sourceId: null, targetId: null, edgeId: null };
         })
         .nodeColor(node => node.id === newEdgeInterim.sourceId || node.id === newEdgeInterim.targetId ? "orange" : null);
-        // .linkColor()
-        // .onNodeClick((node, event) => {})
+    // .linkColor()
+    // .onNodeClick((node, event) => {})
+
+    let canvasEl = inputGraphDiv.firstChild.firstChild;
+    canvasEl.style.border = "1px solid silver";
+    canvasEl.addEventListener('click', event => {
+        let rect = canvasEl.getBoundingClientRect();
+        let screenX = event.x - rect.left; // stackoverflow.com/questions/17130395/real-mouse-position-in-canvas
+        let screenY = event.y - rect.top;
+        let graphCoords = inputGraph.screen2GraphCoords(screenX, screenY);
+        newNodePrompt({ id: inputNodes.length, x: graphCoords.x, y: graphCoords.y });
+    }, false);
+    updateInputGraphData();
+};
+
+const updateInputGraphData = () => {
+    inputGraph.graphData({ nodes: inputNodes, links: inputEdges });
 };
 
 let newEdgeInterim = { sourceId: null, targetId: null, edgeId: null };
@@ -125,7 +126,7 @@ const newNodePrompt = node => {
     }
     node.label = value;
     inputNodes.push(node);
-    updateInputGraph();
+    updateInputGraphData();
 };
 
 const newEdgePrompt = edge => {
@@ -135,7 +136,7 @@ const newEdgePrompt = edge => {
     }
     edge.label = value;
     inputEdges.push(edge);
-    updateInputGraph();
+    updateInputGraphData();
 };
 
 const buildOutputGraph = visuType => {
