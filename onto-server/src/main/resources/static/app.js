@@ -82,8 +82,7 @@ const buildInputGraph = () => {
         let screenX = event.x - rect.left; // stackoverflow.com/questions/17130395/real-mouse-position-in-canvas
         let screenY = event.y - rect.top;
         let graphCoords = inputGraph.screen2GraphCoords(screenX, screenY);
-        inputNodes.push({ id: inputNodes.length, x: graphCoords.x, y: graphCoords.y });
-        updateInputGraph();
+        newNodePrompt({ id: inputNodes.length, x: graphCoords.x, y: graphCoords.y });
     }, false);
     updateInputGraph();
 };
@@ -92,8 +91,8 @@ const updateInputGraph = () => {
     inputGraph.graphData({ nodes: inputNodes, links: inputEdges })
         .width(400)
         .height(300)
-        .nodeLabel('id')
-        .linkLabel('id')
+        .nodeLabel('label')
+        .linkLabel('label')
         .linkDirectionalArrowLength(6)
         .linkDirectionalArrowRelPos(1)
         .onNodeDrag(dragNode => {
@@ -103,11 +102,30 @@ const updateInputGraph = () => {
                 }
                 let distance = Math.sqrt(Math.pow(dragNode.x - node.x, 2) + Math.pow(dragNode.y - node.y, 2));
                 if (distance < 10) {
-                    inputEdges.push({ id: inputEdges.length, source: dragNode.id, target: node.id });
-                    updateInputGraph();
+                    newEdgePrompt({ id: inputEdges.length, source: dragNode.id, target: node.id });
                 }
             }
         });
+};
+
+const newNodePrompt = node => {
+    let value = prompt("Enter the value for this node:", appendRandomStr("node"));
+    if (!value) {
+        return;
+    }
+    node.label = value;
+    inputNodes.push(node);
+    updateInputGraph();
+};
+
+const newEdgePrompt = edge => {
+    let value = prompt("Enter the value for this edge:", appendRandomStr("edge"));
+    if (!value) {
+        return;
+    }
+    edge.label = value;
+    inputEdges.push(edge);
+    updateInputGraph();
 };
 
 const buildOutputGraph = visuType => {
