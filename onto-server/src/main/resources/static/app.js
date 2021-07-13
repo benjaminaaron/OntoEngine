@@ -68,6 +68,39 @@ const onKeypress = (element, onEnter, resourceType) => {
     });
 };
 
+let inputGraph;
+
+const buildInputGraph = () => {
+    let inputGraphDiv = document.getElementById("graphInput");
+    inputGraph = ForceGraph()(inputGraphDiv);
+    let canvasEl = inputGraphDiv.firstChild.firstChild;
+    canvasEl.style.border = "1px solid silver";
+    canvasEl.addEventListener('click', event => {
+        let rect = canvasEl.getBoundingClientRect();
+        let screenX = event.x - rect.left; // stackoverflow.com/questions/17130395/real-mouse-position-in-canvas
+        let screenY = event.y - rect.top;
+        let graphCoords = inputGraph.screen2GraphCoords(screenX, screenY);
+
+        console.log(graphCoords);
+        // TODO
+
+    }, false);
+    updateInputGraph();
+};
+
+const updateInputGraph = () => {
+
+    // TODO
+
+    inputGraph.graphData({ nodes: [], links: [] })
+        .width(400)
+        .height(300)
+        .nodeLabel('id')
+        .linkLabel('id')
+        .linkDirectionalArrowLength(6)
+        .linkDirectionalArrowRelPos(1)
+};
+
 const buildOutputGraph = visuType => {
     let outputGraphDiv = document.getElementById("graphOutput");
     while (outputGraphDiv.firstChild) {
@@ -200,4 +233,5 @@ $(() => {
     $("#subjectTextField").focus();
     $("#visu-2d").prop("checked", true);
     buildOutputGraph("2D");
+    buildInputGraph();
 });
