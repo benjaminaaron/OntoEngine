@@ -69,6 +69,8 @@ const onKeypress = (element, onEnter, resourceType) => {
 };
 
 let inputGraph;
+let inputNodes = [];
+let inputEdges = [];
 
 const buildInputGraph = () => {
     let inputGraphDiv = document.getElementById("graphInput");
@@ -80,19 +82,14 @@ const buildInputGraph = () => {
         let screenX = event.x - rect.left; // stackoverflow.com/questions/17130395/real-mouse-position-in-canvas
         let screenY = event.y - rect.top;
         let graphCoords = inputGraph.screen2GraphCoords(screenX, screenY);
-
-        console.log(graphCoords);
-        // TODO
-
+        inputNodes.push({ id: inputNodes.length, x: graphCoords.x, y: graphCoords.y });
+        updateInputGraph();
     }, false);
     updateInputGraph();
 };
 
 const updateInputGraph = () => {
-
-    // TODO
-
-    inputGraph.graphData({ nodes: [], links: [] })
+    inputGraph.graphData({ nodes: inputNodes, links: inputEdges })
         .width(400)
         .height(300)
         .nodeLabel('id')
