@@ -96,6 +96,18 @@ const updateInputGraph = () => {
         .linkLabel('id')
         .linkDirectionalArrowLength(6)
         .linkDirectionalArrowRelPos(1)
+        .onNodeDrag(dragNode => {
+            for (let node of inputNodes) {
+                if (dragNode.id === node.id) {
+                    continue;
+                }
+                let distance = Math.sqrt(Math.pow(dragNode.x - node.x, 2) + Math.pow(dragNode.y - node.y, 2));
+                if (distance < 10) {
+                    inputEdges.push({ id: inputEdges.length, source: dragNode.id, target: node.id });
+                    updateInputGraph();
+                }
+            }
+        });
 };
 
 const buildOutputGraph = visuType => {
