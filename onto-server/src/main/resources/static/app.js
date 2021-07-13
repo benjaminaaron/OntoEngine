@@ -24,12 +24,12 @@ const connect = () => {
             for (let triple of JSON.parse(messageObj.body).triples) {
                 addNewTripleToGraph(triple.subjectUri, triple.predicateUri, triple.objectUriOrLiteralValue, triple.objectIsLiteral);
             }
-            updateGraph();
+            updateOutputGraph();
         });
         stompClient.subscribe('/topic/new-triple-event', messageObj => {
             let json = JSON.parse(messageObj.body);
             addNewTripleToGraph(json.subjectUri, json.predicateUri, json.objectUriOrLiteralValue, json.objectIsLiteral);
-            updateGraph();
+            updateOutputGraph();
         });
     });
     // stompClient.disconnect();
@@ -68,39 +68,40 @@ const onKeypress = (element, onEnter, resourceType) => {
     });
 };
 
-let graph;
-
-const buildGraph = visuType => {
-    let graphDiv = document.getElementById("graph");
-    while (graphDiv.firstChild) {
-        graphDiv.removeChild(graphDiv.lastChild);
+const buildOutputGraph = visuType => {
+    let outputGraphDiv = document.getElementById("graphOutput");
+    while (outputGraphDiv.firstChild) {
+        outputGraphDiv.removeChild(outputGraphDiv.lastChild);
     }
     switch (visuType) {
         case "None":
             return;
         case "2D":
-            graph = ForceGraph()(graphDiv);
+            outputGraph = ForceGraph()(outputGraphDiv);
             break;
         case "3D":
-            graph = ForceGraph3D()(graphDiv);
+            outputGraph = ForceGraph3D()(outputGraphDiv);
             break;
     }
-    graph.graphData({ nodes: [], links: [] })
+    outputGraph.graphData({ nodes: [], links: [] })
+        .width(600)
+        .height(400)
         .nodeLabel('label')
         .linkLabel('label')
         .linkDirectionalArrowLength(6)
         .linkDirectionalArrowRelPos(1)
         .linkCurvature('curvature');
-    updateGraph();
+    updateOutputGraph();
 };
 
-let nodesMap = {};
-let edgesArr = [];
+let outputGraph;
+let outputNodesMap = {};
+let outputEdgesArr = [];
 const curvatureMinMax = 0.5;
 
-const updateGraph = () => {
+const updateOutputGraph = () => {
     let nodes = [];
-    Object.keys(nodesMap).forEach(key => nodes.push(nodesMap[key]));
+    Object.keys(outputNodesMap).forEach(key => nodes.push(outputNodesMap[key]));
 
     let edges = [];
     let selfLoopEdges = {};
@@ -113,7 +114,7 @@ const updateGraph = () => {
         map[edge.vertexPairId].push(edge);
     };
 
-    edgesArr.forEach(edge => {
+    outputEdgesArr.forEach(edge => {
         edges.push(edge);
         add(edge.sourceId === edge.targetId ? selfLoopEdges : vertexPairEdges, edge);
     });
@@ -140,36 +141,36 @@ const updateGraph = () => {
         }
     });
 
-    graph.graphData({ nodes: nodes, links: edges });
+    outputGraph.graphData({ nodes: nodes, links: edges });
 };
 
 const nextId = () => {
-  return Object.keys(nodesMap).length;
+  return Object.keys(outputNodesMap).length;
 };
 
 const addNewTripleToGraph = (subjectUri, predicateUri, object, objectIsLiteral) => {
     console.log("addNewTripleToGraph", subjectUri, predicateUri, object, objectIsLiteral);
 
-    if (!nodesMap[subjectUri]) {
-        nodesMap[subjectUri] = {id: nextId(), label: subjectUri};
+    if (!outputNodesMap[subjectUri]) {
+        outputNodesMap[subjectUri] = {id: nextId(), label: subjectUri};
     }
-    let sVertex = nodesMap[subjectUri];
+    let sVertex = outputNodesMap[subjectUri];
 
     let oVertex;
     if (objectIsLiteral) {
         oVertex = {id: nextId(), label: object};
-        nodesMap[appendRandomStr(object)] = oVertex;
+        outputNodesMap[appendRandomStr(object)] = oVertex;
     } else {
         let objectUri = object;
-        if (!nodesMap[objectUri]) {
-            nodesMap[objectUri] = {id: nextId(), label: objectUri};
+        if (!outputNodesMap[objectUri]) {
+            outputNodesMap[objectUri] = {id: nextId(), label: objectUri};
         }
-        oVertex = nodesMap[objectUri];
+        oVertex = outputNodesMap[objectUri];
     }
 
     let vertexPairId = sVertex.id <= oVertex.id ? (sVertex.id + "_" + oVertex.id) : (oVertex.id + "_" + sVertex.id); // indifferent to the direction of an edge
 
-    edgesArr.push({
+    outputEdgesArr.push({
         source: sVertex,
         target: oVertex,
         sourceId: sVertex.id,
@@ -185,7 +186,7 @@ const appendRandomStr = str => {
 };
 
 const visuChange = visuType => {
-    buildGraph(visuType);
+    buildOutputGraph(visuType);
 };
 
 $(() => {
@@ -198,5 +199,5 @@ $(() => {
     onKeypress("commandTextField", sendCommand, null);
     $("#subjectTextField").focus();
     $("#visu-2d").prop("checked", true);
-    buildGraph("2D");
+    buildOutputGraph("2D");
 });
