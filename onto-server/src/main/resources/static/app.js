@@ -96,17 +96,24 @@ const updateInputGraph = () => {
         .linkDirectionalArrowLength(6)
         .linkDirectionalArrowRelPos(1)
         .onNodeDrag(dragNode => {
+            newEdgeInterim.sourceId = dragNode.id;
             for (let node of inputNodes) {
                 if (dragNode.id === node.id) {
                     continue;
                 }
                 let distance = Math.sqrt(Math.pow(dragNode.x - node.x, 2) + Math.pow(dragNode.y - node.y, 2));
-                if (distance < 10) {
-                    newEdgePrompt({ id: inputEdges.length, source: dragNode.id, target: node.id });
-                }
+                newEdgeInterim.targetId = distance < 10 ? node.id : null;
             }
+        })
+        .onNodeDragEnd(dragNode => {
+            if (newEdgeInterim.targetId !== null) {
+                newEdgePrompt({ id: inputEdges.length, source: dragNode.id, target: newEdgeInterim.targetId });
+            }
+            newEdgeInterim = { sourceId: null, targetId: null, edgeId: null };
         });
 };
+
+let newEdgeInterim = { sourceId: null, targetId: null, edgeId: null };
 
 const newNodePrompt = node => {
     let value = prompt("Enter the value for this node:", appendRandomStr("node"));
