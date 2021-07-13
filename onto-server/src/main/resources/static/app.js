@@ -92,9 +92,11 @@ const buildInputGraph = () => {
                     continue;
                 }
                 if (!interimEdge && distance(dragNode, node) < 15) {
-                    interimEdge = { id: inputEdges.length, source: dragSourceNode.id, target: node.id };
-                    inputEdges.push(interimEdge);
-                    updateInputGraphData();
+                    setInterimEdge(dragSourceNode.id, node.id);
+                }
+                if (interimEdge && node !== interimEdge.target && distance(dragNode, node) < 15) {
+                    removeInterimEdgeFromArray();
+                    setInterimEdge(dragSourceNode.id, node.id);
                 }
             }
             if (interimEdge && distance(dragNode, interimEdge.target) > 40) {
@@ -130,8 +132,18 @@ const updateInputGraphData = () => {
 let dragSourceNode = null;
 let interimEdge = null;
 
-const removeInterimEdgeWithoutAddingIt = () => {
+const setInterimEdge = (sourceId, targetId) => {
+    interimEdge = { id: inputEdges.length, source: sourceId, target: targetId };
+    inputEdges.push(interimEdge);
+    updateInputGraphData();
+};
+
+const removeInterimEdgeFromArray = () => {
     inputEdges.splice(inputEdges.indexOf(interimEdge), 1);
+};
+
+const removeInterimEdgeWithoutAddingIt = () => {
+    removeInterimEdgeFromArray();
     interimEdge = null;
     updateInputGraphData();
 };
