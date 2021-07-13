@@ -110,7 +110,10 @@ const updateInputGraph = () => {
                 newEdgePrompt({ id: inputEdges.length, source: dragNode.id, target: newEdgeInterim.targetId });
             }
             newEdgeInterim = { sourceId: null, targetId: null, edgeId: null };
-        });
+        })
+        .nodeColor(node => node.id === newEdgeInterim.sourceId || node.id === newEdgeInterim.targetId ? "orange" : null);
+        // .linkColor()
+        // .onNodeClick((node, event) => {})
 };
 
 let newEdgeInterim = { sourceId: null, targetId: null, edgeId: null };
