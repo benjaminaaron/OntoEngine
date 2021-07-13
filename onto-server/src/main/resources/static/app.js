@@ -68,6 +68,10 @@ const onKeypress = (element, onEnter, resourceType) => {
     });
 };
 
+const distance = (node1, node2) => {
+    return Math.sqrt(Math.pow(node1.x - node2.x, 2) + Math.pow(node1.y - node2.y, 2));
+};
+
 let inputGraph;
 let inputNodes = [];
 let inputEdges = [];
@@ -75,31 +79,37 @@ let inputEdges = [];
 const buildInputGraph = () => {
     let inputGraphDiv = document.getElementById("graphInput");
     inputGraph = ForceGraph()(inputGraphDiv)
-        .width(400)
-        .height(300)
+        .width(600)
+        .height(400)
         .nodeLabel('label')
         .linkLabel('label')
         .linkDirectionalArrowLength(6)
         .linkDirectionalArrowRelPos(1)
         .onNodeDrag(dragNode => {
-            newEdgeInterim.sourceId = dragNode.id;
+            dragSourceNode = dragNode;
             for (let node of inputNodes) {
                 if (dragNode.id === node.id) {
                     continue;
                 }
-                let distance = Math.sqrt(Math.pow(dragNode.x - node.x, 2) + Math.pow(dragNode.y - node.y, 2));
-                newEdgeInterim.targetId = distance < 10 ? node.id : null;
+                if (!interimEdge && distance(dragNode, node) < 15) {
+                    interimEdge = { id: inputEdges.length, source: dragSourceNode.id, target: node.id };
+                    inputEdges.push(interimEdge);
+                    updateInputGraphData();
+                }
+            }
+            if (interimEdge && distance(dragNode, interimEdge.target) > 40) {
+                removeInterimEdgeWithoutAddingIt();
             }
         })
-        .onNodeDragEnd(dragNode => {
-            if (newEdgeInterim.targetId !== null) {
-                newEdgePrompt({ id: inputEdges.length, source: dragNode.id, target: newEdgeInterim.targetId });
+        .onNodeDragEnd(() => {
+            if (interimEdge) {
+                acceptInterimEdgePrompt();
             }
-            newEdgeInterim = { sourceId: null, targetId: null, edgeId: null };
         })
-        .nodeColor(node => node.id === newEdgeInterim.sourceId || node.id === newEdgeInterim.targetId ? "orange" : null);
-    // .linkColor()
-    // .onNodeClick((node, event) => {})
+        .nodeColor(node => interimEdge && (node === interimEdge.source || node === interimEdge.target) ? "orange" : null)
+        .linkColor(edge => edge === interimEdge ? "orange" : "#bbbbbb")
+        .linkLineDash(edge => edge === interimEdge ? [2, 2] : []);
+        // .onNodeClick((node, event) => {})
 
     let canvasEl = inputGraphDiv.firstChild.firstChild;
     canvasEl.style.border = "1px solid silver";
@@ -117,7 +127,14 @@ const updateInputGraphData = () => {
     inputGraph.graphData({ nodes: inputNodes, links: inputEdges });
 };
 
-let newEdgeInterim = { sourceId: null, targetId: null, edgeId: null };
+let dragSourceNode = null;
+let interimEdge = null;
+
+const removeInterimEdgeWithoutAddingIt = () => {
+    inputEdges.splice(inputEdges.indexOf(interimEdge), 1);
+    interimEdge = null;
+    updateInputGraphData();
+};
 
 const newNodePrompt = node => {
     let value = prompt("Enter the value for this node:", appendRandomStr("node"));
@@ -129,13 +146,14 @@ const newNodePrompt = node => {
     updateInputGraphData();
 };
 
-const newEdgePrompt = edge => {
+const acceptInterimEdgePrompt = () => {
     let value = prompt("Enter the value for this edge:", appendRandomStr("edge"));
     if (!value) {
+        removeInterimEdgeWithoutAddingIt();
         return;
     }
-    edge.label = value;
-    inputEdges.push(edge);
+    interimEdge.label = value;
+    interimEdge = null;
     updateInputGraphData();
 };
 
