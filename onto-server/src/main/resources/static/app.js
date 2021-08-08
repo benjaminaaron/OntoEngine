@@ -68,120 +68,9 @@ const onKeypress = (element, onEnter, resourceType) => {
     });
 };
 
-const distance = (node1, node2) => {
-    return Math.sqrt(Math.pow(node1.x - node2.x, 2) + Math.pow(node1.y - node2.y, 2));
-};
-
-let inputGraph;
-let inputNodes = [];
-let inputEdges = [];
-
-const buildInputGraph = () => {
-    let inputGraphDiv = document.getElementById("graphInput");
-    inputGraph = ForceGraph()(inputGraphDiv)
-        .width(600)
-        .height(400)
-        .nodeLabel('label')
-        .linkLabel('label')
-        .linkDirectionalArrowLength(6)
-        .linkDirectionalArrowRelPos(1)
-        .onNodeDrag(dragNode => {
-            dragSourceNode = dragNode;
-            for (let node of inputNodes) {
-                if (dragNode.id === node.id) {
-                    continue;
-                }
-                if (!interimEdge && distance(dragNode, node) < 15) {
-                    setInterimEdge(dragSourceNode.id, node.id);
-                }
-                if (interimEdge && node !== interimEdge.target && distance(dragNode, node) < 15) {
-                    removeInterimEdgeFromArray();
-                    setInterimEdge(dragSourceNode.id, node.id);
-                }
-            }
-            if (interimEdge && distance(dragNode, interimEdge.target) > 40) {
-                removeInterimEdgeWithoutAddingIt();
-            }
-        })
-        .onNodeDragEnd(() => {
-            dragSourceNode = null;
-            if (interimEdge) {
-                acceptInterimEdgePrompt();
-            }
-        })
-        .nodeColor(node => node === dragSourceNode || (interimEdge && (node === interimEdge.source || node === interimEdge.target)) ? "orange" : null)
-        .linkColor(edge => edge === interimEdge ? "orange" : "#bbbbbb")
-        .linkLineDash(edge => edge === interimEdge ? [2, 2] : [])
-        .onNodeClick((node, event) => rename(node, "node"))
-        .onLinkClick((edge, event) => rename(edge, "edge"))
-        .onBackgroundClick(event => {
-            let coords = inputGraph.screen2GraphCoords(event.layerX, event.layerY);
-            newNodePrompt({ id: inputNodes.length, x: coords.x, y: coords.y });
-        });
-
-    let canvasEl = inputGraphDiv.firstChild.firstChild;
-    canvasEl.style.border = "1px solid silver";
-    updateInputGraphData();
-};
-
-const updateInputGraphData = () => {
-    inputGraph.graphData({ nodes: inputNodes, links: inputEdges });
-};
-
-let dragSourceNode = null;
-let interimEdge = null;
-
-const rename = (nodeOrEdge, type) => {
-    let value = prompt("Rename this " + type + ":", nodeOrEdge.label);
-    if (!value) {
-        return;
-    }
-    nodeOrEdge.label = value;
-    updateInputGraphData();
-};
-
-const setInterimEdge = (sourceId, targetId) => {
-    interimEdge = { id: inputEdges.length, source: sourceId, target: targetId };
-    inputEdges.push(interimEdge);
-    updateInputGraphData();
-};
-
-const removeInterimEdgeFromArray = () => {
-    inputEdges.splice(inputEdges.indexOf(interimEdge), 1);
-};
-
-const removeInterimEdgeWithoutAddingIt = () => {
-    removeInterimEdgeFromArray();
-    interimEdge = null;
-    updateInputGraphData();
-};
-
-const newNodePrompt = node => {
-    let value = prompt("Name this node:", appendRandomStr("node"));
-    if (!value) {
-        return;
-    }
-    node.label = value;
-    inputNodes.push(node);
-    updateInputGraphData();
-};
-
-const acceptInterimEdgePrompt = () => {
-    let value = prompt("Name this edge:", appendRandomStr("edge"));
-    if (!value) {
-        removeInterimEdgeWithoutAddingIt();
-        return;
-    }
-    interimEdge.label = value;
-    interimEdge = null;
-    updateInputGraphData();
-};
-
 const buildOutputGraph = visuType => {
     let outputGraphDiv = document.getElementById("graphOutput");
-    while (outputGraphDiv.firstChild) {
-        outputGraphDiv.removeChild(outputGraphDiv.lastChild);
-    }
+    while (outputGraphDiv.firstChild) outputGraphDiv.removeChild(outputGraphDiv.lastChild);
     switch (visuType) {
         case "None":
             return;
@@ -193,13 +82,15 @@ const buildOutputGraph = visuType => {
             break;
     }
     outputGraph.graphData({ nodes: [], links: [] })
-        .width(600)
-        .height(400)
+        .width(1200)
+        .height(600)
         .nodeLabel('label')
         .linkLabel('label')
         .linkDirectionalArrowLength(6)
         .linkDirectionalArrowRelPos(1)
         .linkCurvature('curvature');
+    let canvasEl = outputGraphDiv.firstChild.firstChild;
+    canvasEl.style.border = "1px solid silver";
     updateOutputGraph();
 };
 
@@ -294,10 +185,6 @@ const appendRandomStr = str => {
     return str + "_" + Math.random().toString(36).substr(2, 5);
 };
 
-const visuChange = visuType => {
-    buildOutputGraph(visuType);
-};
-
 $(() => {
     connect();
     $("#addStatementBtn").click(() => { addStatement(); });
@@ -309,5 +196,4 @@ $(() => {
     $("#subjectTextField").focus();
     $("#visu-2d").prop("checked", true);
     buildOutputGraph("2D");
-    buildInputGraph();
 });
