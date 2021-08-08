@@ -104,24 +104,23 @@ const buildInputGraph = () => {
             }
         })
         .onNodeDragEnd(() => {
+            dragSourceNode = null;
             if (interimEdge) {
                 acceptInterimEdgePrompt();
             }
         })
-        .nodeColor(node => interimEdge && (node === interimEdge.source || node === interimEdge.target) ? "orange" : null)
+        .nodeColor(node => node === dragSourceNode || (interimEdge && (node === interimEdge.source || node === interimEdge.target)) ? "orange" : null)
         .linkColor(edge => edge === interimEdge ? "orange" : "#bbbbbb")
-        .linkLineDash(edge => edge === interimEdge ? [2, 2] : []);
-        // .onNodeClick((node, event) => {})
+        .linkLineDash(edge => edge === interimEdge ? [2, 2] : [])
+        .onNodeClick((node, event) => rename(node, "node"))
+        .onLinkClick((edge, event) => rename(edge, "edge"))
+        .onBackgroundClick(event => {
+            let coords = inputGraph.screen2GraphCoords(event.layerX, event.layerY);
+            newNodePrompt({ id: inputNodes.length, x: coords.x, y: coords.y });
+        });
 
     let canvasEl = inputGraphDiv.firstChild.firstChild;
     canvasEl.style.border = "1px solid silver";
-    canvasEl.addEventListener('click', event => {
-        let rect = canvasEl.getBoundingClientRect();
-        let screenX = event.x - rect.left; // stackoverflow.com/questions/17130395/real-mouse-position-in-canvas
-        let screenY = event.y - rect.top;
-        let graphCoords = inputGraph.screen2GraphCoords(screenX, screenY);
-        newNodePrompt({ id: inputNodes.length, x: graphCoords.x, y: graphCoords.y });
-    }, false);
     updateInputGraphData();
 };
 
@@ -131,6 +130,15 @@ const updateInputGraphData = () => {
 
 let dragSourceNode = null;
 let interimEdge = null;
+
+const rename = (nodeOrEdge, type) => {
+    let value = prompt("Rename this " + type + ":", nodeOrEdge.label);
+    if (!value) {
+        return;
+    }
+    nodeOrEdge.label = value;
+    updateInputGraphData();
+};
 
 const setInterimEdge = (sourceId, targetId) => {
     interimEdge = { id: inputEdges.length, source: sourceId, target: targetId };
@@ -149,7 +157,7 @@ const removeInterimEdgeWithoutAddingIt = () => {
 };
 
 const newNodePrompt = node => {
-    let value = prompt("Enter the value for this node:", appendRandomStr("node"));
+    let value = prompt("Name this node:", appendRandomStr("node"));
     if (!value) {
         return;
     }
@@ -159,7 +167,7 @@ const newNodePrompt = node => {
 };
 
 const acceptInterimEdgePrompt = () => {
-    let value = prompt("Enter the value for this edge:", appendRandomStr("edge"));
+    let value = prompt("Name this edge:", appendRandomStr("edge"));
     if (!value) {
         removeInterimEdgeWithoutAddingIt();
         return;
