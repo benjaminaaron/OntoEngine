@@ -185,6 +185,10 @@ const appendRandomStr = str => {
     return str + "_" + Math.random().toString(36).substr(2, 5);
 };
 
+const visuChange = visuType => {
+    buildOutputGraph(visuType);
+};
+
 $(() => {
     connect();
     $("#addStatementBtn").click(() => { addStatement(); });
