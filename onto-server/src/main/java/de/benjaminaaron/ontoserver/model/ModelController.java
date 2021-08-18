@@ -5,8 +5,8 @@ import de.benjaminaaron.ontoserver.model.graph.GraphManager;
 import de.benjaminaaron.ontoserver.routing.websocket.WebSocketRouting;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementMessage;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementResponse;
-import de.benjaminaaron.ontoserver.suggestion.SuggestionEngine;
 import de.benjaminaaron.ontoserver.suggestion.LocalVocabularyManager;
+import de.benjaminaaron.ontoserver.suggestion.SuggestionEngine;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.tdb.TDBFactory;
@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -31,40 +30,31 @@ public class ModelController {
 
     private final Logger logger = LogManager.getLogger(ModelController.class);
 
-    @Value("${jena.tdb.directory}")
-    private Path TBD_DIR;
-    @Value("${jena.tdb.model.main.name}")
-    private String MAIN_MODEL_NAME;
-    @Value("${jena.tdb.model.meta.name}")
-    private String META_MODEL_NAME;
-    @Value("${jena.tdb.model.vocabulary-sources.name}")
-    private String VOCABULARY_SOURCES_MODEL_NAME;
-
     @Autowired
     private WebSocketRouting router;
+
     @Autowired
     private SuggestionEngine suggestionEngine;
 
-    private Model mainModel, metaModel, vocabularySourcesModel;
-    private GraphManager graphManager;
-    private MetaHandler metaHandler;
-    private LocalVocabularyManager localVocabularyManager;
+    private final Model mainModel;
+    private final Model metaModel;
+    private final Model vocabularySourcesModel;
+    private final GraphManager graphManager;
+    private final MetaHandler metaHandler;
+    private final LocalVocabularyManager localVocabularyManager;
 
-    @Value("${uri.default.namespace}")
-    public void setUriDefaultNamespace(String ns) {
-        Utils.DEFAULT_URI_NAMESPACE = ns;
-    }
+    public ModelController(
+            @Value("${jena.tdb.directory}") Path TBD_DIR,
+            @Value("${jena.tdb.model.main.name}") String MAIN_MODEL_NAME,
+            @Value("${jena.tdb.model.meta.name}") String META_MODEL_NAME,
+            @Value("${jena.tdb.model.vocabulary-sources.name}") String VOCABULARY_SOURCES_MODEL_NAME,
+            @Value("${uri.default.namespace}") String DEFAULT_URI_NAMESPACE,
+            @Value("${uri.default.separator}") String DEFAULT_URI_SEPARATOR,
+            @Value("classpath:meta.owl") Path META_OWL
+    ) {
+        Utils.DEFAULT_URI_NAMESPACE = DEFAULT_URI_NAMESPACE;
+        Utils.DEFAULT_URI_SEPARATOR = DEFAULT_URI_SEPARATOR;
 
-    @Value("${uri.default.separator}")
-    public void setUriDefaultSeparator(String sep) {
-        Utils.DEFAULT_URI_SEPARATOR = sep;
-    }
-
-    @Value("classpath:meta.owl")
-    private Path META_OWL;
-
-    @PostConstruct
-    private void init() {
         Dataset dataset = TDBFactory.createDataset(TBD_DIR.toString());
 
         // Main Model
