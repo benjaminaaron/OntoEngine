@@ -9,17 +9,17 @@
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
     <script src="/app.js"></script>
+    <script src="//unpkg.com/force-graph"></script>
+    <script src="//unpkg.com/3d-force-graph"></script>
 </head>
 <body>
     <div style="padding-left: 40px; padding-top: 40px">
-        <input type="text" id="subjectTextField" size="20">
-        <input type="text" id="predicateTextField" size="20">
-        <input type="text" id="objectTextField" size="20">
-        <input type="checkbox" id="literalCheckBox">
-        <button id="addStatementBtn" type="submit">Add statement</button>
-        <br/><br/>
-        <input type="text" id="commandTextField" size="74">
-        <button id="sendCommandBtn" type="submit">Send command</button>
+        <input type="radio" id="visu-2d" name="visu" value="2D" onChange="visuChange(this.value)">
+        <label for="visu-2d">2D</label>
+        <input type="radio" id="visu-3d" name="visu" value="3D" onChange="visuChange(this.value)">
+        <label for="visu-3d">3D</label>
+        <br/>
+        <div id="graphOutput"></div>
     </div>
 </body>
 </html>

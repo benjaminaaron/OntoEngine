@@ -72,8 +72,6 @@ const buildOutputGraph = visuType => {
     let outputGraphDiv = document.getElementById("graphOutput");
     while (outputGraphDiv.firstChild) outputGraphDiv.removeChild(outputGraphDiv.lastChild);
     switch (visuType) {
-        case "None":
-            return;
         case "2D":
             outputGraph = ForceGraph()(outputGraphDiv);
             break;
