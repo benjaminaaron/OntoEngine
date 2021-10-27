@@ -5,21 +5,6 @@ const connect = () => {
     stompClient = Stomp.over(socket);
     stompClient.connect({}, frame => {
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/app/subscribe', messageObj => {
-            console.log("Server says: ", JSON.parse(messageObj.body).message);
-        });
-        stompClient.subscribe('/topic/serverBroadcasting', messageObj => {
-            console.log("Server says: ", JSON.parse(messageObj.body).message);
-        });
-        stompClient.subscribe('/topic/serverAddStatementResponse', messageObj => {
-            console.log("serverAddStatementResponse: ", JSON.parse(messageObj.body));
-        });
-        stompClient.subscribe('/topic/serverSuggestions', messageObj => {
-            console.log("serverSuggestions: ", JSON.parse(messageObj.body));
-        });
-        stompClient.subscribe('/topic/whileTypingSuggestionsResponse', messageObj => {
-            console.log("whileTypingSuggestionsResponse: ", JSON.parse(messageObj.body));
-        });
         stompClient.subscribe('/app/initial-triples', messageObj => {
             for (let triple of JSON.parse(messageObj.body).triples) {
                 addNewTripleToGraph(triple.subjectUri, triple.predicateUri, triple.objectUriOrLiteralValue, triple.objectIsLiteral);
@@ -31,40 +16,6 @@ const connect = () => {
             addNewTripleToGraph(json.subjectUri, json.predicateUri, json.objectUriOrLiteralValue, json.objectIsLiteral);
             updateOutputGraph();
         });
-    });
-    // stompClient.disconnect();
-};
-
-const addStatement = () => {
-    let statement = {
-        subject: $("#subjectTextField").val(),
-        predicate: $("#predicateTextField").val(),
-        object: $("#objectTextField").val(),
-        objectIsLiteral: $("#literalCheckBox").prop('checked')
-    };
-    console.log("statement: ", statement);
-    stompClient.send("/app/serverReceiveAddStatement", {}, JSON.stringify(statement));
-};
-
-const sendCommand = () => {
-    let command = {
-        command: $("#commandTextField").val()
-    }
-    stompClient.send("/app/serverReceiveCommand", {}, JSON.stringify(command));
-};
-
-const onKeypress = (element, onEnter, resourceType) => {
-    let el = $("#" + element);
-    el.on('keyup', e => {
-        if (e.which === 13) {
-            onEnter();
-        } else if (resourceType !== null) {
-            let message = {
-                resourceType: resourceType,
-                value: el.val()
-            };
-            // stompClient.send("/app/requestWhileTypingSuggestions", {}, JSON.stringify(message));
-        }
     });
 };
 
@@ -143,7 +94,7 @@ const updateOutputGraph = () => {
 };
 
 const nextId = () => {
-  return Object.keys(outputNodesMap).length;
+    return Object.keys(outputNodesMap).length;
 };
 
 const addNewTripleToGraph = (subjectUri, predicateUri, object, objectIsLiteral) => {
@@ -189,13 +140,6 @@ const visuChange = visuType => {
 
 $(() => {
     connect();
-    $("#addStatementBtn").click(() => { addStatement(); });
-    $("#sendCommandBtn").click(() => { sendCommand(); });
-    onKeypress("subjectTextField", () => $("#predicateTextField").focus(), "SUBJECT");
-    onKeypress("predicateTextField", () => $("#objectTextField").focus(), "PREDICATE");
-    onKeypress("objectTextField", addStatement, "OBJECT");
-    onKeypress("commandTextField", sendCommand, null);
-    $("#subjectTextField").focus();
     $("#visu-2d").prop("checked", true);
     buildOutputGraph("2D");
 });
