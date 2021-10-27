@@ -1,13 +1,12 @@
-/* Light mode */
+/*
 @media (prefers-color-scheme: light) {
     body {
         background-color: white;
     }
 }
-
-/* Dark mode */
 @media (prefers-color-scheme: dark) {
     body {
         background-color: black;
     }
 }
+*/
