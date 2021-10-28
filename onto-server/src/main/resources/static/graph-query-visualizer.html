@@ -1,0 +1,121 @@
+<head>
+    <meta charset="UTF-8">
+    <title>Graph Query Visualizer</title>
+    <script src="graph-query-visualizer/bundle.js"></script>
+    <link href="graph-query-visualizer/yasgui.min.css" rel="stylesheet" />
+    <style>
+        .yasgui .controlbar, .tabslist, .yasqe_buttons, .yasr {
+            display: none !important;
+        }
+        #sparqlEditorDiv .CodeMirror {
+            font-size: 15px !important;
+            height: 232px !important;
+        }
+        #languageInterpreterDiv .CodeMirror {
+            font-family: "Ubuntu Mono",serif;
+            font-size: 18px !important;
+            height: 180px;
+        }
+        .cm-namedNodeShort {
+            color: #e9591e;
+        }
+        .cm-variable {
+            color: #1d158b;
+        }
+        .cm-literal {
+            color: #912419;
+        }
+        #outputWrapperDiv {
+            display: none;
+        }
+        #queryResultsDiv {
+            padding-right: 14px;
+        }
+        #queryResultsTable {
+            font-family: "Ubuntu Mono",serif;
+            border-collapse: collapse;
+            width: 300px;
+            table-layout: fixed;
+        }
+        #queryResultsTable th, #queryResultsTable td {
+            border: 1px solid silver;
+            padding: 10px;
+        }
+        #queryResultsTable th {
+            color: #1d158b;
+            text-align: left;
+            background-color: lightcyan;
+        }
+        #queryResultsTable tr:hover {
+            background-color: lightgoldenrodyellow;
+        }
+        .selectedRow {
+            background-color: yellow;
+        }
+        .Literal {
+            color: #912419;
+        }
+        .NamedNode {
+            color: #e9591e;
+        }
+    </style>
+</head>
+<body>
+<!--<div style="text-align: center; color: silver">
+    <b>New node:</b> click on the canvas, <b>New edge:</b> drag one node close enough to another one,
+    <b>Rename</b> node or edge by clicking on it, <b>Remove</b> node or edge by right-clicking on it
+</div>-->
+<table>
+    <tr>
+        <td style="vertical-align: top; width: 600px; padding-right: 10px">
+            <div id="sparqlEditorDiv"></div>
+            <div id="languageInterpreterDiv"></div>
+        </td>
+        <td style="padding-bottom: 10px">
+            <div id="graphBuilderDiv"></div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div style="display: flex; justify-content: center; padding: 20px">
+                <button id="submitBtn" type="submit">Submit SPARQL query</button>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div id="outputWrapperDiv">
+                <div id="queryResultsDiv"></div>
+                <div id="graphOutputDiv"></div>
+            </div>
+        </td>
+    </tr>
+</table>
+<script>
+    init({
+        graphBuilder: {
+            div: document.getElementById('graphBuilderDiv'),
+            width: 700,
+            height: 424
+        },
+        sparqlEditor: {
+            div: document.getElementById('sparqlEditorDiv')
+        },
+        languageInterpreter: {
+            div: document.getElementById('languageInterpreterDiv')
+        },
+        graphOutput: {
+            div: document.getElementById('graphOutputDiv'),
+            width: 999,
+            height: 600
+        },
+        resultsTable: {
+            queryResultsDiv: document.getElementById('queryResultsDiv')
+        },
+        outputElements: {
+            submitButtonId: 'submitBtn',
+            outputWrapperDiv: document.getElementById('outputWrapperDiv')
+        }
+    });
+</script>
+</body>
