@@ -2,9 +2,3 @@
 *.iml
 .mvn/
 target/
-
-jena-tdb/
-*.rdf
-*.graphml
-logs/
-export/
