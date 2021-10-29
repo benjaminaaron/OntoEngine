@@ -39,6 +39,8 @@ public class ModelController {
     private final Model mainModel;
     private final Model metaModel;
     private final Model vocabularySourcesModel;
+
+    // these three should all be @Component's
     private final GraphManager graphManager;
     private final MetaHandler metaHandler;
     private final LocalVocabularyManager localVocabularyManager;
