@@ -146,6 +146,10 @@ public class ModelController {
         return mainModel;
     }
 
+    public Model getMetaModel() {
+        return metaModel;
+    }
+
     public MetaHandler getMetaHandler() {
         return metaHandler;
     }

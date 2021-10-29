@@ -51,19 +51,16 @@ public abstract class BaseRouting {
                 modelController.printStatements();
                 break;
             case "export":
-                String arg0 = args.get(0).toLowerCase();
-                if (arg0.equals("rdf")) {
-                    if (args.size() > 1 && args.get(1).equalsIgnoreCase("meta")) {
-                        exporter.exportRDF("meta");
-                    } else {
-                        exporter.exportRDF("main");
-                    }
+                String format = args.get(0).toLowerCase(); // rdf, graphml or graphdb
+                String model = args.get(1).toLowerCase(); // main or meta
+                if (format.equals("rdf")) {
+                    exporter.exportRDF(model);
                 }
-                if (arg0.equals("graphml")) {
-                    exporter.exportGraphml(args.size() >= 2 && args.get(1).equalsIgnoreCase("full"));
+                if (format.equals("graphml")) {
+                    exporter.exportGraphml(args.size() >= 3 && args.get(2).equalsIgnoreCase("full"));
                 }
-                if (arg0.equals("graphdb")) {
-                    exporter.exportToGraphDB();
+                if (format.equals("graphdb")) {
+                    exporter.exportToGraphDB(model);
                 }
                 break;
             case "import":

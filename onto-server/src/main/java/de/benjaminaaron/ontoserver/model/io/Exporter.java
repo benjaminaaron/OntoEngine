@@ -65,9 +65,14 @@ public class Exporter {
     }
 
     @SneakyThrows
-    public void exportToGraphDB() {
-        // TODO allow passing of "clear" and "repo-name" param
-        URL url = new URL(GRAPHDB_INSERT_URL.replace("<repository>", GRAPHDB_DEFAULT_REPOSITORY));
+    public void exportToGraphDB(String modelName) {
+        // allow passing of a "clear" flag TODO
+        String repoName = GRAPHDB_DEFAULT_REPOSITORY + (modelName.equals("meta") ? "-meta" : "");
+        String insertURL = GRAPHDB_INSERT_URL.replace("<repository>", repoName);
+
+        // delete old repo
+
+        URL url = new URL(insertURL);
         HttpURLConnection http = (HttpURLConnection) url.openConnection();
         http.setRequestMethod("DELETE");
         http.setRequestProperty("Accept", "application/json");
@@ -76,24 +81,27 @@ public class Exporter {
         }
         http.disconnect();
 
+        // create new repo
+
         url = new URL(GRAPHDB_REST_URL);
         http = (HttpURLConnection) url.openConnection();
         http.setRequestMethod("POST");
         http.setDoOutput(true);
         http.setRequestProperty("Content-Type", "application/json");
         http.setRequestProperty("Accept", "application/json");
-        String jsonStr = Files.readString(GRAPHDB_REPO_TEMPLATE, StandardCharsets.UTF_8)
-                .replace("<id>", GRAPHDB_DEFAULT_REPOSITORY);
+        String jsonStr = Files.readString(GRAPHDB_REPO_TEMPLATE, StandardCharsets.UTF_8).replace("<id>", repoName);
         http.getOutputStream().write(jsonStr.getBytes(StandardCharsets.UTF_8));
         if (http.getResponseCode() != 201) {
             System.out.println("Could not create GraphDB repository");
         }
         http.disconnect();
 
-        Model mainModel = modelController.getMainModel();
-        try (RDFConnection conn = RDFConnectionFactory.connect(GRAPHDB_INSERT_URL.replace("<repository>", GRAPHDB_DEFAULT_REPOSITORY))) {
+        // add triples to repo
+
+        Model model = modelName.equals("main") ? modelController.getMainModel() : modelController.getMetaModel();
+        try (RDFConnection conn = RDFConnectionFactory.connect(insertURL)) {
             Txn.executeWrite(conn, () -> {
-                StmtIterator iterator = mainModel.listStatements();
+                StmtIterator iterator = model.listStatements();
                 while (iterator.hasNext()) {
                     Statement statement = iterator.nextStatement();
                     String sUri = statement.getSubject().getURI();
