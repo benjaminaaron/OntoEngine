@@ -12,14 +12,41 @@
 </head>
 <body>
     <div style="padding-left: 40px; padding-top: 40px">
-        <input type="text" id="subjectTextField" size="20">
-        <input type="text" id="predicateTextField" size="20">
-        <input type="text" id="objectTextField" size="20">
-        <input type="checkbox" id="literalCheckBox">
-        <button id="addStatementBtn" type="submit">Add statement</button>
-        <br/><br/>
-        <input type="text" id="commandTextField" size="74">
-        <button id="sendCommandBtn" type="submit">Send command</button>
+        <table style="float: left">
+            <tr>
+                <td>
+                    namespace1
+                </td>
+                <td>
+                    namespace2
+                </td>
+                <td>
+                    namespace3
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="text" id="subjectTextField" size="20">
+                </td>
+                <td>
+                    <input type="text" id="predicateTextField" size="20">
+                </td>
+                <td>
+                    <input type="text" id="objectTextField" size="20">
+                </td>
+            </tr><br/>
+            <tr>
+                <td></td><td></td>
+                <td>
+                    <input type="checkbox" id="literalCheckBox">
+                    is a literal
+                </td>
+            </tr>
+        </table>
+        <button style="margin: 49px 0 0 5px" id="addStatementBtn" type="submit">Add statement</button>
+        <br/><br/><br/><br/><br/>
+        <input style="margin-left: 22px" type="text" id="commandTextField" size="69">
+        <button style="margin-left: 16px" id="sendCommandBtn" type="submit">Send command</button>
     </div>
 </body>
 </html>
