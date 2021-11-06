@@ -17,7 +17,7 @@ table {
 }
 
 td {
-  padding: 10px 0;
+  padding: 8px 0;
 }
 
 /*
@@ -25,3 +25,8 @@ table, th, td {
   border: 1px solid black;
 }
 */
+
+.namespace-field {
+    color: lightgray;
+    border: none;
+}
