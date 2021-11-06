@@ -30,3 +30,7 @@ table, th, td {
     color: lightgray;
     border: none;
 }
+
+.entity-field {
+    color: darkblue;
+}

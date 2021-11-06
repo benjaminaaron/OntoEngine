@@ -27,13 +27,13 @@
             </tr>
             <tr>
                 <td>
-                    <input type="text" id="subjectTextField" size="20" placeholder="subject">
+                    <input type="text" class="entity-field" id="subjectTextField" size="20" placeholder="subject">
                 </td>
                 <td>
-                    <input type="text" id="predicateTextField" size="20" placeholder="predicate">
+                    <input type="text" class="entity-field" id="predicateTextField" size="20" placeholder="predicate">
                 </td>
                 <td>
-                    <input type="text" id="objectTextField" size="20" placeholder="object">
+                    <input type="text" class="entity-field" id="objectTextField" size="20" placeholder="object">
                 </td>
                 <td>
                     <button id="addStatementBtn" type="submit">Add statement</button>
@@ -50,6 +50,10 @@
         </table>
         <input style="margin-top: 50px; margin-left: 22px" type="text" id="commandTextField" size="69">
         <button style="margin-left: 14px" id="sendCommandBtn" type="submit">Send command</button>
+        <br>
+        <textarea rows="8" id="outputField" style="border: none; background-color: lightgray; color: gray; padding: 10px; width: 769px; margin-top: 50px; margin-left: 22px; font-family: monospace">
+Messages from server
+        </textarea>
     </div>
 </body>
 </html>
