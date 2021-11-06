@@ -1,5 +1,7 @@
 let stompClient = null;
 
+let serverSuggestionMessages = [];
+
 const connect = () => {
     let socket = new SockJS('/onto-engine-websocket');
     stompClient = Stomp.over(socket);
@@ -12,9 +14,11 @@ const connect = () => {
             console.log("Server says: ", JSON.parse(messageObj.body).message);
         });
         stompClient.subscribe('/topic/serverAddStatementResponse', messageObj => {
+            appendOutput(messageObj.body);
             console.log("serverAddStatementResponse: ", JSON.parse(messageObj.body));
         });
         stompClient.subscribe('/topic/serverSuggestions', messageObj => {
+            appendOutput(messageObj.body);
             console.log("serverSuggestions: ", JSON.parse(messageObj.body));
         });
         stompClient.subscribe('/topic/whileTypingSuggestionsResponse', messageObj => {
@@ -22,6 +26,17 @@ const connect = () => {
         });
     });
     // stompClient.disconnect();
+};
+
+const appendOutput = text => {
+    let date = new Date();
+    let timestamp = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+    serverSuggestionMessages.push(timestamp + " " + text);
+    let output = "";
+    serverSuggestionMessages.forEach(msg => output += msg + "\n\n");
+    let textarea = document.getElementById('outputField');
+    textarea.value = output;
+    textarea.scrollTop = textarea.scrollHeight; // scroll to bottom
 };
 
 const addStatement = () => {
