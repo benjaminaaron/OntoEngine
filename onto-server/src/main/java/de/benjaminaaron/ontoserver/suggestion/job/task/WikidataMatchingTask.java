@@ -54,10 +54,10 @@ public class WikidataMatchingTask extends JobStatementTask {
                 message.setMatchLabel(result.getLabel());
                 message.setInfo("Description: " + result.getDescription());
                 // TODO
-                String command = "REPLACE " + resource.getURI() + " WITH " + result.getConceptUri() + " / " +
-                        "LABEL " + result.getConceptUri() + " AS '" + result.getLabel() + "' / " +
-                        "ADDTRIPLE " + resource.getURI() + " " + Utils.buildDefaultNsUri("sameAs") + " " + result.getConceptUri();
-                message.setAchievingCommand(command);
+                // String command = "REPLACE " + resource.getURI() + " WITH " + result.getConceptUri() + " / " +
+                //         "LABEL " + result.getConceptUri() + " AS '" + result.getLabel() + "' / " +
+                //         "ADDTRIPLE " + resource.getURI() + " " + Utils.buildDefaultNsUri("sameAs") + " " + result.getConceptUri();
+                message.setAchievingCommand("TODO");
                 list.add(message);
             });
         } catch (MediaWikiApiErrorException | IOException e) {
