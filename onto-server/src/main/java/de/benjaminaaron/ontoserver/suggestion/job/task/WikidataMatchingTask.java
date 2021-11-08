@@ -47,6 +47,7 @@ public class WikidataMatchingTask extends JobStatementTask {
                     .filter(result -> result.getLabel().equalsIgnoreCase(resource.getLocalName()))
                     .forEach(result -> {
                 ExternalMatchMessage message = new ExternalMatchMessage();
+                message.setTaskName(getClass().getSimpleName());
                 message.setExternalSource("Wikidata");
                 message.setCurrentUri(resource.getURI());
                 message.setResourceType(resourceType);

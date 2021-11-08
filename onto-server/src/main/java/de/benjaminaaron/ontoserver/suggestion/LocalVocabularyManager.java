@@ -32,6 +32,7 @@ public class LocalVocabularyManager {
         List<VocabularySuggestionMessage> list = new ArrayList<>();
         runQuery(source.getLocalName(), resourceType).forEach((target, attributes) -> {
             VocabularySuggestionMessage message = new VocabularySuggestionMessage();
+            message.setTaskName("LocalVocabularyMatchingTask");
             message.setResourceType(resourceType);
             message.setCurrentUri(source.getURI());
             message.setSuggestedUri(target.getURI());

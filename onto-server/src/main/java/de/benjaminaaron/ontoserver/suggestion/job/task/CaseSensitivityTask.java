@@ -30,6 +30,7 @@ public class CaseSensitivityTask extends JobModelTask {
 
         multiBuckets.forEach((key, uris) -> {
             MergeWordsSuggestionMessage message = new MergeWordsSuggestionMessage();
+            message.setTaskName(getClass().getSimpleName());
             Map<String, Integer> urisWithStats = new HashMap<>();
             int maxUsed = 0;
             String uriMaxUsed = null;
