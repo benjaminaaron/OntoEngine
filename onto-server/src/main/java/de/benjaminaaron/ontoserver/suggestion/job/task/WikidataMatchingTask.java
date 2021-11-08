@@ -43,7 +43,9 @@ public class WikidataMatchingTask extends JobStatementTask {
         searchProps.type = PREDICATE == resourceType ? "property" : "item";
         try {
             List<WbSearchEntitiesResult> search = wbdf.searchEntities(searchProps);
-            search.forEach(result -> {
+            search.stream()
+                    .filter(result -> result.getLabel().equalsIgnoreCase(resource.getLocalName()))
+                    .forEach(result -> {
                 ExternalMatchMessage message = new ExternalMatchMessage();
                 message.setExternalSource("Wikidata");
                 message.setCurrentUri(resource.getURI());
