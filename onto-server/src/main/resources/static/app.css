@@ -27,7 +27,8 @@ table, th, td {
 */
 
 .namespace-field {
-    color: lightgray;
+    color: silver;
+    background-color: lightyellow;
     border: none;
 }
 
