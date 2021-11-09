@@ -20,13 +20,13 @@ public abstract class JobStatementTask extends JobTask {
 
     @Override
     public List<Suggestion> execute() {
-        check(statement.getSubject(), SUBJECT);
-        check(statement.getPredicate(), PREDICATE);
-        if (statement.getResource().isResource()) {
-            check(statement.getObject().asResource(), OBJECT);
+        check(statement, SUBJECT);
+        check(statement, PREDICATE);
+        if (statement.getObject().isResource()) {
+            check(statement, OBJECT);
         }
         return suggestions;
     }
 
-    protected abstract void check(Resource resource, Utils.ResourceType resourceType);
+    protected abstract void check(Statement statement, Utils.ResourceType resourceType);
 }

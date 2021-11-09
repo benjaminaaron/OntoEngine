@@ -9,6 +9,7 @@ import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Statement;
 
 import java.util.*;
 
@@ -30,7 +31,8 @@ public class LocalVocabularyManager {
         // model.write(System.out);
     }
 
-    public List<VocabularySuggestionMessage> checkForMatches(Resource source, ResourceType resourceType) {
+    public List<VocabularySuggestionMessage> checkForMatches(Statement statement, ResourceType resourceType) {
+        Resource source = resourceType.fromStatement(statement);
         List<VocabularySuggestionMessage> list = new ArrayList<>();
         runQuery(source.getLocalName(), resourceType).forEach((target, attributes) -> {
             VocabularySuggestionMessage message = new VocabularySuggestionMessage();

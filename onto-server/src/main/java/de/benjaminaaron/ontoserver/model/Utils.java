@@ -4,6 +4,7 @@ import com.github.slugify.Slugify;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.TripleMessage;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
 
 import java.io.File;
@@ -131,5 +132,18 @@ public class Utils {
 
     public enum ResourceType {
         SUBJECT, PREDICATE, OBJECT;
+
+        public Resource fromStatement(Statement statement) {
+            switch (this) {
+                case SUBJECT:
+                    return statement.getSubject();
+                case PREDICATE:
+                    return statement.getPredicate();
+                case OBJECT:
+                    return statement.getObject().isResource() ? statement.getObject().asResource() : null;
+                default:
+                    return null;
+            }
+        }
     }
 }

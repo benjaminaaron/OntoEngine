@@ -7,6 +7,7 @@ import de.benjaminaaron.ontoserver.suggestion.Suggestion;
 import de.benjaminaaron.ontoserver.suggestion.job.task.base.FixedBasicApiConnection;
 import de.benjaminaaron.ontoserver.suggestion.job.task.base.JobStatementTask;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Statement;
 import org.wikidata.wdtk.datamodel.helpers.Datamodel;
 import org.wikidata.wdtk.wikibaseapi.WbGetEntitiesSearchData;
 import org.wikidata.wdtk.wikibaseapi.WbSearchEntitiesResult;
@@ -34,7 +35,8 @@ public class WikidataMatchingTask extends JobStatementTask {
     }
 
     @Override
-    protected void check(Resource resource, ResourceType resourceType) {
+    protected void check(Statement statement, ResourceType resourceType) {
+        Resource resource = resourceType.fromStatement(statement);
         List<ExternalMatchMessage> list = new ArrayList<>();
         WbGetEntitiesSearchData searchProps = new WbGetEntitiesSearchData();
         searchProps.language = "en";
