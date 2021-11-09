@@ -84,7 +84,10 @@ public abstract class BaseRouting {
                 if (!suggestionEngine.suggestionExists(id)) {
                     return "no suggestion with id " + id + " found";
                 }
-                handleCommand(suggestionEngine.accept(id));
+                String storedCommandStr = suggestionEngine.accept(id);
+                for (String cmd : storedCommandStr.split(",")) {
+                    handleCommand(cmd.trim());
+                }
                 break;
             default:
                 return "Unknown command";
