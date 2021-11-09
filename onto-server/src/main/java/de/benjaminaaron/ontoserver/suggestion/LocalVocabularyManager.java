@@ -19,7 +19,9 @@ public class LocalVocabularyManager {
     private final Model model;
     private static final Set<String> sourceUris = Set.of(
             "https://www.w3.org/2006/vcard/ns"
-            //"https://www.w3.org/2002/07/owl"
+            // "http://www.w3.org/1999/02/22-rdf-syntax-ns",
+            // "http://www.w3.org/2000/01/rdf-schema",
+            // "https://www.w3.org/2002/07/owl"
     );
 
     public LocalVocabularyManager(Model model) {
