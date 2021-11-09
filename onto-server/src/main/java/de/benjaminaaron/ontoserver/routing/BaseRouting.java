@@ -79,6 +79,14 @@ public abstract class BaseRouting {
                 }
                 modelController.replaceUris(from, to);
                 break;
+            case "add":
+                AddStatementMessage msg = new AddStatementMessage();
+                msg.setSubject(args.get(0));
+                msg.setPredicate(args.get(1));
+                msg.setObject(args.get(2));
+                msg.setObjectIsLiteral(false); // pass as optional args.get(3) boolean? TODO
+                modelController.addStatement(msg);
+                break;
             case "accept":
                 String id = args.get(0);
                 if (!suggestionEngine.suggestionExists(id)) {
