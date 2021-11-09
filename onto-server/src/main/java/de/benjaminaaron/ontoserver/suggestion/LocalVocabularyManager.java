@@ -34,6 +34,32 @@ public class LocalVocabularyManager {
     public List<VocabularySuggestionMessage> checkForMatches(Statement statement, ResourceType resourceType) {
         Resource source = resourceType.fromStatement(statement);
         List<VocabularySuggestionMessage> list = new ArrayList<>();
+
+        // workaround to demonstrate inferable subClassOf-suggestion, TODO integrate properly
+        if (PREDICATE == resourceType &&
+                source.getLocalName().equalsIgnoreCase("subPropertyOf")
+                && !source.getNameSpace().equalsIgnoreCase("http://www.w3.org/2000/01/rdf-schema#")
+        ) {
+            VocabularySuggestionMessage message = new VocabularySuggestionMessage();
+            message.setTaskName("LocalVocabularyMatchingTask");
+            message.setResourceType(resourceType);
+            message.setCurrentUri(source.getURI());
+            String targetUri = "http://www.w3.org/2000/01/rdf-schema#subPropertyOf";
+            message.setSuggestedUri(targetUri);
+            message.setInfo("Use rdfs:subPropertyOf to make the connection inferable");
+            String subUri = statement.getSubject().getURI();
+            String objUri = statement.getObject().asResource().getURI(); // what if its a literal? TODO
+            String rdfType = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
+            String owlObjProp = "http://www.w3.org/2002/07/owl#ObjectProperty";
+            message.setAchievingCommand(
+                    "REPLACE " + source.getURI() + " WITH " + targetUri + ", "
+                    + "ADD " + subUri + " " + rdfType + " " + owlObjProp + ", " // child property
+                    + "ADD " + objUri + " " + rdfType + " " + owlObjProp + ", " // parent property
+            );
+            list.add(message);
+            return list;
+        }
+
         runQuery(source.getLocalName(), resourceType).forEach((target, attributes) -> {
             VocabularySuggestionMessage message = new VocabularySuggestionMessage();
             message.setTaskName("LocalVocabularyMatchingTask");
