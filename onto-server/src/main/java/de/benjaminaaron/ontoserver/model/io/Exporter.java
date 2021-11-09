@@ -68,6 +68,7 @@ public class Exporter {
     public void exportToGraphDB(String modelName) {
         // allow passing of a "clear" flag TODO
         String repoName = GRAPHDB_DEFAULT_REPOSITORY + (modelName.equals("meta") ? "-meta" : "");
+        String ruleset = "rdfsplus-optimized"; // empty
         String insertURL = GRAPHDB_INSERT_URL.replace("<repository>", repoName);
 
         // delete old repo
@@ -89,7 +90,9 @@ public class Exporter {
         http.setDoOutput(true);
         http.setRequestProperty("Content-Type", "application/json");
         http.setRequestProperty("Accept", "application/json");
-        String jsonStr = Files.readString(GRAPHDB_REPO_TEMPLATE, StandardCharsets.UTF_8).replace("<id>", repoName);
+        String jsonStr = Files.readString(GRAPHDB_REPO_TEMPLATE, StandardCharsets.UTF_8)
+                .replace("<id>", repoName)
+                .replace("<ruleset>", ruleset);
         http.getOutputStream().write(jsonStr.getBytes(StandardCharsets.UTF_8));
         if (http.getResponseCode() != 201) {
             System.out.println("Could not create GraphDB repository");

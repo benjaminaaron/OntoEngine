@@ -5,7 +5,7 @@
     "ruleset" : {
       "label": "Ruleset",
       "name": "ruleset",
-      "value": "empty"
+      "value": "<ruleset>"
     }
   },
   "title": "",
