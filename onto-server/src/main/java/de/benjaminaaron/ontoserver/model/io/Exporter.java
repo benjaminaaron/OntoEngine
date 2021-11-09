@@ -65,10 +65,9 @@ public class Exporter {
     }
 
     @SneakyThrows
-    public void exportToGraphDB(String modelName) {
+    public void exportToGraphDB(String modelName, String ruleset) {
         // allow passing of a "clear" flag TODO
-        String repoName = GRAPHDB_DEFAULT_REPOSITORY + (modelName.equals("meta") ? "-meta" : "");
-        String ruleset = "rdfsplus-optimized"; // empty
+        String repoName = GRAPHDB_DEFAULT_REPOSITORY + "_" + modelName + "_" + ruleset;
         String insertURL = GRAPHDB_INSERT_URL.replace("<repository>", repoName);
 
         // delete old repo

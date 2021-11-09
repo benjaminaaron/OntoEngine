@@ -60,7 +60,8 @@ public abstract class BaseRouting {
                     exporter.exportGraphml(args.size() >= 3 && args.get(2).equalsIgnoreCase("full"));
                 }
                 if (format.equals("graphdb")) {
-                    exporter.exportToGraphDB(model);
+                    String ruleset = args.size() >= 3 ? args.get(2) : "empty"; // rdfsplus-optimized
+                    exporter.exportToGraphDB(model, ruleset);
                 }
                 break;
             case "import":
