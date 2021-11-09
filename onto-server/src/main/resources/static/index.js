@@ -28,9 +28,13 @@ const connect = () => {
     // stompClient.disconnect();
 };
 
+const prependZero = value => {
+  return (value + "").length === 1 ? "0" + value : value;
+};
+
 const appendOutput = text => {
     let date = new Date();
-    let timestamp = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+    let timestamp = prependZero(date.getHours()) + ":" + prependZero(date.getMinutes()) + ":" + prependZero(date.getSeconds());
     serverSuggestionMessages.push(timestamp + " " + text);
     let output = "";
     serverSuggestionMessages.forEach(msg => output += msg + "\n\n");
