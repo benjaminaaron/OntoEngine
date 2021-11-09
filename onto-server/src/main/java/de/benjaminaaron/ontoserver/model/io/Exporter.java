@@ -78,7 +78,7 @@ public class Exporter {
         http.setRequestMethod("DELETE");
         http.setRequestProperty("Accept", "application/json");
         if (http.getResponseCode() != 204) {
-            System.out.println("Could not delete the GraphDB repository");
+            System.out.println("Could not delete the GraphDB repository. Response code: " + http.getResponseCode());
         }
         http.disconnect();
 
@@ -95,11 +95,11 @@ public class Exporter {
                 .replace("<ruleset>", ruleset);
         http.getOutputStream().write(jsonStr.getBytes(StandardCharsets.UTF_8));
         if (http.getResponseCode() != 201) {
-            System.out.println("Could not create GraphDB repository");
+            System.out.println("Could not create new GraphDB repository. Response code: " + http.getResponseCode());
         }
         http.disconnect();
 
-        // add triples to repo
+        // add triples to new repo
 
         Model model = modelName.equals("main") ? modelController.getMainModel() : modelController.getMetaModel();
         try (RDFConnection conn = RDFConnectionFactory.connect(insertURL)) {
