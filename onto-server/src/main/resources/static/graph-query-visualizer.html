@@ -34,7 +34,7 @@
         #queryResultsTable {
             font-family: "Ubuntu Mono",serif;
             border-collapse: collapse;
-            width: 300px;
+            width: 600px;
             table-layout: fixed;
         }
         #queryResultsTable th, #queryResultsTable td {
@@ -57,6 +57,12 @@
         }
         .NamedNode {
             color: #e9591e;
+        }
+        #queryResultsSentenceDiv {
+            font-family: "Ubuntu Mono",serif;
+            font-size: larger;
+            background-color: lightyellow;
+            color: navy;
         }
     </style>
 </head>
@@ -84,6 +90,11 @@
     </tr>
     <tr>
         <td colspan="2">
+            <div id="queryResultsSentenceDiv" style="padding: 20px"></div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
             <div id="outputWrapperDiv">
                 <div id="queryResultsDiv"></div>
                 <div id="graphOutputDiv"></div>
@@ -106,7 +117,7 @@
         },
         graphOutput: {
             div: document.getElementById('graphOutputDiv'),
-            width: 999,
+            width: 698,
             height: 600
         },
         resultsTable: {
@@ -114,6 +125,7 @@
         },
         outputElements: {
             submitButtonId: 'submitBtn',
+            queryResultsSentenceDiv: document.getElementById('queryResultsSentenceDiv'),
             outputWrapperDiv: document.getElementById('outputWrapperDiv')
         }
     });
