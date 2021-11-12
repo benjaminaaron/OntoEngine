@@ -76,6 +76,11 @@ const onKeypress = (element, onEnter, resourceType) => {
     });
 };
 
+const literalCheckBoxClicked = () => {
+    document.getElementById('objectNamespaceField').style.display =
+        document.getElementById('literalCheckBox').checked ? "none" : "block";
+};
+
 $(() => {
     connect();
     $("#addStatementBtn").click(() => { addStatement(); });

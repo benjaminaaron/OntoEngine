@@ -14,6 +14,7 @@
     <div style="padding-left: 40px; padding-top: 40px">
         <table style="float: left; background-color: lightgoldenrodyellow">
             <tr>
+                <!-- the namespace fields are not wired up to do anything yet TODO -->
                 <td>
                     <input class="namespace-field" type="text" value="http://onto.de/default#" size="20">
                 </td>
@@ -21,7 +22,7 @@
                     <input class="namespace-field" type="text" value="http://onto.de/default#" size="20">
                 </td>
                 <td>
-                    <input class="namespace-field" type="text" value="http://onto.de/default#" size="20">
+                    <input id="objectNamespaceField" class="namespace-field" type="text" value="http://onto.de/default#" size="20">
                 </td>
                 <td></td>
             </tr>
@@ -42,7 +43,7 @@
             <tr>
                 <td></td><td></td>
                 <td>
-                    <input type="checkbox" id="literalCheckBox">
+                    <input type="checkbox" id="literalCheckBox" onclick="literalCheckBoxClicked();">
                     is a literal
                 </td>
                 <td></td>
