@@ -31,8 +31,8 @@ const buildOutputGraph = visuType => {
             break;
     }
     outputGraph.graphData({ nodes: [], links: [] })
-        .width(1200)
-        .height(600)
+        .width(800)
+        .height(500)
         .nodeLabel('label')
         .linkLabel('label')
         .linkDirectionalArrowLength(6)
