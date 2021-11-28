@@ -1,4 +1,4 @@
-# DIY knowledge graph
+# DIY Knowledge Graph
 > An idea conglomerate for continuous ontologization: an ontology design assistant working with you towards continuous expansion and consolidation.
 
 ### Video presentation of the project: [youtu.be/-AwxUrsVxsI](https://youtu.be/-AwxUrsVxsI)
