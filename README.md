@@ -14,7 +14,7 @@ Direct links to chapters in the presentation:
 
 <a href="https://youtu.be/-AwxUrsVxsI"><img src="https://user-images.githubusercontent.com/5141792/142049173-06e2213a-634f-4935-8418-6273ad8534d8.png"></a>
  
-[Slides](https://docs.google.com/presentation/d/1-2TvOkOQuzK_5s9oh00t7KaHmwk38R_YrgscAnXNpqA/edit?usp=sharing) | [Video Script](https://docs.google.com/document/d/1rC8gi-aBkMEKHY9_RfVWvlpltHNxyaVO3MhI8JdPZ-I/edit?usp=sharing) 
+[One-pager](https://docs.google.com/document/d/1oFeoyaKU1pk_UaqobcYeuxGRNrhjDrPll8R-_co4xR8/edit?usp=sharing) | [Slides](https://docs.google.com/presentation/d/1-2TvOkOQuzK_5s9oh00t7KaHmwk38R_YrgscAnXNpqA/edit?usp=sharing) | [Video Script](https://docs.google.com/document/d/1rC8gi-aBkMEKHY9_RfVWvlpltHNxyaVO3MhI8JdPZ-I/edit?usp=sharing) 
  
 ### Readme from before making the video presentation
  
