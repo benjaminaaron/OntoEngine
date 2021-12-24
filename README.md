@@ -28,7 +28,7 @@ Early work in progress of an ontology engine working with you towards continuous
 - [JGraphT](https://jgrapht.org/) for having all triples available in a graph structure
 - [Wikidata Toolkit](https://github.com/Wikidata/Wikidata-Toolkit) (just the wdtk-wikibaseapi module) to find matching entities on @Wikidata.
 
-For clients I want to prototype a few different options eventually: a neat web app, a command line utility, a Telegram bot, etc. For now I am using a static site that Spring serves when running. I moved the [graph-query-visualizer](https://github.com/benjaminaaron/graph-query-visualizer) into a separate repository to make it potentially useful elsewhere. It get's imported back in here as `bundle.js`.
+For clients I want to prototype a few different options eventually: a neat web app, a command line utility, etc. For now I am using a static site that Spring serves when running. I moved the [graph-query-visualizer](https://github.com/benjaminaaron/graph-query-visualizer) into a separate repository to make it potentially useful elsewhere. It get's imported back in here as `bundle.js`.
 
 ## Setup in IntelliJ IDEA
 
