@@ -1,7 +1,8 @@
 # DIY Knowledge Graph
 > An idea conglomerate for continuous ontologization: an ontology design assistant working with you towards continuous expansion and consolidation.
 
-### Video presentation of the project: [youtu.be/-AwxUrsVxsI](https://youtu.be/-AwxUrsVxsI)
+### 📺 Video presentation of the project
+👉 **[youtu.be/-AwxUrsVxsI](https://youtu.be/-AwxUrsVxsI)**
 
 Direct links to chapters in the presentation:
 - [4:56](https://youtu.be/-AwxUrsVxsI?t=296) Basic ideas
