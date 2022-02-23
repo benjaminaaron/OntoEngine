@@ -41,7 +41,7 @@ public class WikidataMatchingTask extends JobStatementTask {
         WbGetEntitiesSearchData searchProps = new WbGetEntitiesSearchData();
         searchProps.language = "en";
         searchProps.search = resource.getLocalName();
-        searchProps.limit = 5L;
+        searchProps.limit = 1L;
         searchProps.type = PREDICATE == resourceType ? "property" : "item";
         try {
             List<WbSearchEntitiesResult> search = wbdf.searchEntities(searchProps);
