@@ -43,7 +43,7 @@ public class SuggestionEngine {
     @PostConstruct
     void init() {
         taskManager = new TaskSchedulingManager(this);
-        taskManager.schedulePeriodicJob("runPeriodicJob", 5, 30);
+        // taskManager.schedulePeriodicJob("runPeriodicJob", 5, 30);
     }
 
     public void runPeriodicJob() {
@@ -58,6 +58,9 @@ public class SuggestionEngine {
         NewStatementJob job = new NewStatementJob(statement);
         job.addTask(new LocalVocabularyMatchingTask(localVocabularyManager));
         job.addTask(new WikidataMatchingTask());
+        CaseSensitivityTask caseSensitivityTask = new CaseSensitivityTask();
+        caseSensitivityTask.setMainModel(modelController.getMainModel());
+        job.addTask(caseSensitivityTask);
         job.getFuture().whenComplete((_suggestions, ex) -> handleNewSuggestions(_suggestions));
         taskManager.scheduleOneTimeJobNow(job);
     }
