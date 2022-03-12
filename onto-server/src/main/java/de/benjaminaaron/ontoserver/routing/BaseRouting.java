@@ -52,6 +52,10 @@ public abstract class BaseRouting {
                 break;
             case "export":
                 String format = args.get(0).toLowerCase(); // rdf, graphml or graphdb
+                if (format.equals("markdown")) {
+                    exporter.exportMarkdown();
+                    break;
+                }
                 String model = args.get(1).toLowerCase(); // main or meta
                 if (format.equals("rdf")) {
                     exporter.exportRDF(model);

@@ -3,6 +3,7 @@ jena-tdb/
 *.graphml
 logs/
 export/
+markdown/
 
 src/main/resources/static/graph-query-visualizer/*
 !src/main/resources/static/graph-query-visualizer/commit.version

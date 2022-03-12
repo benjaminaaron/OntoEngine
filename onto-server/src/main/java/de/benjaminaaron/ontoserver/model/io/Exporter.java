@@ -1,6 +1,7 @@
 package de.benjaminaaron.ontoserver.model.io;
 
 import de.benjaminaaron.ontoserver.model.ModelController;
+import de.benjaminaaron.ontoserver.model.Utils;
 import lombok.SneakyThrows;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Statement;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -28,6 +30,8 @@ public class Exporter {
 
     @Value("${model.export.directory}")
     private Path EXPORT_DIRECTORY;
+    @Value("${markdown.export.directory}")
+    private Path MARKDOWN_DIRECTORY;
     @Value("${graphdb.insert-url}")
     private String GRAPHDB_INSERT_URL;
     @Value("classpath:graphdb_repo_template.json")
@@ -62,6 +66,17 @@ public class Exporter {
 
     public void exportGraphml(boolean fullUri) {
         modelController.getGraph().exportGraphml(getExportFile(EXPORT_DIRECTORY, "model", "graphml"), fullUri);
+    }
+
+    public void exportMarkdown() {
+        MARKDOWN_DIRECTORY.toFile().mkdirs();
+        Path newFile = MARKDOWN_DIRECTORY.resolve("test.md");
+        try(FileWriter fw = new FileWriter(newFile.toFile())) {
+            Utils.writeLine(fw, "line1");
+            Utils.writeLine(fw, "line2");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @SneakyThrows
