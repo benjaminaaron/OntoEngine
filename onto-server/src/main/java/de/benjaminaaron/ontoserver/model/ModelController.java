@@ -156,7 +156,7 @@ public class ModelController {
         return metaHandler;
     }
 
-    public GraphManager getGraph() {
+    public GraphManager getGraphManager() {
         return graphManager;
     }
 

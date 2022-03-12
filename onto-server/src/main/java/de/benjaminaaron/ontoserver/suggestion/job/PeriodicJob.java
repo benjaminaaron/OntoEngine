@@ -18,7 +18,7 @@ public class PeriodicJob extends Job {
         start();
         tasks.forEach(task -> {
             task.setMainModel(modelController.getMainModel());
-            task.setGraphManager(modelController.getGraph());
+            task.setGraphManager(modelController.getGraphManager());
             suggestions.addAll(task.execute());
         });
         stop();

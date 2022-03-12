@@ -65,7 +65,7 @@ public class Exporter {
     }
 
     public void exportGraphml(boolean fullUri) {
-        modelController.getGraph().exportGraphml(getExportFile(EXPORT_DIRECTORY, "model", "graphml"), fullUri);
+        modelController.getGraphManager().exportGraphml(getExportFile(EXPORT_DIRECTORY, "model", "graphml"), fullUri);
     }
 
     public void exportMarkdown() {
