@@ -2,13 +2,13 @@ package de.benjaminaaron.ontoserver.model.io;
 
 import de.benjaminaaron.ontoserver.model.ModelController;
 import de.benjaminaaron.ontoserver.model.Utils;
+import de.benjaminaaron.ontoserver.model.graph.Edge;
 import lombok.SneakyThrows;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.Statement;
-import org.apache.jena.rdf.model.StmtIterator;
+import org.apache.jena.rdf.model.*;
 import org.apache.jena.rdfconnection.RDFConnection;
 import org.apache.jena.rdfconnection.RDFConnectionFactory;
 import org.apache.jena.system.Txn;
+import org.jgrapht.Graph;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -70,12 +70,29 @@ public class Exporter {
 
     public void exportMarkdown() {
         MARKDOWN_DIRECTORY.toFile().mkdirs();
-        Path newFile = MARKDOWN_DIRECTORY.resolve("test.md");
-        try(FileWriter fw = new FileWriter(newFile.toFile())) {
-            Utils.writeLine(fw, "line1");
-            Utils.writeLine(fw, "line2");
-        } catch (IOException e) {
-            e.printStackTrace();
+        Graph<RDFNode, Edge> graph = modelController.getGraphManager().getGraph();
+        for (RDFNode node : graph.vertexSet()) {
+            if (node.isLiteral()) {
+                continue;
+            }
+            Resource source = node.asResource();
+            Path newFile = MARKDOWN_DIRECTORY.resolve(source.getLocalName() + ".md");
+            try(FileWriter fw = new FileWriter(newFile.toFile())) {
+                Utils.writeLine(fw, source.getURI());
+                Utils.writeLine(fw, "");
+                for (Edge edge : graph.outgoingEdgesOf(node)) {
+                    RDFNode target = graph.getEdgeTarget(edge);
+                    Utils.writeLine(fw,
+                            edge.property.getURI() + " " +
+                            (target.isResource() ?
+                                    "[[" + target.asResource().getLocalName() + "]]"
+                                    :
+                                    target.asLiteral().toString())
+                    );
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
