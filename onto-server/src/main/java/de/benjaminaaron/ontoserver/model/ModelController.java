@@ -64,6 +64,7 @@ public class ModelController {
             logger.info("Creating " + MAIN_MODEL_NAME + "-model in TDB location '" + TBD_DIR + "'");
         }
         mainModel = dataset.getNamedModel(MAIN_MODEL_NAME);
+        mainModel.setNsPrefix("onto", DEFAULT_URI_NAMESPACE + "#");
         // Meta Model
         if (!dataset.containsNamedModel(META_MODEL_NAME)) {
             logger.info("Creating " + META_MODEL_NAME + "-model in TDB location '" + TBD_DIR + "'");

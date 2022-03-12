@@ -15,9 +15,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class Utils {
 
@@ -138,6 +136,18 @@ public class Utils {
 
     public static void writeLine(FileWriter fw, String line) throws IOException {
         fw.write(line + System.getProperty("line.separator"));
+    }
+
+    public static String checkPrefixes(Map<String, String> prefixes, RDFNode rdfNode) {
+        Resource resource = rdfNode.asResource();
+        String ns = resource.getNameSpace();
+        if (prefixes.containsValue(ns)) {
+            Optional<String> key = prefixes.keySet().stream().filter(k -> prefixes.get(k).equals(ns)).findAny();
+            if (key.isPresent()) {
+                return key.get() + ":" + resource.getLocalName();
+            }
+        }
+        return resource.getURI();
     }
 
     public enum ResourceType {

@@ -21,6 +21,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Map;
 
 import static de.benjaminaaron.ontoserver.model.Utils.getExportFile;
 import static de.benjaminaaron.ontoserver.model.Utils.rdfNodeToGraphDatabaseEntryString;
@@ -70,6 +71,14 @@ public class Exporter {
 
     public void exportMarkdown() {
         MARKDOWN_DIRECTORY.toFile().mkdirs();
+
+        Map<String, String> prefixes = modelController.getMainModel().getNsPrefixMap();
+        try(FileWriter fw = new FileWriter(MARKDOWN_DIRECTORY.resolve("PREFIXES.md").toFile())) {
+            for (String key : prefixes.keySet()) {
+                Utils.writeLine(fw, key + ":" + prefixes.get(key));
+            }
+        } catch (IOException ignored) {}
+
         Graph<RDFNode, Edge> graph = modelController.getGraphManager().getGraph();
         for (RDFNode node : graph.vertexSet()) {
             if (node.isLiteral()) {
@@ -78,21 +87,20 @@ public class Exporter {
             Resource source = node.asResource();
             Path newFile = MARKDOWN_DIRECTORY.resolve(source.getLocalName() + ".md");
             try(FileWriter fw = new FileWriter(newFile.toFile())) {
-                Utils.writeLine(fw, source.getURI());
+                Utils.writeLine(fw, Utils.checkPrefixes(prefixes, source));
                 Utils.writeLine(fw, "");
                 for (Edge edge : graph.outgoingEdgesOf(node)) {
                     RDFNode target = graph.getEdgeTarget(edge);
                     Utils.writeLine(fw,
-                            edge.property.getURI() + " " +
-                            (target.isResource() ?
+                            Utils.checkPrefixes(prefixes, edge.property)
+                                    + " " +
+                                    (target.isResource() ?
                                     "[[" + target.asResource().getLocalName() + "]]"
                                     :
-                                    target.asLiteral().toString())
+                                    target.asLiteral().getString())
                     );
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            } catch (IOException ignored) {}
         }
     }
 
