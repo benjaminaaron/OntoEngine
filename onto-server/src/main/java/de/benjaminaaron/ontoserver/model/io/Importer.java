@@ -77,22 +77,21 @@ public class Importer {
         markdownFiles.forEach((localName, path) -> {
             try (Stream<String> stream = Files.lines(path)) {
                 stream.filter(line -> line.trim().split(" ").length >= 2).forEach(line -> {
-                    String predicatePart = line.split(" ")[0].trim();
-                    String objectPart = line.split(" ")[1].trim();
-                    String predicateUri = predicatePart;
-                    if (!predicatePart.startsWith("http")) {
-                        String prefix = predicatePart.split(":")[0];
-                        predicateUri = model.getNsPrefixURI(prefix) + predicatePart.split(":")[1];
-                    }
+                    String predicateUri = Utils.expandShortUriRepresentation(line.split(" ")[0].trim(), model);
+                    String object = line.substring(line.split(" ")[0].length() + 1).trim();
+                    // strip away potential literal-wrapping of ""
+                    if (object.startsWith("\"") || object.startsWith("'")) object = object.substring(1);
+                    if (object.endsWith("\"") || object.endsWith("'")) object = object.substring(0, object.length() - 1);
                     AddStatementMessage statement = new AddStatementMessage();
-                    statement.setObjectIsLiteral(!objectPart.contains("[["));
+                    statement.setObjectIsLiteral(!object.contains("[["));
                     statement.setSubject(filenamesToUris.get(localName));
                     statement.setPredicate(predicateUri);
                     if (statement.isObjectIsLiteral()) {
-                        statement.setObject(objectPart);
+                        statement.setObject(object);
                     } else {
-                        objectPart = objectPart.substring(2, objectPart.length() - 2); // remove the [[]]
-                        statement.setObject(filenamesToUris.get(objectPart));
+                        String objectLocalName = object.substring(2, object.length() - 2); // remove the [[]]
+                        // is always the localName because it links to other pages in Obsidian
+                        statement.setObject(filenamesToUris.get(objectLocalName));
                     }
                     modelController.addStatement(statement);
                 });

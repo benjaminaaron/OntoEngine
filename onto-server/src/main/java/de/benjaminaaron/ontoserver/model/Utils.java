@@ -2,10 +2,7 @@ package de.benjaminaaron.ontoserver.model;
 
 import com.github.slugify.Slugify;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.TripleMessage;
-import org.apache.jena.rdf.model.Literal;
-import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.*;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -138,9 +135,12 @@ public class Utils {
         fw.write(line + System.getProperty("line.separator"));
     }
 
-    public static String checkPrefixes(Map<String, String> prefixes, RDFNode rdfNode) {
+    public static String determineShortestUriRepresentation(Map<String, String> prefixes, RDFNode rdfNode) {
         Resource resource = rdfNode.asResource();
         String ns = resource.getNameSpace();
+        if (ns.equals(DEFAULT_URI_NAMESPACE)) {
+            return resource.getLocalName();
+        }
         if (prefixes.containsValue(ns)) {
             Optional<String> key = prefixes.keySet().stream().filter(k -> prefixes.get(k).equals(ns)).findAny();
             if (key.isPresent()) {
@@ -148,6 +148,17 @@ public class Utils {
             }
         }
         return resource.getURI();
+    }
+
+    public static String expandShortUriRepresentation(String uriPart, Model model) {
+        if (uriPart.startsWith("http")) {
+            return uriPart;
+        }
+        if (!uriPart.contains(":")) {
+            return buildDefaultNsUri(uriPart);
+        }
+        String prefix = uriPart.split(":")[0];
+        return model.getNsPrefixURI(prefix) + uriPart.split(":")[1];
     }
 
     public static Path getObsidianICloudDir() {

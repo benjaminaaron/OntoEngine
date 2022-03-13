@@ -23,8 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 
-import static de.benjaminaaron.ontoserver.model.Utils.getExportFile;
-import static de.benjaminaaron.ontoserver.model.Utils.rdfNodeToGraphDatabaseEntryString;
+import static de.benjaminaaron.ontoserver.model.Utils.*;
 
 @Component
 public class Exporter {
@@ -70,7 +69,8 @@ public class Exporter {
     }
 
     public void exportMarkdown() {
-        Path markdownDir = Utils.getObsidianICloudDir(); // MARKDOWN_DEFAULT_DIRECTORY
+        // Path markdownDir = Utils.getObsidianICloudDir();
+        Path markdownDir = MARKDOWN_DEFAULT_DIRECTORY;
         markdownDir.toFile().mkdirs();
 
         // Write PREFIXES.md
@@ -90,17 +90,19 @@ public class Exporter {
             Resource source = node.asResource();
             Path newFile = markdownDir.resolve(source.getLocalName() + ".md");
             try(FileWriter fw = new FileWriter(newFile.toFile())) {
-                Utils.writeLine(fw, Utils.checkPrefixes(prefixes, source));
-                Utils.writeLine(fw, "");
+                if (!source.getNameSpace().equals(DEFAULT_URI_NAMESPACE)) {
+                    Utils.writeLine(fw, Utils.determineShortestUriRepresentation(prefixes, source));
+                    Utils.writeLine(fw, "");
+                }
                 for (Edge edge : graph.outgoingEdgesOf(node)) {
                     RDFNode target = graph.getEdgeTarget(edge);
                     Utils.writeLine(fw,
-                            Utils.checkPrefixes(prefixes, edge.property)
+                            Utils.determineShortestUriRepresentation(prefixes, edge.property)
                                     + " " +
                                     (target.isResource() ?
                                     "[[" + target.asResource().getLocalName() + "]]"
                                     :
-                                    target.asLiteral().getString())
+                                    "\"" + target.asLiteral().getString() + "\"")
                     );
                 }
             } catch (IOException ignored) {}
