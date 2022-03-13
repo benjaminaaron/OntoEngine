@@ -79,19 +79,18 @@ public class Importer {
                 stream.filter(line -> line.trim().split(" ").length >= 2).forEach(line -> {
                     String predicateUri = Utils.expandShortUriRepresentation(line.split(" ")[0].trim(), model);
                     String object = line.substring(line.split(" ")[0].length() + 1).trim();
-                    // strip away potential literal-wrapping of ""
-                    if (object.startsWith("\"") || object.startsWith("'")) object = object.substring(1);
-                    if (object.endsWith("\"") || object.endsWith("'")) object = object.substring(0, object.length() - 1);
                     AddStatementMessage statement = new AddStatementMessage();
-                    statement.setObjectIsLiteral(!object.contains("[["));
                     statement.setSubject(filenamesToUris.get(localName));
                     statement.setPredicate(predicateUri);
+                    statement.setObjectIsLiteral(object.startsWith("\""));
                     if (statement.isObjectIsLiteral()) {
-                        statement.setObject(object);
+                        statement.setObject(object.substring(1, object.length() - 1));
                     } else {
-                        String objectLocalName = object.substring(2, object.length() - 2); // remove the [[]]
-                        // is always the localName because it links to other pages in Obsidian
-                        statement.setObject(filenamesToUris.get(objectLocalName));
+                        if (object.startsWith("[[")) {
+                            object = object.substring(2, object.length() - 2); // remove the [[]]
+                        }
+                        statement.setObject(filenamesToUris.containsKey(object)
+                                ? filenamesToUris.get(object) : Utils.buildDefaultNsUri(object));
                     }
                     modelController.addStatement(statement);
                 });
