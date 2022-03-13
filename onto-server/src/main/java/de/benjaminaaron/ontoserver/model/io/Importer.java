@@ -2,6 +2,8 @@ package de.benjaminaaron.ontoserver.model.io;
 
 import de.benjaminaaron.ontoserver.model.MetaHandler.StatementOrigin;
 import de.benjaminaaron.ontoserver.model.ModelController;
+import de.benjaminaaron.ontoserver.model.Utils;
+import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementMessage;
 import lombok.SneakyThrows;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.*;
@@ -15,7 +17,11 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
+import org.apache.commons.io.FilenameUtils;
 
 @Component
 public class Importer {
@@ -30,18 +36,68 @@ public class Importer {
 
     @SneakyThrows
     public void importFromMarkdown() {
-        try (Stream<Path> paths = Files.walk(MARKDOWN_DIRECTORY)) {
-            paths.filter(Files::isRegularFile).forEach(file -> {
-                String filename = file.getFileName().toString();
-                if (filename.toLowerCase().endsWith(".md")) {
-                    try (Stream<String> lines = Files.lines(file)) {
-                        lines.forEach(line -> {
-                            // TODO
-                        });
-                    } catch (IOException ignored) {}
-                }
+        Model model = modelController.getMainModel();
+
+        Map<String, Path> markdownFiles = new HashMap<>(); // key: resourceLocalName, value: file path
+        Map<String, String> filenamesToUris = new HashMap<>();
+
+        // import prefixes.md if existent
+        Optional<Path> prefixFileOptional = Files.walk(MARKDOWN_DIRECTORY).filter(Files::isRegularFile)
+                .filter(path -> path.getFileName().toString().equalsIgnoreCase("prefixes.md")).findAny();
+        if (prefixFileOptional.isPresent()) {
+            Files.lines(prefixFileOptional.get()).forEach(line -> {
+                String prefix = line.split(":")[0];
+                String uri = line.substring(prefix.length() + 1);
+                model.setNsPrefix(prefix, uri);
             });
         }
+
+        // collect markdown files and URIs of resources
+        Files.walk(MARKDOWN_DIRECTORY).filter(Files::isRegularFile)
+                .filter(path -> !path.getFileName().toString().equalsIgnoreCase("prefixes.md"))
+                .filter(path -> FilenameUtils.isExtension(path.toString(), "md"))
+                .forEach(path -> {
+                    String filename = FilenameUtils.getBaseName(path.getFileName().toString()); // = localName of resource
+                    markdownFiles.put(filename, path);
+                    try (Stream<String> stream = Files.lines(path)) {
+                        // means it can be anywhere in the file - restrict its possible location more?
+                        Optional<String> uriDefOptional = stream.filter(line -> !line.isBlank())
+                                .filter(line -> line.split(" ").length == 1).findAny();
+                        if (uriDefOptional.isPresent()) {
+                            String uriDef = uriDefOptional.get().trim();
+                            String uri = uriDef.startsWith("http") ? uriDef : model.getNsPrefixURI(uriDef.split(":")[0].trim()) + filename;
+                            filenamesToUris.put(filename, uri);
+                        } else {
+                            filenamesToUris.put(filename, Utils.buildDefaultNsUri(filename));
+                        }
+                    } catch (IOException ignored) {}
+                });
+
+        // run through markdown files to import statements
+        markdownFiles.forEach((localName, path) -> {
+            try (Stream<String> stream = Files.lines(path)) {
+                stream.filter(line -> line.trim().split(" ").length >= 2).forEach(line -> {
+                    String predicatePart = line.split(" ")[0].trim();
+                    String objectPart = line.split(" ")[1].trim();
+                    String predicateUri = predicatePart;
+                    if (!predicatePart.startsWith("http")) {
+                        String prefix = predicatePart.split(":")[0];
+                        predicateUri = model.getNsPrefixURI(prefix) + predicatePart.split(":")[1];
+                    }
+                    AddStatementMessage statement = new AddStatementMessage();
+                    statement.setObjectIsLiteral(!objectPart.contains("[["));
+                    statement.setSubject(filenamesToUris.get(localName));
+                    statement.setPredicate(predicateUri);
+                    if (statement.isObjectIsLiteral()) {
+                        statement.setObject(objectPart);
+                    } else {
+                        objectPart = objectPart.substring(2, objectPart.length() - 2); // remove the [[]]
+                        statement.setObject(filenamesToUris.get(objectPart));
+                    }
+                    modelController.addStatement(statement);
+                });
+            } catch (IOException ignored) {}
+        });
     }
 
     public void importFromGraphDB(String repository) {
