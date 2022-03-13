@@ -46,12 +46,13 @@ public abstract class BaseRouting {
     protected String handleCommand(String commandStr) {
         List<String> args = new ArrayList<>(Arrays.asList(commandStr.split(" ")));
         String command = args.remove(0).toLowerCase();
+        String format;
         switch (command) {
             case "print":
                 modelController.printStatements();
                 break;
             case "export":
-                String format = args.get(0).toLowerCase(); // rdf, graphml or graphdb
+                format = args.get(0).toLowerCase(); // rdf, graphml or graphdb
                 if (format.equals("markdown")) {
                     exporter.exportMarkdown();
                     break;
@@ -69,8 +70,12 @@ public abstract class BaseRouting {
                 }
                 break;
             case "import":
-                if (args.get(0).equalsIgnoreCase("graphdb")) {
+                format = args.get(0).toLowerCase();
+                if (format.equals("graphdb")) {
                     importer.importFromGraphDB(args.get(1));
+                }
+                if (format.equals("markdown")) {
+                    importer.importFromMarkdown();
                 }
                 break;
             case "replace":
