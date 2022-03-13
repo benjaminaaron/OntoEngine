@@ -42,7 +42,7 @@ public class Importer {
         Map<String, String> filenamesToUris = new HashMap<>();
 
         // import prefixes.md if existent
-        Optional<Path> prefixFileOptional = Files.walk(markdownDir).filter(Files::isRegularFile)
+        Optional<Path> prefixFileOptional = Files.walk(markdownDir).filter(Files::isRegularFile).filter(path -> !path.toString().contains(".Trash"))
                 .filter(path -> path.getFileName().toString().equalsIgnoreCase("prefixes.md")).findAny();
         if (prefixFileOptional.isPresent()) {
             Files.lines(prefixFileOptional.get()).forEach(line -> {
@@ -53,7 +53,7 @@ public class Importer {
         }
 
         // collect markdown files and URIs of resources
-        Files.walk(markdownDir).filter(Files::isRegularFile)
+        Files.walk(markdownDir).filter(Files::isRegularFile).filter(path -> !path.toString().contains(".Trash"))
                 .filter(path -> !path.getFileName().toString().equalsIgnoreCase("prefixes.md"))
                 .filter(path -> FilenameUtils.isExtension(path.toString(), "md"))
                 .forEach(path -> {
