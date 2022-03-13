@@ -21,11 +21,10 @@ import java.util.*;
 public class Utils {
 
     public static String DEFAULT_URI_NAMESPACE;
-    public static String DEFAULT_URI_SEPARATOR;
     private final static Slugify slugifier = new Slugify().withLowerCase(false);
 
     public static String buildDefaultNsUri(String word) {
-        return DEFAULT_URI_NAMESPACE + DEFAULT_URI_SEPARATOR + slugifier.slugify(word);
+        return DEFAULT_URI_NAMESPACE + slugifier.slugify(word);
     }
 
     public static String ensureUri(String str) {

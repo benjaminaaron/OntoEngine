@@ -51,11 +51,9 @@ public class ModelController {
             @Value("${jena.tdb.model.meta.name}") String META_MODEL_NAME,
             @Value("${jena.tdb.model.vocabulary-sources.name}") String VOCABULARY_SOURCES_MODEL_NAME,
             @Value("${uri.default.namespace}") String DEFAULT_URI_NAMESPACE,
-            @Value("${uri.default.separator}") String DEFAULT_URI_SEPARATOR,
             @Value("classpath:meta.owl") Path META_OWL
     ) {
         Utils.DEFAULT_URI_NAMESPACE = DEFAULT_URI_NAMESPACE;
-        Utils.DEFAULT_URI_SEPARATOR = DEFAULT_URI_SEPARATOR;
 
         Dataset dataset = TDBFactory.createDataset(TBD_DIR.toString());
 
@@ -64,7 +62,7 @@ public class ModelController {
             logger.info("Creating " + MAIN_MODEL_NAME + "-model in TDB location '" + TBD_DIR + "'");
         }
         mainModel = dataset.getNamedModel(MAIN_MODEL_NAME);
-        mainModel.setNsPrefix("onto", DEFAULT_URI_NAMESPACE + "#");
+        mainModel.setNsPrefix("onto", DEFAULT_URI_NAMESPACE);
         // Meta Model
         if (!dataset.containsNamedModel(META_MODEL_NAME)) {
             logger.info("Creating " + META_MODEL_NAME + "-model in TDB location '" + TBD_DIR + "'");
