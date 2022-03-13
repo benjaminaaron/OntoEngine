@@ -14,6 +14,7 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -148,6 +149,14 @@ public class Utils {
             }
         }
         return resource.getURI();
+    }
+
+    public static Path getObsidianICloudDir() {
+        String userName = System.getProperty("user.name");
+        String vaultName = "main";
+        // This works for my setup, needs to be made more solid for variations
+        return Paths.get("/Users/" + userName +
+                "/Library/Mobile Documents/iCloud~md~obsidian/Documents/"+ vaultName);
     }
 
     public enum ResourceType {

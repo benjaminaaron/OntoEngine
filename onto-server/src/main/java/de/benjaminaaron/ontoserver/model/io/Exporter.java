@@ -32,7 +32,7 @@ public class Exporter {
     @Value("${model.export.directory}")
     private Path EXPORT_DIRECTORY;
     @Value("${markdown.export.directory}")
-    private Path MARKDOWN_DIRECTORY;
+    private Path MARKDOWN_DEFAULT_DIRECTORY;
     @Value("${graphdb.insert-url}")
     private String GRAPHDB_INSERT_URL;
     @Value("classpath:graphdb_repo_template.json")
@@ -70,22 +70,25 @@ public class Exporter {
     }
 
     public void exportMarkdown() {
-        MARKDOWN_DIRECTORY.toFile().mkdirs();
+        Path markdownDir = Utils.getObsidianICloudDir(); // MARKDOWN_DEFAULT_DIRECTORY
+        markdownDir.toFile().mkdirs();
 
+        // Write PREFIXES.md
         Map<String, String> prefixes = modelController.getMainModel().getNsPrefixMap();
-        try(FileWriter fw = new FileWriter(MARKDOWN_DIRECTORY.resolve("PREFIXES.md").toFile())) {
+        try(FileWriter fw = new FileWriter(markdownDir.resolve("PREFIXES.md").toFile())) {
             for (String key : prefixes.keySet()) {
                 Utils.writeLine(fw, key + ":" + prefixes.get(key));
             }
         } catch (IOException ignored) {}
 
+        // Write an .md file for each vertex
         Graph<RDFNode, Edge> graph = modelController.getGraphManager().getGraph();
         for (RDFNode node : graph.vertexSet()) {
             if (node.isLiteral()) {
                 continue;
             }
             Resource source = node.asResource();
-            Path newFile = MARKDOWN_DIRECTORY.resolve(source.getLocalName() + ".md");
+            Path newFile = markdownDir.resolve(source.getLocalName() + ".md");
             try(FileWriter fw = new FileWriter(newFile.toFile())) {
                 Utils.writeLine(fw, Utils.checkPrefixes(prefixes, source));
                 Utils.writeLine(fw, "");

@@ -29,20 +29,20 @@ public class Importer {
     @Value("${graphdb.get-url}")
     private String GRAPHDB_GET_URL;
     @Value("${markdown.export.directory}")
-    private Path MARKDOWN_DIRECTORY;
+    private Path MARKDOWN_DEFAULT_DIRECTORY;
 
     @Autowired
     private ModelController modelController;
 
     @SneakyThrows
     public void importFromMarkdown() {
+        Path markdownDir = Utils.getObsidianICloudDir(); // MARKDOWN_DEFAULT_DIRECTORY
         Model model = modelController.getMainModel();
-
         Map<String, Path> markdownFiles = new HashMap<>(); // key: resourceLocalName, value: file path
         Map<String, String> filenamesToUris = new HashMap<>();
 
         // import prefixes.md if existent
-        Optional<Path> prefixFileOptional = Files.walk(MARKDOWN_DIRECTORY).filter(Files::isRegularFile)
+        Optional<Path> prefixFileOptional = Files.walk(markdownDir).filter(Files::isRegularFile)
                 .filter(path -> path.getFileName().toString().equalsIgnoreCase("prefixes.md")).findAny();
         if (prefixFileOptional.isPresent()) {
             Files.lines(prefixFileOptional.get()).forEach(line -> {
@@ -53,7 +53,7 @@ public class Importer {
         }
 
         // collect markdown files and URIs of resources
-        Files.walk(MARKDOWN_DIRECTORY).filter(Files::isRegularFile)
+        Files.walk(markdownDir).filter(Files::isRegularFile)
                 .filter(path -> !path.getFileName().toString().equalsIgnoreCase("prefixes.md"))
                 .filter(path -> FilenameUtils.isExtension(path.toString(), "md"))
                 .forEach(path -> {
