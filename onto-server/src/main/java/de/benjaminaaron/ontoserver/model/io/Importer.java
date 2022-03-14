@@ -51,6 +51,8 @@ public class Importer {
         }
 
         // process QUERIES.md if existent
+        // make it more robust than all this if/else and line splitting? TODO
+        // handle URI-expansion TODO
         Optional<Path> queriesFileOptional = Utils.getSpecialMarkdownFile(markdownDir, "QUERIES.md");
         if (queriesFileOptional.isPresent()) {
             List<String> lines = Files.lines(queriesFileOptional.get())
@@ -64,9 +66,7 @@ public class Importer {
             for (String line : lines) {
                 if (withinQuery) {
                     if (line.trim().equals("\"")) {
-                        if (query.isEmpty()) {
-                            continue; // first "
-                        } else { // last "
+                        if (!query.isEmpty()) {
                             withinQuery = false;
                             query = query.trim();
                             // TODO propertyName, queryType, query
