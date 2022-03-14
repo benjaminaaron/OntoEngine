@@ -41,21 +41,24 @@ public class Importer {
         Map<String, Path> markdownFiles = new HashMap<>(); // key: resourceLocalName, value: file path
         Map<String, String> filenamesToUris = new HashMap<>();
 
-        // import prefixes.md if existent
-        Optional<Path> prefixFileOptional = Files.walk(markdownDir).filter(Files::isRegularFile).filter(path -> !path.toString().contains(".Trash"))
-                .filter(path -> path.getFileName().toString().equalsIgnoreCase("prefixes.md")).findAny();
-        if (prefixFileOptional.isPresent()) {
-            Files.lines(prefixFileOptional.get()).forEach(line -> {
+        // import PREFIXES.md if existent
+        Optional<Path> prefixesFileOptional = Utils.getSpecialMarkdownFile(markdownDir, "PREFIXES.md");
+        if (prefixesFileOptional.isPresent()) {
+            Files.lines(prefixesFileOptional.get()).forEach(line -> {
                 String prefix = line.split(":")[0];
                 String uri = line.substring(prefix.length() + 1);
                 model.setNsPrefix(prefix, uri);
             });
         }
 
+        // process QUERIES.md if existent
+        Optional<Path> queriesFileOptional = Utils.getSpecialMarkdownFile(markdownDir, "QUERIES.md");
+        if (queriesFileOptional.isPresent()) {
+            // TODO
+        }
+
         // collect markdown files and URIs of resources
-        Files.walk(markdownDir).filter(Files::isRegularFile).filter(path -> !path.toString().contains(".Trash"))
-                .filter(path -> !path.getFileName().toString().equalsIgnoreCase("prefixes.md"))
-                .filter(path -> FilenameUtils.isExtension(path.toString(), "md"))
+        Utils.getNormalMarkdownFiles(markdownDir)
                 .forEach(path -> {
                     String filename = FilenameUtils.getBaseName(path.getFileName().toString()); // = localName of resource
                     markdownFiles.put(filename, path);

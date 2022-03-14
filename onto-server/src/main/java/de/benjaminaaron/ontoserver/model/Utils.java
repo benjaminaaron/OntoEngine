@@ -2,6 +2,7 @@ package de.benjaminaaron.ontoserver.model;
 
 import com.github.slugify.Slugify;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.TripleMessage;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.jena.rdf.model.*;
 
 import java.io.File;
@@ -10,10 +11,12 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Stream;
 
 public class Utils {
 
@@ -167,6 +170,18 @@ public class Utils {
         // This works for my setup, needs to be made more solid for variations
         return Paths.get("/Users/" + userName +
                 "/Library/Mobile Documents/iCloud~md~obsidian/Documents/"+ vaultName);
+    }
+
+    public static Optional<Path> getSpecialMarkdownFile(Path dir, String filename) throws IOException {
+        return Files.walk(dir).filter(Files::isRegularFile).filter(path -> !path.toString().contains(".Trash"))
+                .filter(path -> path.getFileName().toString().equalsIgnoreCase(filename)).findAny();
+    }
+
+    public static Stream<Path> getNormalMarkdownFiles(Path markdownDir) throws IOException {
+        return Files.walk(markdownDir).filter(Files::isRegularFile).filter(path -> !path.toString().contains(".Trash"))
+                .filter(path -> !path.getFileName().toString().equalsIgnoreCase("PREFIXES.md"))
+                .filter(path -> !path.getFileName().toString().equalsIgnoreCase("QUERIES.md"))
+                .filter(path -> FilenameUtils.isExtension(path.toString(), "md"));
     }
 
     public enum ResourceType {
