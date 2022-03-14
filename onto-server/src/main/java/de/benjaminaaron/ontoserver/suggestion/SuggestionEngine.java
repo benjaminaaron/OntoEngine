@@ -8,6 +8,7 @@ import de.benjaminaaron.ontoserver.suggestion.job.NewStatementJob;
 import de.benjaminaaron.ontoserver.suggestion.job.PeriodicJob;
 import de.benjaminaaron.ontoserver.suggestion.job.task.CaseSensitivityTask;
 import de.benjaminaaron.ontoserver.suggestion.job.task.LocalVocabularyMatchingTask;
+import de.benjaminaaron.ontoserver.suggestion.job.task.QueryExecutionTask;
 import de.benjaminaaron.ontoserver.suggestion.job.task.WikidataMatchingTask;
 import lombok.SneakyThrows;
 import org.apache.jena.rdf.model.Resource;
@@ -19,9 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static de.benjaminaaron.ontoserver.model.Utils.ResourceType.PREDICATE;
 
@@ -39,18 +38,21 @@ public class SuggestionEngine {
     private ModelController modelController;
     private TaskSchedulingManager taskManager;
 
+    private List<Query> queries = new ArrayList<>();
+
     @SneakyThrows
     @PostConstruct
     void init() {
         taskManager = new TaskSchedulingManager(this);
-        // taskManager.schedulePeriodicJob("runPeriodicJob", 5, 30);
+        taskManager.schedulePeriodicJob("runPeriodicJob", 10, 30);
     }
 
     public void runPeriodicJob() {
         PeriodicJob job = new PeriodicJob(modelController);
-        job.addTask(new CaseSensitivityTask());
+        // job.addTask(new CaseSensitivityTask());
         // job.addTask(new GraphSimilarityTask());
         // job.addTask(new PropertyChainsTask());
+        job.addTask(new QueryExecutionTask(queries));
         handleNewSuggestions(job.execute());
     }
 
@@ -114,5 +116,13 @@ public class SuggestionEngine {
         if (word.toLowerCase().contains(value)) {
             matches.put(word, resource.getURI());
         }
+    }
+
+    public void addQuery(Query query) {
+        queries.add(query);
+    }
+
+    public Optional<Query> getTemplateQuery(String queryName) {
+        return queries.stream().filter(q -> q.getQueryName().equals(queryName)).findAny();
     }
 }

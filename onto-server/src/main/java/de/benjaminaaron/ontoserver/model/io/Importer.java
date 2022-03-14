@@ -4,6 +4,8 @@ import de.benjaminaaron.ontoserver.model.MetaHandler.StatementOrigin;
 import de.benjaminaaron.ontoserver.model.ModelController;
 import de.benjaminaaron.ontoserver.model.Utils;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementMessage;
+import de.benjaminaaron.ontoserver.suggestion.Query;
+import de.benjaminaaron.ontoserver.suggestion.SuggestionEngine;
 import lombok.SneakyThrows;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.*;
@@ -33,6 +35,9 @@ public class Importer {
     @Autowired
     private ModelController modelController;
 
+    @Autowired
+    private SuggestionEngine suggestionEngine;
+
     @SneakyThrows
     public void importFromMarkdown() {
         Path markdownDir = Utils.getObsidianICloudDir(); // MARKDOWN_DEFAULT_DIRECTORY
@@ -60,33 +65,51 @@ public class Importer {
                     .filter(line -> !line.trim().startsWith("//"))
                     .collect(Collectors.toList());
             boolean withinQuery = false;
-            String query = "";
-            String propertyName = "";
-            String queryType = "";
+            String queryStr = "";
+            String queryName = "";
+            String queryTypeStr = "";
             for (String line : lines) {
                 if (withinQuery) {
                     if (line.trim().equals("\"")) {
-                        if (!query.isEmpty()) {
+                        if (!queryStr.isEmpty()) {
                             withinQuery = false;
-                            query = query.trim();
-                            // TODO propertyName, queryType, query
-                            query = "";
+                            queryStr = queryStr.trim();
+                            Query query = new Query();
+                            query.setQuery(queryStr);
+                            query.setQueryName(queryName);
+                            query.setType(Query.QueryType.parse(queryTypeStr));
+                            suggestionEngine.addQuery(query);
+                            queryStr = "";
                         }
                     } else { // building the query
-                        query += line + " " + System.getProperty("line.separator");
+                        queryStr += line + " " + System.getProperty("line.separator");
                     }
                 } else {
                     if (line.split(" ").length == 2) { // query definition
                         withinQuery = true;
-                        propertyName = line.split(" ")[0].trim();
-                        queryType = line.split(" ")[1].trim();
+                        queryName = line.split(" ")[0].trim();
+                        queryTypeStr = line.split(" ")[1].trim();
                     }
                     if (line.split(" ").length > 2) { // template instantiation command
                         String command = line.split(" ")[0];
-                        propertyName = line.split(" ")[1];
+                        queryName = line.split(" ")[1];
                         String paramsStr = line.split("\"")[1];
                         List<String> params = Arrays.stream(paramsStr.split(",")).map(String::trim).collect(Collectors.toList());
-                        // TODO command, propertyName, params
+                        Optional<Query> template = suggestionEngine.getTemplateQuery(queryName);
+                        if (template.isPresent()) {
+                            String queryStrReplaced = template.get().getQuery();
+                            for (int i = 0; i < params.size(); i++) {
+                                String param = params.get(i);
+                                int varIdx = i + 1;
+                                queryName += "_" + param;
+                                queryStrReplaced = queryStrReplaced.replaceAll("<var" + varIdx + ">", ":" + param);
+                            }
+                            Query query = new Query();
+                            query.setQuery(queryStrReplaced);
+                            query.setQueryName(queryName);
+                            query.setType(Query.QueryType.PERIODIC);
+                            suggestionEngine.addQuery(query);
+                        }
                     }
                 }
             }
