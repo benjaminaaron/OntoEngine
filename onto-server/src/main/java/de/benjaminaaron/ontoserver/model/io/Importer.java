@@ -2,7 +2,6 @@ package de.benjaminaaron.ontoserver.model.io;
 
 import de.benjaminaaron.ontoserver.model.MetaHandler.StatementOrigin;
 import de.benjaminaaron.ontoserver.model.ModelController;
-import de.benjaminaaron.ontoserver.model.Utils;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementMessage;
 import de.benjaminaaron.ontoserver.suggestion.Query;
 import de.benjaminaaron.ontoserver.suggestion.SuggestionEngine;
@@ -22,7 +21,11 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.apache.commons.io.FilenameUtils;
+
+import static de.benjaminaaron.ontoserver.model.Utils.*;
+import static de.benjaminaaron.ontoserver.suggestion.Query.QueryType.PERIODIC;
+import static de.benjaminaaron.ontoserver.suggestion.Query.QueryType.parse;
+import static org.apache.commons.io.FilenameUtils.getBaseName;
 
 @Component
 public class Importer {
@@ -40,13 +43,13 @@ public class Importer {
 
     @SneakyThrows
     public void importFromMarkdown() {
-        Path markdownDir = Utils.getObsidianICloudDir(); // MARKDOWN_DEFAULT_DIRECTORY
+        Path markdownDir = getObsidianICloudDir(); // MARKDOWN_DEFAULT_DIRECTORY
         Model model = modelController.getMainModel();
         Map<String, Path> markdownFiles = new HashMap<>(); // key: resourceLocalName, value: file path
         Map<String, String> filenamesToUris = new HashMap<>();
 
         // import PREFIXES.md if existent
-        Optional<Path> prefixesFileOptional = Utils.getSpecialMarkdownFile(markdownDir, "PREFIXES.md");
+        Optional<Path> prefixesFileOptional = getSpecialMarkdownFile(markdownDir, "PREFIXES.md");
         if (prefixesFileOptional.isPresent()) {
             Files.lines(prefixesFileOptional.get()).forEach(line -> {
                 String prefix = line.split(":")[0];
@@ -58,7 +61,7 @@ public class Importer {
         // process QUERIES.md if existent
         // make it more robust than all this if/else and line splitting? TODO
         // handle URI-expansion TODO
-        Optional<Path> queriesFileOptional = Utils.getSpecialMarkdownFile(markdownDir, "QUERIES.md");
+        Optional<Path> queriesFileOptional = getSpecialMarkdownFile(markdownDir, "QUERIES.md");
         if (queriesFileOptional.isPresent()) {
             List<String> lines = Files.lines(queriesFileOptional.get())
                     .filter(line -> !line.isBlank())
@@ -77,7 +80,7 @@ public class Importer {
                             Query query = new Query();
                             query.setQuery(queryStr);
                             query.setQueryName(queryName);
-                            query.setType(Query.QueryType.parse(queryTypeStr));
+                            query.setType(parse(queryTypeStr));
                             suggestionEngine.addQuery(query);
                             queryStr = "";
                         }
@@ -107,7 +110,7 @@ public class Importer {
                             Query query = new Query();
                             query.setQuery(queryStrReplaced);
                             query.setQueryName(queryName);
-                            query.setType(Query.QueryType.PERIODIC);
+                            query.setType(PERIODIC);
                             suggestionEngine.addQuery(query);
                         }
                     }
@@ -116,9 +119,9 @@ public class Importer {
         }
 
         // collect markdown files and URIs of resources
-        Utils.getNormalMarkdownFiles(markdownDir)
+        getNormalMarkdownFiles(markdownDir)
                 .forEach(path -> {
-                    String filename = FilenameUtils.getBaseName(path.getFileName().toString()); // = localName of resource
+                    String filename = getBaseName(path.getFileName().toString()); // = localName of resource
                     markdownFiles.put(filename, path);
                     try (Stream<String> stream = Files.lines(path)) {
                         // means it can be anywhere in the file - restrict its possible location more?
@@ -129,7 +132,7 @@ public class Importer {
                             String uri = uriDef.startsWith("http") ? uriDef : model.getNsPrefixURI(uriDef.split(":")[0].trim()) + filename;
                             filenamesToUris.put(filename, uri);
                         } else {
-                            filenamesToUris.put(filename, Utils.buildDefaultNsUri(filename));
+                            filenamesToUris.put(filename, buildDefaultNsUri(filename));
                         }
                     } catch (IOException ignored) {}
                 });
@@ -138,7 +141,7 @@ public class Importer {
         markdownFiles.forEach((localName, path) -> {
             try (Stream<String> stream = Files.lines(path)) {
                 stream.filter(line -> line.trim().split(" ").length >= 2).forEach(line -> {
-                    String predicateUri = Utils.expandShortUriRepresentation(line.split(" ")[0].trim(), model);
+                    String predicateUri = expandShortUriRepresentation(line.split(" ")[0].trim(), model);
                     String object = line.substring(line.split(" ")[0].length() + 1).trim();
                     AddStatementMessage statement = new AddStatementMessage();
                     statement.setSubject(filenamesToUris.get(localName));
@@ -151,7 +154,7 @@ public class Importer {
                             object = object.substring(2, object.length() - 2); // remove the [[]]
                         }
                         statement.setObject(filenamesToUris.containsKey(object)
-                                ? filenamesToUris.get(object) : Utils.buildDefaultNsUri(object));
+                                ? filenamesToUris.get(object) : buildDefaultNsUri(object));
                     }
                     modelController.addStatement(statement);
                 });

@@ -7,6 +7,8 @@ import de.benjaminaaron.ontoserver.suggestion.job.task.base.JobTask;
 import java.util.ArrayList;
 import java.util.List;
 
+import static de.benjaminaaron.ontoserver.suggestion.Query.QueryType.PERIODIC;
+
 public class QueryExecutionTask extends JobTask {
 
     private final List<Query> queries;
@@ -19,7 +21,9 @@ public class QueryExecutionTask extends JobTask {
     @Override
     public List<Suggestion> execute() {
         List<Suggestion> suggestions = new ArrayList<>();
-        // TODO
+        queries.stream().filter(q -> q.getType().equals(PERIODIC)).forEach(query -> {
+            // TODO
+        });
         return suggestions;
     }
 }

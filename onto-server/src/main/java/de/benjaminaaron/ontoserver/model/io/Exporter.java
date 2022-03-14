@@ -1,7 +1,6 @@
 package de.benjaminaaron.ontoserver.model.io;
 
 import de.benjaminaaron.ontoserver.model.ModelController;
-import de.benjaminaaron.ontoserver.model.Utils;
 import de.benjaminaaron.ontoserver.model.graph.Edge;
 import lombok.SneakyThrows;
 import org.apache.jena.rdf.model.*;
@@ -77,7 +76,7 @@ public class Exporter {
         Map<String, String> prefixes = modelController.getMainModel().getNsPrefixMap();
         try(FileWriter fw = new FileWriter(markdownDir.resolve("PREFIXES.md").toFile())) {
             for (String key : prefixes.keySet()) {
-                Utils.writeLine(fw, key + ":" + prefixes.get(key));
+                writeLine(fw, key + ":" + prefixes.get(key));
             }
         } catch (IOException ignored) {}
 
@@ -91,18 +90,17 @@ public class Exporter {
             Path newFile = markdownDir.resolve(source.getLocalName() + ".md");
             try(FileWriter fw = new FileWriter(newFile.toFile())) {
                 if (!source.getNameSpace().equals(DEFAULT_URI_NAMESPACE)) {
-                    Utils.writeLine(fw, Utils.determineShortestUriRepresentation(prefixes, source));
-                    Utils.writeLine(fw, "");
+                    writeLine(fw, determineShortestUriRepresentation(prefixes, source));
+                    writeLine(fw, "");
                 }
                 for (Edge edge : graph.outgoingEdgesOf(node)) {
                     RDFNode target = graph.getEdgeTarget(edge);
-                    Utils.writeLine(fw,
-                            Utils.determineShortestUriRepresentation(prefixes, edge.property)
-                                    + " " +
-                                    (target.isResource() ?
-                                    "[[" + target.asResource().getLocalName() + "]]"
-                                    :
-                                    "\"" + target.asLiteral().getString() + "\"")
+                    writeLine(fw, determineShortestUriRepresentation(prefixes, edge.property)
+                            + " " +
+                            (target.isResource() ?
+                            "[[" + target.asResource().getLocalName() + "]]"
+                            :
+                            "\"" + target.asLiteral().getString() + "\"")
                     );
                 }
             } catch (IOException ignored) {}
