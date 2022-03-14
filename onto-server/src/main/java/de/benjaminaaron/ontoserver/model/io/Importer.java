@@ -17,9 +17,8 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.commons.io.FilenameUtils;
 
@@ -54,7 +53,43 @@ public class Importer {
         // process QUERIES.md if existent
         Optional<Path> queriesFileOptional = Utils.getSpecialMarkdownFile(markdownDir, "QUERIES.md");
         if (queriesFileOptional.isPresent()) {
-            // TODO
+            List<String> lines = Files.lines(queriesFileOptional.get())
+                    .filter(line -> !line.isBlank())
+                    .filter(line -> !line.trim().startsWith("//"))
+                    .collect(Collectors.toList());
+            boolean withinQuery = false;
+            String query = "";
+            String propertyName = "";
+            String queryType = "";
+            for (String line : lines) {
+                if (withinQuery) {
+                    if (line.trim().equals("\"")) {
+                        if (query.isEmpty()) {
+                            continue; // first "
+                        } else { // last "
+                            withinQuery = false;
+                            query = query.trim();
+                            // TODO propertyName, queryType, query
+                            query = "";
+                        }
+                    } else { // building the query
+                        query += line + " " + System.getProperty("line.separator");
+                    }
+                } else {
+                    if (line.split(" ").length == 2) { // query definition
+                        withinQuery = true;
+                        propertyName = line.split(" ")[0].trim();
+                        queryType = line.split(" ")[1].trim();
+                    }
+                    if (line.split(" ").length > 2) { // template instantiation command
+                        String command = line.split(" ")[0];
+                        propertyName = line.split(" ")[1];
+                        String paramsStr = line.split("\"")[1];
+                        List<String> params = Arrays.stream(paramsStr.split(",")).map(String::trim).collect(Collectors.toList());
+                        // TODO command, propertyName, params
+                    }
+                }
+            }
         }
 
         // collect markdown files and URIs of resources
