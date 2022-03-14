@@ -52,7 +52,9 @@ public class SuggestionEngine {
         // job.addTask(new CaseSensitivityTask());
         // job.addTask(new GraphSimilarityTask());
         // job.addTask(new PropertyChainsTask());
-        job.addTask(new QueryExecutionTask(queries));
+        QueryExecutionTask queryExecutionTask = new QueryExecutionTask(queries);
+        queryExecutionTask.setMainModel(modelController.getMainModel());
+        job.addTask(queryExecutionTask);
         handleNewSuggestions(job.execute());
     }
 
