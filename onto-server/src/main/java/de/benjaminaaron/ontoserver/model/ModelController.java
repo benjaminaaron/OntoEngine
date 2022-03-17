@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -40,9 +41,14 @@ public class ModelController {
     private final Model metaModel;
     private final Model vocabularySourcesModel;
 
-    // these three should all be @Component's
+    @Value("classpath:meta.owl")
+    private Path META_OWL;
+
+    @Autowired
+    private MetaHandler metaHandler;
+
+    // these should be @Component's
     private final GraphManager graphManager;
-    private final MetaHandler metaHandler;
     private final LocalVocabularyManager localVocabularyManager;
 
     public ModelController(
@@ -50,8 +56,7 @@ public class ModelController {
             @Value("${jena.tdb.model.main.name}") String MAIN_MODEL_NAME,
             @Value("${jena.tdb.model.meta.name}") String META_MODEL_NAME,
             @Value("${jena.tdb.model.vocabulary-sources.name}") String VOCABULARY_SOURCES_MODEL_NAME,
-            @Value("${uri.default.namespace}") String DEFAULT_URI_NAMESPACE,
-            @Value("classpath:meta.owl") Path META_OWL
+            @Value("${uri.default.namespace}") String DEFAULT_URI_NAMESPACE
     ) {
         Utils.DEFAULT_URI_NAMESPACE = DEFAULT_URI_NAMESPACE;
 
@@ -69,7 +74,6 @@ public class ModelController {
         }
         metaModel = dataset.getNamedModel(META_MODEL_NAME);
         metaModel.setNsPrefix("meta", MetaHandler.META_NS + "#");
-        metaHandler = new MetaHandler(mainModel, metaModel, META_OWL);
         // Vocabulary Sources Model
         if (!dataset.containsNamedModel(VOCABULARY_SOURCES_MODEL_NAME)) {
             logger.info("Creating " + VOCABULARY_SOURCES_MODEL_NAME + "-model in TDB location '" + TBD_DIR + "'");
@@ -79,6 +83,11 @@ public class ModelController {
 
         graphManager = new GraphManager(mainModel);
         printStatements();
+    }
+
+    @PostConstruct
+    private void init() {
+        metaHandler.init(mainModel, metaModel, META_OWL);
     }
 
     @PreDestroy

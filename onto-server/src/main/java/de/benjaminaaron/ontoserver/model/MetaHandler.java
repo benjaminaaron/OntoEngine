@@ -13,6 +13,7 @@ import org.apache.jena.vocabulary.OWL2;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Component;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -21,19 +22,20 @@ import java.time.Instant;
 import java.util.Objects;
 import java.util.Set;
 
+@Component
 public class MetaHandler {
 
     private final Logger logger = LogManager.getLogger(MetaHandler.class);
     private OntModel metaDataModel;
-    private final Model mainModel;
-    private final OntClass NewTripleEvent, UrisRenameEvent, Triple;
-    private final ObjectProperty hasTriple;
-    private final DatatypeProperty hasInfo, hasOrigin, hasTimestamp, objectIsLiteral, objectIsNew, objectUri,
+    private Model mainModel;
+    private OntClass NewTripleEvent, UrisRenameEvent, Triple;
+    private ObjectProperty hasTriple;
+    private DatatypeProperty hasInfo, hasOrigin, hasTimestamp, objectIsLiteral, objectIsNew, objectUri,
             predicateIsNew, predicateUri, renamedFrom, renamedTo, subjectIsNew, subjectUri;
     public static final String META_NS = "http://onto.de/meta.owl";
 
     @SneakyThrows
-    public MetaHandler(Model mainModel, Model metaModel, Path meta_owl) {
+    public void init(Model mainModel, Model metaModel, Path meta_owl) {
         this.mainModel = mainModel;
         metaDataModel = ModelFactory.createOntologyModel(OntModelSpec.getDefaultSpec(ProfileRegistry.OWL_LANG), metaModel);
         OntModel metaOntology = ModelFactory.createOntologyModel();
