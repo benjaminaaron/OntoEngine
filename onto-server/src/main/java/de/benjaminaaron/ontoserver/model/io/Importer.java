@@ -1,5 +1,6 @@
 package de.benjaminaaron.ontoserver.model.io;
 
+import de.benjaminaaron.ontoserver.model.MetaHandler;
 import de.benjaminaaron.ontoserver.model.MetaHandler.StatementOrigin;
 import de.benjaminaaron.ontoserver.model.ModelController;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementMessage;
@@ -41,6 +42,9 @@ public class Importer {
     @Autowired
     private SuggestionEngine suggestionEngine;
 
+    @Autowired
+    private MetaHandler metaHandler;
+
     @SneakyThrows
     public void importFromMarkdown() {
         Path markdownDir = getObsidianICloudDir(); // MARKDOWN_DEFAULT_DIRECTORY
@@ -81,6 +85,7 @@ public class Importer {
                             query.setQuery(queryStr);
                             query.setQueryName(queryName);
                             query.setType(parse(queryTypeStr));
+                            metaHandler.storeQueryTriple(queryName, parse(queryTypeStr), queryStr);
                             suggestionEngine.addQuery(query);
                             queryStr = "";
                         }
@@ -111,6 +116,7 @@ public class Importer {
                             query.setQuery(queryStrReplaced);
                             query.setQueryName(queryName);
                             query.setType(PERIODIC);
+                            metaHandler.storeQueryTriple(queryName, PERIODIC, queryStrReplaced);
                             suggestionEngine.addQuery(query);
                         }
                     }

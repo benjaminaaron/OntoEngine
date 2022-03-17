@@ -1,6 +1,7 @@
 package de.benjaminaaron.ontoserver.model;
 
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementResponse;
+import de.benjaminaaron.ontoserver.suggestion.Query;
 import lombok.SneakyThrows;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.ext.com.google.common.collect.Iterators;
@@ -129,6 +130,12 @@ public class MetaHandler {
         // ontology.addImport(metaDataModel.createResource("http://onto.de/meta.owl"));
         // ontology.removeImport(metaDataModel.getOntResource("http://onto.de/meta.owl"));
         return metaDataModel;
+    }
+
+    public void storeQueryTriple(String name, Query.QueryType type, String query) {
+        // TODO
+        // store info about which template was used in an instantiation too for
+        // recreating short template+instantiation-command syntax in (markdown) export
     }
 
     public enum StatementOrigin {
