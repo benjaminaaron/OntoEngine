@@ -7,7 +7,7 @@ import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementMessag
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementResponse;
 import de.benjaminaaron.ontoserver.suggestion.LocalVocabularyManager;
 import de.benjaminaaron.ontoserver.suggestion.SuggestionEngine;
-import org.apache.jena.query.Dataset;
+import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.tdb.TDBFactory;
 import org.apache.logging.log4j.LogManager;
@@ -19,9 +19,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static de.benjaminaaron.ontoserver.model.Utils.detectLiteralType;
 import static de.benjaminaaron.ontoserver.model.Utils.ensureUri;
@@ -170,5 +168,21 @@ public class ModelController {
 
     public void printStatements() {
         mainModel.listStatements().toList().forEach(System.out::println);
+    }
+
+    public void dev() {
+        String query =
+                "PREFIX apf: <http://jena.hpl.hp.com/ARQ/property#> " +
+                "PREFIX list: <http://jena.hpl.hp.com/ARQ/list#> " +
+                "SELECT * WHERE { " +
+                "   BIND(\"A pred1 B pred2 C --> A pred3 C\" AS ?str)." +
+                "   ?parts apf:strSplit(?str \"-->\") . " +
+                //"   ?x :list ?ls . " +
+                //"   ?ls list:index (?pos ?parts). " +
+                "}";
+        try(QueryExecution queryExecution = QueryExecutionFactory.create(query, mainModel)) {
+            ResultSet resultSet = queryExecution.execSelect();
+            ResultSetFormatter.out(resultSet);
+        }
     }
 }

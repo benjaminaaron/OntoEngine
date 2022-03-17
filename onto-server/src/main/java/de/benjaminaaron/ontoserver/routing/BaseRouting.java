@@ -107,6 +107,9 @@ public abstract class BaseRouting {
                     handleCommand(cmd.trim());
                 }
                 break;
+            case "dev":
+                modelController.dev();
+                break;
             default:
                 return "Unknown command";
         }
