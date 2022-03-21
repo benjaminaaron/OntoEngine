@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class Query {
+    private String instantiatedFromTemplate;
     private String queryName;
     private QueryType type;
     private String query;

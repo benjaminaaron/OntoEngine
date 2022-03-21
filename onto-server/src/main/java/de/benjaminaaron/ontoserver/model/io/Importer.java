@@ -100,7 +100,8 @@ public class Importer {
                     }
                     if (line.split(" ").length > 2) { // template instantiation command
                         String command = line.split(" ")[0];
-                        queryName = line.split(" ")[1];
+                        String templateName = line.split(" ")[1];
+                        queryName = templateName;
                         String paramsStr = line.split("\"")[1];
                         List<String> params = Arrays.stream(paramsStr.split(",")).map(String::trim).collect(Collectors.toList());
                         Optional<Query> template = suggestionEngine.getTemplateQuery(queryName);
@@ -113,6 +114,7 @@ public class Importer {
                                 queryStrReplaced = queryStrReplaced.replaceAll("<var" + varIdx + ">", ":" + param);
                             }
                             Query query = new Query();
+                            query.setInstantiatedFromTemplate(templateName);
                             query.setQuery(queryStrReplaced);
                             query.setQueryName(queryName);
                             query.setType(PERIODIC);
