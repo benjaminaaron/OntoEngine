@@ -181,6 +181,7 @@ public class Utils {
         return Files.walk(markdownDir).filter(Files::isRegularFile).filter(path -> !path.toString().contains(".Trash"))
                 .filter(path -> !path.getFileName().toString().equalsIgnoreCase("PREFIXES.md"))
                 .filter(path -> !path.getFileName().toString().equalsIgnoreCase("QUERIES.md"))
+                .filter(path -> !path.getFileName().toString().toLowerCase().startsWith("ignore"))
                 .filter(path -> FilenameUtils.isExtension(path.toString(), "md"));
     }
 
