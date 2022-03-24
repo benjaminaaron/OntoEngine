@@ -67,6 +67,12 @@ public class Importer {
         // handle URI-expansion TODO
         Optional<Path> queriesFileOptional = getSpecialMarkdownFile(markdownDir, "QUERIES.md");
         if (queriesFileOptional.isPresent()) {
+            List<RawTriple> triples = parseTriples(queriesFileOptional.get());
+            for (RawTriple triple : triples) {
+                System.out.println(triple);
+            }
+            // TODO
+            /*
             List<String> lines = Files.lines(queriesFileOptional.get())
                     .filter(line -> !line.isBlank())
                     .filter(line -> !line.trim().startsWith("//"))
@@ -123,7 +129,7 @@ public class Importer {
                         }
                     }
                 }
-            }
+            }*/
         }
 
         // collect markdown files and URIs of resources
@@ -168,6 +174,33 @@ public class Importer {
                 });
             } catch (IOException ignored) {}
         });
+    }
+
+    private List<RawTriple> parseTriples(Path path) throws IOException {
+        List<String> lines = Files.lines(path)
+                .filter(line -> !line.isBlank()) // ignore empty lines
+                .filter(line -> !line.trim().startsWith("//")) // ignore comments
+                .collect(Collectors.toList());
+        List<RawTriple> triples = new ArrayList<>();
+        boolean inObjectString = false;
+        for (String line : lines) {
+            if (line.trim().equals("\"")) {
+                inObjectString = !inObjectString;
+                continue;
+            }
+            if (inObjectString) {
+                triples.get(triples.size() - 1).appendToObject(line); // make safer TODO
+                continue;
+            }
+            String[] parts = line.split(" ");
+            if (parts.length == 2) { // object starts in next line
+                triples.add(new RawTriple(parts[0], parts[1]));
+            }
+            if (parts.length > 2) { // full triple in one line
+                triples.add(new RawTriple(parts[0], parts[1], line.substring(parts[0].length() + parts[1].length() + 2)));
+            }
+        }
+        return triples;
     }
 
     public void importFromGraphDB(String repository) {
