@@ -75,8 +75,12 @@ public class Importer {
                 switch (triple.getPredicate()) {
                     case "hasPeriodicQueryTemplate":
                         suggestionEngine.addQuery(new Query(TEMPLATE, triple.getSubject(), triple.getObject()));
+                        metaHandler.storeQueryTriple(triple);
                         break;
                     case "instantiatePeriodicQueryTemplateFor":
+                        String templateQuery = metaHandler.getPeriodicQueryTemplate(ensureUri(triple.getSubject()));
+                        // metaHandler.storeInstantiatedTemplateQueryTriple(triple);
+                        // TODO
                         Optional<Query> templateQueryOptional = suggestionEngine.getTemplateQuery(triple.getSubject());
                         if (templateQueryOptional.isEmpty()) {
                             logger.warn("No template query found for \"" + triple.getSubject() + "\", could not instantiate query for \"" + triple.getSubject() + "\"");
@@ -95,6 +99,7 @@ public class Importer {
                         break;
                     case "hasPeriodicQuery":
                         suggestionEngine.addQuery(new Query(PERIODIC, triple.getSubject(), triple.getObject()));
+                        metaHandler.storeQueryTriple(triple);
                         break;
                     case "setupPropertyChain":
                         // TODO

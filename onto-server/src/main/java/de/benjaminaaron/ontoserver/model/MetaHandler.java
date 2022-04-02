@@ -1,12 +1,13 @@
 package de.benjaminaaron.ontoserver.model;
 
+import de.benjaminaaron.ontoserver.model.io.RawTriple;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementResponse;
-import de.benjaminaaron.ontoserver.suggestion.Query;
 import lombok.SneakyThrows;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.ext.com.google.common.collect.Iterators;
 import org.apache.jena.graph.Node;
 import org.apache.jena.ontology.*;
+import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.riot.RDFLanguages;
 import org.apache.jena.riot.RDFParser;
@@ -22,6 +23,8 @@ import java.nio.file.Path;
 import java.time.Instant;
 import java.util.Objects;
 import java.util.Set;
+
+import static de.benjaminaaron.ontoserver.model.Utils.ensureUri;
 
 @Component
 public class MetaHandler {
@@ -132,10 +135,31 @@ public class MetaHandler {
         return metaDataModel;
     }
 
-    public void storeQueryTriple(String name, Query.QueryType type, String query) {
-        // TODO
+    public void storeQueryTriple(RawTriple triple) {
+        Resource sub = metaDataModel.createResource(ensureUri(triple.getSubject()));
+        Property pred = metaDataModel.createProperty(ensureUri(triple.getPredicate()));
+        RDFNode obj = metaDataModel.createTypedLiteral(triple.getObject());
+        metaDataModel.add(ResourceFactory.createStatement(sub, pred, obj));
+    }
+
+    public String getPeriodicQueryTemplate(String queryName) {
+        String query = "PREFIX : <http://onto.de/default#> " +
+                "SELECT * WHERE { " +
+                "   <" + queryName + "> :hasPeriodicQueryTemplate ?query " +
+                "}";
+        String queryTemplate = "";
+        try(QueryExecution queryExecution = QueryExecutionFactory.create(query, metaDataModel)) {
+            ResultSet resultSet = queryExecution.execSelect();
+            QuerySolution querySolution = resultSet.next(); // assumes only one result
+            queryTemplate = querySolution.getLiteral("query").getString();
+        }
+        return queryTemplate;
+    }
+
+    public void storeInstantiatedTemplateQueryTriple(RawTriple triple) {
         // store info about which template was used in an instantiation too for
         // recreating short template+instantiation-command syntax in (markdown) export
+        // TODO
     }
 
     public enum StatementOrigin {
