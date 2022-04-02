@@ -68,6 +68,9 @@ public class Importer {
         Optional<Path> queriesFileOptional = getSpecialMarkdownFile(markdownDir, "QUERIES.md");
         if (queriesFileOptional.isPresent()) {
             for (RawTriple triple : parseTriples(queriesFileOptional.get())) {
+
+                // TODO handle special characters in query strings: <>\n
+
                 switch (triple.getPredicate()) {
                     case "hasPeriodicQueryTemplate":
                     case "hasPeriodicQuery":
@@ -84,9 +87,8 @@ public class Importer {
                         List<String> params = triple.getObjectParams();
                         for (int i = 0; i < params.size(); i++) {
                             String param = params.get(i);
-                            int varIdx = i + 1;
                             instantiatedQueryName += "_" + param;
-                            queryStrReplaced = queryStrReplaced.replaceAll("<var" + varIdx + ">", ":" + param);
+                            queryStrReplaced = queryStrReplaced.replaceAll("<var" + (i + 1) + ">", ":" + param);
                         }
                         metaHandler.storeInstantiatedTemplateQueryTriple(
                                 instantiatedQueryName, ensureUri("hasPeriodicQuery"), queryStrReplaced, triple.getSubject());
