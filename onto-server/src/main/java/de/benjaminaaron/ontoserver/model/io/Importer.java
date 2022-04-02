@@ -4,7 +4,6 @@ import de.benjaminaaron.ontoserver.model.MetaHandler;
 import de.benjaminaaron.ontoserver.model.MetaHandler.StatementOrigin;
 import de.benjaminaaron.ontoserver.model.ModelController;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementMessage;
-import de.benjaminaaron.ontoserver.suggestion.Query;
 import de.benjaminaaron.ontoserver.suggestion.SuggestionEngine;
 import lombok.SneakyThrows;
 import org.apache.jena.query.QueryFactory;
@@ -26,8 +25,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static de.benjaminaaron.ontoserver.model.Utils.*;
-import static de.benjaminaaron.ontoserver.suggestion.Query.QueryType.PERIODIC;
-import static de.benjaminaaron.ontoserver.suggestion.Query.QueryType.TEMPLATE;
 import static org.apache.commons.io.FilenameUtils.getBaseName;
 
 @Component
@@ -70,24 +67,20 @@ public class Importer {
         // handle URI-expansion TODO
         Optional<Path> queriesFileOptional = getSpecialMarkdownFile(markdownDir, "QUERIES.md");
         if (queriesFileOptional.isPresent()) {
-            List<RawTriple> triples = parseTriples(queriesFileOptional.get());
-            for (RawTriple triple : triples) {
+            for (RawTriple triple : parseTriples(queriesFileOptional.get())) {
                 switch (triple.getPredicate()) {
                     case "hasPeriodicQueryTemplate":
-                        suggestionEngine.addQuery(new Query(TEMPLATE, triple.getSubject(), triple.getObject()));
-                        metaHandler.storeQueryTriple(triple);
+                    case "hasPeriodicQuery":
+                        metaHandler.storeQueryTriple(triple.getSubject(), triple.getPredicate(), triple.getObject());
                         break;
                     case "instantiatePeriodicQueryTemplateFor":
-                        String templateQuery = metaHandler.getPeriodicQueryTemplate(ensureUri(triple.getSubject()));
-                        // metaHandler.storeInstantiatedTemplateQueryTriple(triple);
-                        // TODO
-                        Optional<Query> templateQueryOptional = suggestionEngine.getTemplateQuery(triple.getSubject());
-                        if (templateQueryOptional.isEmpty()) {
+                        String templateQueryStr = metaHandler.getPeriodicQueryTemplate(ensureUri(triple.getSubject()));
+                        if (Objects.isNull(templateQueryStr)) {
                             logger.warn("No template query found for \"" + triple.getSubject() + "\", could not instantiate query for \"" + triple.getSubject() + "\"");
                             break;
                         }
                         String instantiatedQueryName = triple.getSubject();
-                        String queryStrReplaced = templateQueryOptional.get().getQuery();
+                        String queryStrReplaced = templateQueryStr;
                         List<String> params = triple.getObjectParams();
                         for (int i = 0; i < params.size(); i++) {
                             String param = params.get(i);
@@ -95,11 +88,8 @@ public class Importer {
                             instantiatedQueryName += "_" + param;
                             queryStrReplaced = queryStrReplaced.replaceAll("<var" + varIdx + ">", ":" + param);
                         }
-                        suggestionEngine.addQuery(new Query(PERIODIC, instantiatedQueryName, queryStrReplaced, triple.getSubject()));
-                        break;
-                    case "hasPeriodicQuery":
-                        suggestionEngine.addQuery(new Query(PERIODIC, triple.getSubject(), triple.getObject()));
-                        metaHandler.storeQueryTriple(triple);
+                        metaHandler.storeInstantiatedTemplateQueryTriple(
+                                instantiatedQueryName, ensureUri("hasPeriodicQuery"), queryStrReplaced, triple.getSubject());
                         break;
                     case "setupPropertyChain":
                         // TODO

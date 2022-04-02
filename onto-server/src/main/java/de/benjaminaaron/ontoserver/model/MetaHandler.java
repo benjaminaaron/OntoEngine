@@ -1,13 +1,14 @@
 package de.benjaminaaron.ontoserver.model;
 
-import de.benjaminaaron.ontoserver.model.io.RawTriple;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementResponse;
 import lombok.SneakyThrows;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.ext.com.google.common.collect.Iterators;
 import org.apache.jena.graph.Node;
 import org.apache.jena.ontology.*;
-import org.apache.jena.query.*;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.riot.RDFLanguages;
 import org.apache.jena.riot.RDFParser;
@@ -135,11 +136,11 @@ public class MetaHandler {
         return metaDataModel;
     }
 
-    public void storeQueryTriple(RawTriple triple) {
-        Resource sub = metaDataModel.createResource(ensureUri(triple.getSubject()));
-        Property pred = metaDataModel.createProperty(ensureUri(triple.getPredicate()));
-        RDFNode obj = metaDataModel.createTypedLiteral(triple.getObject());
-        metaDataModel.add(ResourceFactory.createStatement(sub, pred, obj));
+    public void storeQueryTriple(String sub, String pred, String obj) {
+        metaDataModel.add(ResourceFactory.createStatement(
+                metaDataModel.createResource(ensureUri(sub)),
+                metaDataModel.createProperty(ensureUri(pred)),
+                metaDataModel.createTypedLiteral(obj)));
     }
 
     public String getPeriodicQueryTemplate(String queryName) {
@@ -147,19 +148,24 @@ public class MetaHandler {
                 "SELECT * WHERE { " +
                 "   <" + queryName + "> :hasPeriodicQueryTemplate ?query " +
                 "}";
-        String queryTemplate = "";
+        String queryTemplate = null;
         try(QueryExecution queryExecution = QueryExecutionFactory.create(query, metaDataModel)) {
             ResultSet resultSet = queryExecution.execSelect();
-            QuerySolution querySolution = resultSet.next(); // assumes only one result
-            queryTemplate = querySolution.getLiteral("query").getString();
+            queryTemplate = resultSet.next().getLiteral("query").getString();
+            if (resultSet.hasNext()) {
+                logger.warn("More than one template query found for \"" + queryName + "\", using the first result");
+            }
         }
         return queryTemplate;
     }
 
-    public void storeInstantiatedTemplateQueryTriple(RawTriple triple) {
-        // store info about which template was used in an instantiation too for
-        // recreating short template+instantiation-command syntax in (markdown) export
-        // TODO
+    public void storeInstantiatedTemplateQueryTriple(String sub, String pred, String obj, String templateName) {
+        // recreate short template+instantiation-command syntax in (markdown) export TODO
+        storeQueryTriple(sub, pred, obj);
+        metaDataModel.add(ResourceFactory.createStatement(
+                metaDataModel.createResource(ensureUri(sub)),
+                metaDataModel.createProperty(ensureUri("wasInstantiatedFromTemplate")),
+                metaDataModel.createTypedLiteral(templateName)));
     }
 
     public enum StatementOrigin {

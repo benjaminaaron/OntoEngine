@@ -8,7 +8,6 @@ import de.benjaminaaron.ontoserver.suggestion.job.NewStatementJob;
 import de.benjaminaaron.ontoserver.suggestion.job.PeriodicJob;
 import de.benjaminaaron.ontoserver.suggestion.job.task.CaseSensitivityTask;
 import de.benjaminaaron.ontoserver.suggestion.job.task.LocalVocabularyMatchingTask;
-import de.benjaminaaron.ontoserver.suggestion.job.task.QueryExecutionTask;
 import de.benjaminaaron.ontoserver.suggestion.job.task.WikidataMatchingTask;
 import lombok.SneakyThrows;
 import org.apache.jena.rdf.model.Resource;
@@ -20,7 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static de.benjaminaaron.ontoserver.model.Utils.ResourceType.PREDICATE;
 
@@ -38,8 +39,6 @@ public class SuggestionEngine {
     private ModelController modelController;
     private TaskSchedulingManager taskManager;
 
-    private final List<Query> queries = new ArrayList<>();
-
     @SneakyThrows
     @PostConstruct
     void init() {
@@ -52,9 +51,9 @@ public class SuggestionEngine {
         // job.addTask(new CaseSensitivityTask());
         // job.addTask(new GraphSimilarityTask());
         // job.addTask(new PropertyChainsTask());
-        QueryExecutionTask queryExecutionTask = new QueryExecutionTask(queries);
-        queryExecutionTask.setMainModel(modelController.getMainModel());
-        job.addTask(queryExecutionTask);
+        // QueryExecutionTask queryExecutionTask = new QueryExecutionTask(queries);
+        // queryExecutionTask.setMainModel(modelController.getMainModel());
+        // job.addTask(queryExecutionTask);
         handleNewSuggestions(job.execute());
     }
 
@@ -118,14 +117,5 @@ public class SuggestionEngine {
         if (word.toLowerCase().contains(value)) {
             matches.put(word, resource.getURI());
         }
-    }
-
-    public void addQuery(Query query) {
-        logger.info("Query added --> " + query);
-        queries.add(query);
-    }
-
-    public Optional<Query> getTemplateQuery(String queryName) {
-        return queries.stream().filter(q -> q.getQueryName().equals(queryName)).findAny();
     }
 }
