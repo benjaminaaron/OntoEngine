@@ -38,7 +38,7 @@ public class SuggestionEngine {
     private ModelController modelController;
     private TaskSchedulingManager taskManager;
 
-    private List<Query> queries = new ArrayList<>();
+    private final List<Query> queries = new ArrayList<>();
 
     @SneakyThrows
     @PostConstruct
@@ -121,6 +121,7 @@ public class SuggestionEngine {
     }
 
     public void addQuery(Query query) {
+        logger.info("Query added --> " + query);
         queries.add(query);
     }
 

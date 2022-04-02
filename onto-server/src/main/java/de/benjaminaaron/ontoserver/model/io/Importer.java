@@ -12,6 +12,8 @@ import org.apache.jena.rdf.model.*;
 import org.apache.jena.rdfconnection.RDFConnection;
 import org.apache.jena.rdfconnection.RDFConnectionFactory;
 import org.apache.jena.system.Txn;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -25,11 +27,13 @@ import java.util.stream.Stream;
 
 import static de.benjaminaaron.ontoserver.model.Utils.*;
 import static de.benjaminaaron.ontoserver.suggestion.Query.QueryType.PERIODIC;
-import static de.benjaminaaron.ontoserver.suggestion.Query.QueryType.parse;
+import static de.benjaminaaron.ontoserver.suggestion.Query.QueryType.TEMPLATE;
 import static org.apache.commons.io.FilenameUtils.getBaseName;
 
 @Component
 public class Importer {
+
+    private final Logger logger = LogManager.getLogger(Importer.class);
 
     @Value("${graphdb.get-url}")
     private String GRAPHDB_GET_URL;
@@ -63,73 +67,42 @@ public class Importer {
         }
 
         // process QUERIES.md if existent
-        // make it more robust than all this if/else and line splitting? TODO
         // handle URI-expansion TODO
         Optional<Path> queriesFileOptional = getSpecialMarkdownFile(markdownDir, "QUERIES.md");
         if (queriesFileOptional.isPresent()) {
             List<RawTriple> triples = parseTriples(queriesFileOptional.get());
             for (RawTriple triple : triples) {
-                System.out.println(triple);
-            }
-            // TODO
-            /*
-            List<String> lines = Files.lines(queriesFileOptional.get())
-                    .filter(line -> !line.isBlank())
-                    .filter(line -> !line.trim().startsWith("//"))
-                    .collect(Collectors.toList());
-            boolean withinQuery = false;
-            String queryStr = "";
-            String queryName = "";
-            String queryTypeStr = "";
-            for (String line : lines) {
-                if (withinQuery) {
-                    if (line.trim().equals("\"")) {
-                        if (!queryStr.isEmpty()) {
-                            withinQuery = false;
-                            queryStr = queryStr.trim();
-                            Query query = new Query();
-                            query.setQuery(queryStr);
-                            query.setQueryName(queryName);
-                            query.setType(parse(queryTypeStr));
-                            metaHandler.storeQueryTriple(queryName, parse(queryTypeStr), queryStr);
-                            suggestionEngine.addQuery(query);
-                            queryStr = "";
+                switch (triple.getPredicate()) {
+                    case "hasPeriodicQueryTemplate":
+                        suggestionEngine.addQuery(new Query(TEMPLATE, triple.getSubject(), triple.getObject()));
+                        break;
+                    case "instantiatePeriodicQueryTemplateFor":
+                        Optional<Query> templateQueryOptional = suggestionEngine.getTemplateQuery(triple.getSubject());
+                        if (templateQueryOptional.isEmpty()) {
+                            logger.warn("No template query found for \"" + triple.getSubject() + "\", could not instantiate query for \"" + triple.getSubject() + "\"");
+                            break;
                         }
-                    } else { // building the query
-                        queryStr += line + " " + System.getProperty("line.separator");
-                    }
-                } else {
-                    if (line.split(" ").length == 2) { // query definition
-                        withinQuery = true;
-                        queryName = line.split(" ")[0].trim();
-                        queryTypeStr = line.split(" ")[1].trim();
-                    }
-                    if (line.split(" ").length > 2) { // template instantiation command
-                        String command = line.split(" ")[0];
-                        String templateName = line.split(" ")[1];
-                        queryName = templateName;
-                        String paramsStr = line.split("\"")[1];
-                        List<String> params = Arrays.stream(paramsStr.split(",")).map(String::trim).collect(Collectors.toList());
-                        Optional<Query> template = suggestionEngine.getTemplateQuery(queryName);
-                        if (template.isPresent()) {
-                            String queryStrReplaced = template.get().getQuery();
-                            for (int i = 0; i < params.size(); i++) {
-                                String param = params.get(i);
-                                int varIdx = i + 1;
-                                queryName += "_" + param;
-                                queryStrReplaced = queryStrReplaced.replaceAll("<var" + varIdx + ">", ":" + param);
-                            }
-                            Query query = new Query();
-                            query.setInstantiatedFromTemplate(templateName);
-                            query.setQuery(queryStrReplaced);
-                            query.setQueryName(queryName);
-                            query.setType(PERIODIC);
-                            metaHandler.storeQueryTriple(queryName, PERIODIC, queryStrReplaced);
-                            suggestionEngine.addQuery(query);
+                        String instantiatedQueryName = triple.getSubject();
+                        String queryStrReplaced = templateQueryOptional.get().getQuery();
+                        List<String> params = triple.getObjectParams();
+                        for (int i = 0; i < params.size(); i++) {
+                            String param = params.get(i);
+                            int varIdx = i + 1;
+                            instantiatedQueryName += "_" + param;
+                            queryStrReplaced = queryStrReplaced.replaceAll("<var" + varIdx + ">", ":" + param);
                         }
-                    }
+                        suggestionEngine.addQuery(new Query(PERIODIC, instantiatedQueryName, queryStrReplaced, triple.getSubject()));
+                        break;
+                    case "hasPeriodicQuery":
+                        suggestionEngine.addQuery(new Query(PERIODIC, triple.getSubject(), triple.getObject()));
+                        break;
+                    case "setupPropertyChain":
+                        // TODO
+                        break;
+                    default:
+                        break;
                 }
-            }*/
+            }
         }
 
         // collect markdown files and URIs of resources
