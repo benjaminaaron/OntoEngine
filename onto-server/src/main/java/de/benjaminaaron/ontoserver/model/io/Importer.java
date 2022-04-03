@@ -92,9 +92,22 @@ public class Importer {
                                 instantiatedQueryName, ensureUri("hasPeriodicQuery"), queryStrReplaced, triple.getSubject());
                         break;
                     case "ifttt":
-                        System.out.println("ifttt:" + triple);
-                        Pair<String[], String[]> parts = triple.getObjectParamsIFTTT();
-                        // TODO
+                        Pair<List<RawTriple>, List<RawTriple>> parts = triple.getObjectParamsIFTTT();
+                        List<RawTriple> whereParts = parts.getLeft();
+                        // TODO deal with "A pred1/pred2 B"
+                        List<RawTriple> constructParts = parts.getRight();
+                        String query =
+                                "PREFIX : <http://onto.de/default#> " +
+                                "CONSTRUCT { ";
+                        for (RawTriple cpart : constructParts) {
+                            query += cpart.toQueryLine();
+                        }
+                        query += "} WHERE { ";
+                        for (RawTriple wpart : whereParts) {
+                            query += wpart.toQueryLine();
+                        }
+                        query += "}";
+                        metaHandler.storeQueryTriple(triple.getSubject(), "hasPeriodicQuery", query);
                         break;
                     default:
                         break;

@@ -3,9 +3,9 @@ package de.benjaminaaron.ontoserver.model.io;
 import lombok.Data;
 import org.apache.jena.atlas.lib.Pair;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Data
@@ -45,11 +45,25 @@ public class RawTriple {
         return Arrays.stream(object.split(",")).map(String::trim).collect(Collectors.toList());
     }
 
-    public Pair<String[], String[]> getObjectParamsIFTTT() {
+    public Pair<List<RawTriple>, List<RawTriple>> getObjectParamsIFTTT() {
         cleanObject();
-        String ifPart = object.split("-->")[0].trim();
-        String thenPart = object.split("-->")[1].trim();
-        return Pair.create(ifPart.split(" "), thenPart.split(" "));
+        String[] whereParts = object.split("-->")[0].trim().split(" ");
+        String[] constructParts = object.split("-->")[1].trim().split(" ");
+        return Pair.create(collectIftttTriples(whereParts), collectIftttTriples(constructParts));
+    }
+
+    private List<RawTriple> collectIftttTriples(String[] parts) {
+        List<RawTriple> list = new ArrayList<>();
+        int sub = 0;
+        for (int i = 0; i < (parts.length - 1) / 2; i++) {
+            int idx = i * 3 - (sub ++);
+            list.add(new RawTriple(parts[idx], parts[idx + 1], parts[idx + 2]));
+        }
+        return list;
+    }
+
+    public String toQueryLine() {
+        return "?" + subject + " :" + predicate + " ?" + object + ". ";
     }
 
     @Override
