@@ -6,6 +6,7 @@ import de.benjaminaaron.ontoserver.model.ModelController;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementMessage;
 import de.benjaminaaron.ontoserver.suggestion.SuggestionEngine;
 import lombok.SneakyThrows;
+import org.apache.jena.atlas.lib.Pair;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.rdfconnection.RDFConnection;
@@ -68,9 +69,6 @@ public class Importer {
         Optional<Path> queriesFileOptional = getSpecialMarkdownFile(markdownDir, "QUERIES.md");
         if (queriesFileOptional.isPresent()) {
             for (RawTriple triple : parseTriples(queriesFileOptional.get())) {
-
-                // TODO handle special characters in query strings: <>\n
-
                 switch (triple.getPredicate()) {
                     case "hasPeriodicQueryTemplate":
                     case "hasPeriodicQuery":
@@ -84,7 +82,7 @@ public class Importer {
                         }
                         String instantiatedQueryName = triple.getSubject();
                         String queryStrReplaced = templateQueryStr;
-                        List<String> params = triple.getObjectParams();
+                        List<String> params = triple.getObjectParamsCSV();
                         for (int i = 0; i < params.size(); i++) {
                             String param = params.get(i);
                             instantiatedQueryName += "_" + param;
@@ -93,7 +91,9 @@ public class Importer {
                         metaHandler.storeInstantiatedTemplateQueryTriple(
                                 instantiatedQueryName, ensureUri("hasPeriodicQuery"), queryStrReplaced, triple.getSubject());
                         break;
-                    case "setupPropertyChain":
+                    case "ifttt":
+                        System.out.println("ifttt:" + triple);
+                        Pair<String[], String[]> parts = triple.getObjectParamsIFTTT();
                         // TODO
                         break;
                     default:
