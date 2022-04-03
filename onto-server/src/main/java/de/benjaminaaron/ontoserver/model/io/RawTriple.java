@@ -25,7 +25,7 @@ public class RawTriple {
     }
 
     public void appendToObject(String objectStringPart) {
-        object += objectStringPart + System.getProperty("line.separator");
+        object += objectStringPart.trim() + " "; // System.getProperty("line.separator");
     }
 
     public List<String> getObjectParams() {
