@@ -28,6 +28,10 @@ public class RawTriple {
         object += objectStringPart.trim() + " "; // System.getProperty("line.separator");
     }
 
+    public String getObject() {
+        return object.trim();
+    }
+
     public List<String> getObjectParams() {
         object = object.trim();
         if (object.startsWith("\"")) object = object.substring(1);
