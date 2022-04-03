@@ -8,6 +8,7 @@ import de.benjaminaaron.ontoserver.suggestion.job.NewStatementJob;
 import de.benjaminaaron.ontoserver.suggestion.job.PeriodicJob;
 import de.benjaminaaron.ontoserver.suggestion.job.task.CaseSensitivityTask;
 import de.benjaminaaron.ontoserver.suggestion.job.task.LocalVocabularyMatchingTask;
+import de.benjaminaaron.ontoserver.suggestion.job.task.PeriodicQueryTask;
 import de.benjaminaaron.ontoserver.suggestion.job.task.WikidataMatchingTask;
 import lombok.SneakyThrows;
 import org.apache.jena.rdf.model.Resource;
@@ -51,9 +52,9 @@ public class SuggestionEngine {
         // job.addTask(new CaseSensitivityTask());
         // job.addTask(new GraphSimilarityTask());
         // job.addTask(new PropertyChainsTask());
-        // QueryExecutionTask queryExecutionTask = new QueryExecutionTask(queries);
-        // queryExecutionTask.setMainModel(modelController.getMainModel());
-        // job.addTask(queryExecutionTask);
+        PeriodicQueryTask periodicQueryTask = new PeriodicQueryTask(modelController.getMetaModel());
+        periodicQueryTask.setMainModel(modelController.getMainModel());
+        job.addTask(periodicQueryTask);
         handleNewSuggestions(job.execute());
     }
 
