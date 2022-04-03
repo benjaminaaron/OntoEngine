@@ -26,18 +26,29 @@ public class PeriodicQueryTask extends JobModelTask {
 
         // GET PERIODIC QUERIES
         Map<String, String> periodicQueries = new HashMap<>();
-        String query = "PREFIX : <http://onto.de/default#> " +
+        String queryStr = "PREFIX : <http://onto.de/default#> " +
                 "SELECT * WHERE { " +
                 "   ?queryName :hasPeriodicQuery ?query " +
                 "}";
-        try(QueryExecution queryExecution = QueryExecutionFactory.create(query, metaModel)) {
+        try(QueryExecution queryExecution = QueryExecutionFactory.create(queryStr, metaModel)) {
             ResultSet resultSet = queryExecution.execSelect();
             while(resultSet.hasNext()) {
                 QuerySolution row = resultSet.next();
                 periodicQueries.put(row.getResource("queryName").getURI(), row.getLiteral("query").getString());
             }
         }
-        System.out.println(periodicQueries);
+
+        // EXECUTE THEM
+        periodicQueries.forEach((queryName, query) -> {
+            try(QueryExecution queryExecution = QueryExecutionFactory.create(query, mainModel)) {
+                StmtIterator iter = queryExecution.execConstruct().listStatements();
+                while(iter.hasNext()) {
+                    Statement statement = iter.nextStatement();
+                    System.out.println(queryName + " --> " + statement);
+                    // TODO suggestion
+                }
+            }
+        });
 
         return suggestions;
     }

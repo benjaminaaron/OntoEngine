@@ -44,7 +44,7 @@ public class SuggestionEngine {
     @PostConstruct
     void init() {
         taskManager = new TaskSchedulingManager(this);
-        taskManager.schedulePeriodicJob("runPeriodicJob", 10, 30);
+        taskManager.schedulePeriodicJob("runPeriodicJob", 5, 30);
     }
 
     public void runPeriodicJob() {
