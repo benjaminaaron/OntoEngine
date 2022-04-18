@@ -47,6 +47,7 @@ public class RawTriple {
 
     public Pair<List<RawTriple>, List<RawTriple>> getObjectParamsIFTTT() {
         cleanObject();
+        // A father B mother C --> A grandmother C
         String[] whereParts = object.split("-->")[0].trim().split(" ");
         String[] constructParts = object.split("-->")[1].trim().split(" ");
         return Pair.create(collectIftttTriples(whereParts), collectIftttTriples(constructParts));
@@ -55,10 +56,12 @@ public class RawTriple {
     private List<RawTriple> collectIftttTriples(String[] parts) {
         List<RawTriple> list = new ArrayList<>();
         int sub = 0;
+        // A father B mother C
         for (int i = 0; i < (parts.length - 1) / 2; i++) {
             int idx = i * 3 - (sub ++);
             list.add(new RawTriple(parts[idx], parts[idx + 1], parts[idx + 2]));
         }
+        // <A father B> <B mother C>
         return list;
     }
 
