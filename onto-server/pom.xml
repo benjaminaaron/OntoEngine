@@ -102,6 +102,13 @@
             <artifactId>wdtk-wikibaseapi</artifactId>
             <version>0.12.1</version>
         </dependency>
+
+        <!-- https://github.com/rubenlagus/TelegramBots/tree/master/telegrambots-spring-boot-starter -->
+        <dependency>
+            <groupId>org.telegram</groupId>
+            <artifactId>telegrambots-spring-boot-starter</artifactId>
+            <version>6.0.1</version>
+        </dependency>
     </dependencies>
 
     <build>
