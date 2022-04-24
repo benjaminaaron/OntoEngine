@@ -164,12 +164,11 @@ public class Utils {
         return model.getNsPrefixURI(prefix) + uriPart.split(":")[1];
     }
 
-    public static Path getObsidianICloudDir() {
+    public static Path getObsidianICloudDir(String folderName) {
         String userName = System.getProperty("user.name");
-        String vaultName = "main";
         // This works for my setup, needs to be made more solid for variations
         return Paths.get("/Users/" + userName +
-                "/Library/Mobile Documents/iCloud~md~obsidian/Documents/"+ vaultName);
+                "/Library/Mobile Documents/iCloud~md~obsidian/Documents/"+ folderName);
     }
 
     public static Optional<Path> getSpecialMarkdownFile(Path dir, String filename) throws IOException {

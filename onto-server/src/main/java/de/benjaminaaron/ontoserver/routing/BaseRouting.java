@@ -72,10 +72,10 @@ public abstract class BaseRouting {
             case "import":
                 format = args.get(0).toLowerCase();
                 if (format.equals("graphdb")) {
-                    importer.importFromGraphDB(args.get(1));
+                    importer.importFromGraphDB(args.get(1)); // repo
                 }
                 if (format.equals("markdown")) {
-                    importer.importFromMarkdown();
+                    importer.importFromMarkdown(args.get(1)); // folder name
                 }
                 break;
             case "replace":

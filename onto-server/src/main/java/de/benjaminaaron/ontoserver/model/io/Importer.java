@@ -48,8 +48,8 @@ public class Importer {
     private MetaHandler metaHandler;
 
     @SneakyThrows
-    public void importFromMarkdown() {
-        Path markdownDir = getObsidianICloudDir(); // MARKDOWN_DEFAULT_DIRECTORY
+    public void importFromMarkdown(String folderName) {
+        Path markdownDir = getObsidianICloudDir(folderName);
         Model model = modelController.getMainModel();
         Map<String, Path> markdownFiles = new HashMap<>(); // key: resourceLocalName, value: file path
         Map<String, String> filenamesToUris = new HashMap<>();
