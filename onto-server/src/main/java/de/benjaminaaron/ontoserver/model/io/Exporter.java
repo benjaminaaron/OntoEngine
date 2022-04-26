@@ -1,6 +1,7 @@
 package de.benjaminaaron.ontoserver.model.io;
 
 import de.benjaminaaron.ontoserver.model.ModelController;
+import de.benjaminaaron.ontoserver.model.Utils;
 import de.benjaminaaron.ontoserver.model.graph.Edge;
 import lombok.SneakyThrows;
 import org.apache.jena.rdf.model.*;
@@ -67,9 +68,8 @@ public class Exporter {
         modelController.getGraphManager().exportGraphml(getExportFile(EXPORT_DIRECTORY, "model", "graphml"), fullUri);
     }
 
-    public void exportMarkdown() {
-        // Path markdownDir = Utils.getObsidianICloudDir();
-        Path markdownDir = MARKDOWN_DEFAULT_DIRECTORY;
+    public void exportMarkdown(String folderName) {
+        Path markdownDir = Utils.getObsidianICloudDir(folderName);
         markdownDir.toFile().mkdirs();
 
         // Write PREFIXES.md
