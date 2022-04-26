@@ -83,7 +83,7 @@ public class Exporter {
         // Write an .md file for each vertex
         Graph<RDFNode, Edge> graph = modelController.getGraphManager().getGraph();
         for (RDFNode node : graph.vertexSet()) {
-            if (node.isLiteral()) {
+            if (node.isLiteral() || graph.outgoingEdgesOf(node).isEmpty()) {
                 continue;
             }
             Resource source = node.asResource();
