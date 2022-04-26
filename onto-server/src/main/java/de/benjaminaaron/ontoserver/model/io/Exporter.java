@@ -96,15 +96,21 @@ public class Exporter {
                 for (Edge edge : graph.outgoingEdgesOf(node)) {
                     RDFNode target = graph.getEdgeTarget(edge);
                     writeLine(fw, determineShortestUriRepresentation(prefixes, edge.property)
-                            + " " +
-                            (target.isResource() ?
-                            "[[" + target.asResource().getLocalName() + "]]"
-                            :
-                            "\"" + target.asLiteral().getString() + "\"")
-                    );
+                        + " " + getObjectString(target));
                 }
             } catch (IOException ignored) {}
         }
+    }
+
+    private String getObjectString(RDFNode target) {
+        if (target.isLiteral()) {
+            return "\"" + target.asLiteral().getString() + "\"";
+        }
+        if (modelController.getGraphManager().getGraph().outgoingEdgesOf(target).isEmpty()) {
+            // this probably has to be removed when we want to be serious about namespaces TODO
+            return target.asResource().getLocalName();
+        }
+        return "[[" + target.asResource().getLocalName() + "]]";
     }
 
     @SneakyThrows
