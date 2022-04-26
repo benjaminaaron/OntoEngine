@@ -70,6 +70,7 @@ public class Exporter {
 
     public void exportMarkdown(String folderName) {
         Path markdownDir = Utils.getObsidianICloudDir(folderName);
+        // delete all existing files or only those that wouldn't get overwritten? --> sync mechanism TODO
         markdownDir.toFile().mkdirs();
 
         // Write PREFIXES.md
@@ -79,6 +80,8 @@ public class Exporter {
                 writeLine(fw, key + ":" + prefixes.get(key));
             }
         } catch (IOException ignored) {}
+
+        // Write QUERIES.md TODO
 
         // Write an .md file for each vertex
         Graph<RDFNode, Edge> graph = modelController.getGraphManager().getGraph();
