@@ -4,10 +4,13 @@ import de.benjaminaaron.ontoserver.model.ModelController;
 import de.benjaminaaron.ontoserver.model.Utils;
 import de.benjaminaaron.ontoserver.model.graph.Edge;
 import lombok.SneakyThrows;
+import org.apache.commons.io.FileUtils;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.rdfconnection.RDFConnection;
 import org.apache.jena.rdfconnection.RDFConnectionFactory;
 import org.apache.jena.system.Txn;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jgrapht.Graph;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +30,8 @@ import static de.benjaminaaron.ontoserver.model.Utils.*;
 
 @Component
 public class Exporter {
+
+    private final Logger logger = LogManager.getLogger(Exporter.class);
 
     @Value("${model.export.directory}")
     private Path EXPORT_DIRECTORY;
@@ -70,8 +75,20 @@ public class Exporter {
 
     public void exportMarkdown(String folderName) {
         Path markdownDir = Utils.getObsidianICloudDir(folderName);
-        // delete all existing files or only those that wouldn't get overwritten? --> sync mechanism TODO
-        markdownDir.toFile().mkdirs();
+        // sync mechanism? TODO
+
+        try {
+            // Add a warning-step first or make a backup copy? This could lead to accidental data loss
+            FileUtils.deleteDirectory(markdownDir.toFile());
+        } catch (IOException e) {
+            logger.error("Could not delete directory " + markdownDir + ", aborting markdown export");
+            return;
+        }
+
+        if (!markdownDir.toFile().mkdirs()) {
+            logger.error("Could not (re)create directory " + markdownDir + ", aborting markdown export");
+            return;
+        }
 
         // Write PREFIXES.md
         Map<String, String> prefixes = modelController.getMainModel().getNsPrefixMap();
