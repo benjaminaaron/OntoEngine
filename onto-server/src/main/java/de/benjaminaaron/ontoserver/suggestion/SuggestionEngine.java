@@ -38,12 +38,20 @@ public class SuggestionEngine {
 
     @Autowired
     private ModelController modelController;
+
     private TaskSchedulingManager taskManager;
+    private LocalVocabularyManager localVocabularyManager;
+
+    private final boolean isON = false;
 
     @SneakyThrows
     @PostConstruct
     void init() {
+        if (!isON) {
+            return;
+        }
         taskManager = new TaskSchedulingManager(this);
+        localVocabularyManager = new LocalVocabularyManager(modelController.getVocabularySourcesModel());
         taskManager.schedulePeriodicJob("runPeriodicJob", 5, 30);
     }
 
@@ -58,7 +66,7 @@ public class SuggestionEngine {
         handleNewSuggestions(job.execute());
     }
 
-    public void runNewStatementJob(Statement statement, LocalVocabularyManager localVocabularyManager) {
+    public void runNewStatementJob(Statement statement) {
         NewStatementJob job = new NewStatementJob(statement);
         job.addTask(new LocalVocabularyMatchingTask(localVocabularyManager));
         job.addTask(new WikidataMatchingTask());

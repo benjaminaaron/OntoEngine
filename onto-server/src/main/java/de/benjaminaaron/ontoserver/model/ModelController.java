@@ -45,9 +45,8 @@ public class ModelController {
     @Autowired
     private MetaHandler metaHandler;
 
-    // these should be @Component's
+    // this should be a @Component
     private final GraphManager graphManager;
-    private final LocalVocabularyManager localVocabularyManager;
 
     public ModelController(
             @Value("${jena.tdb.directory}") Path TBD_DIR,
@@ -77,7 +76,6 @@ public class ModelController {
             logger.info("Creating " + VOCABULARY_SOURCES_MODEL_NAME + "-model in TDB location '" + TBD_DIR + "'");
         }
         vocabularySourcesModel = dataset.getNamedModel(VOCABULARY_SOURCES_MODEL_NAME);
-        localVocabularyManager = new LocalVocabularyManager(vocabularySourcesModel);
 
         graphManager = new GraphManager(mainModel);
         printStatements();
@@ -111,7 +109,7 @@ public class ModelController {
         }
         addStatement(statement, StatementOrigin.ADD, "client", response);
         router.sendNewTripleEvent(statement);
-        // suggestionEngine.runNewStatementJob(statement, localVocabularyManager);
+        // suggestionEngine.runNewStatementJob(statement);
         return response;
     }
 
@@ -156,6 +154,10 @@ public class ModelController {
 
     public Model getMetaModel() {
         return metaModel;
+    }
+
+    public Model getVocabularySourcesModel() {
+        return vocabularySourcesModel;
     }
 
     public MetaHandler getMetaHandler() {

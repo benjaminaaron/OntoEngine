@@ -27,6 +27,7 @@ public class LocalVocabularyManager {
 
     public LocalVocabularyManager(Model model) {
         this.model = model;
+        // this fails without internet
         sourceUris.forEach(model::read);
         // model.write(System.out);
     }
