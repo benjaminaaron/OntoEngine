@@ -108,7 +108,7 @@ public abstract class BaseRouting {
                 }
                 break;
             case "dev":
-                modelController.dev();
+                modelController.dev(args.size() > 1 ? commandStr.substring(4) : null);
                 break;
             default:
                 return "Unknown command";

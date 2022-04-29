@@ -170,7 +170,7 @@ public class ModelController {
         mainModel.listStatements().toList().forEach(System.out::println);
     }
 
-    public void dev() {
+    public void dev(String optionalQuery) {
         String query =
                 "PREFIX apf: <http://jena.hpl.hp.com/ARQ/property#> " +
                 "PREFIX list: <http://jena.hpl.hp.com/ARQ/list#> " +
@@ -180,6 +180,9 @@ public class ModelController {
                 //"   ?x :list ?ls . " +
                 //"   ?ls list:index (?pos ?parts). " +
                 "}";
+        if (Objects.nonNull(optionalQuery)) {
+            query = optionalQuery;
+        }
         try(QueryExecution queryExecution = QueryExecutionFactory.create(query, mainModel)) {
             ResultSet resultSet = queryExecution.execSelect();
             ResultSetFormatter.out(resultSet);
