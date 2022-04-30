@@ -31,22 +31,20 @@ public class RawTriple {
     }
 
     public String getObject() {
-        return object.trim();
+        return object;
     }
 
-    private void cleanObject() {
+    public void cleanObject() {
         object = object.trim();
         if (object.startsWith("\"")) object = object.substring(1);
         if (object.endsWith("\"")) object = object.substring(0, object.length() - 1);
     }
 
     public List<String> getObjectParamsCSV() {
-        cleanObject();
         return Arrays.stream(object.split(",")).map(String::trim).collect(Collectors.toList());
     }
 
     public Pair<List<RawTriple>, List<RawTriple>> getObjectParamsIFTTT() {
-        cleanObject();
         // A father B mother C --> A grandmother C
         String[] whereParts = object.split("-->")[0].trim().split(" ");
         String[] constructParts = object.split("-->")[1].trim().split(" ");

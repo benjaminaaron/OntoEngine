@@ -183,6 +183,7 @@ public class Importer {
                 triples.add(new RawTriple(parts[0], parts[1], line.substring(parts[0].length() + parts[1].length() + 2)));
             }
         }
+        triples.forEach(RawTriple::cleanObject);
         return triples;
     }
 
