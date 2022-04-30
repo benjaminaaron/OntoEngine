@@ -168,6 +168,14 @@ public class MetaHandler {
                 metaDataModel.createTypedLiteral(templateName)));
     }
 
+    public void storeIFTTTtriple(String sub, String pred, String obj, String originalIFTTTstring) {
+        storeQueryTriple(sub, pred, obj);
+        metaDataModel.add(ResourceFactory.createStatement(
+            metaDataModel.createResource(ensureUri(sub)),
+            metaDataModel.createProperty(ensureUri("hasOriginalIFTTTstring")),
+            metaDataModel.createTypedLiteral(originalIFTTTstring)));
+    }
+
     public enum StatementOrigin {
         ADD, IMPORT, INFERENCE
     }

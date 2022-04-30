@@ -107,7 +107,7 @@ public class Importer {
                             query += wpart.toQueryLine();
                         }
                         query += "}";
-                        metaHandler.storeQueryTriple(triple.getSubject(), "hasPeriodicQuery", query);
+                        metaHandler.storeIFTTTtriple(triple.getSubject(), "hasPeriodicQuery", query, triple.getObject());
                         break;
                     default:
                         break;
