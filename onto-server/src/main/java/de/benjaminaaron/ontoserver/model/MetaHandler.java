@@ -183,8 +183,8 @@ public class MetaHandler {
             +   "VALUES ?queryType { :hasPeriodicQueryTemplate :hasPeriodicQuery } "
             +   "OPTIONAL { "
             +       "?queryName ?originInfoType ?originInfo . "
-            +       "VALUES ?originInfo { :wasInstantiatedFromTemplate :hasOriginalIFTTTstring } "
-            + "}}";
+            +       "VALUES ?originInfoType { :wasInstantiatedFromTemplate :hasOriginalIFTTTstring } "
+            + "}} ORDER BY ?queryType ?originInfoType";
         try(QueryExecution queryExecution = QueryExecutionFactory.create(query, metaDataModel)) {
             ResultSet resultSet = queryExecution.execSelect();
             ResultSetFormatter.out(resultSet);
