@@ -94,8 +94,8 @@ public class Importer {
                     case "ifttt":
                         Pair<List<RawTriple>, List<RawTriple>> parts = triple.getObjectParamsIFTTT();
                         List<RawTriple> whereParts = parts.getLeft();
-                        // TODO deal with "A pred1/pred2 B"
                         List<RawTriple> constructParts = parts.getRight();
+                        int valuesPredCount = 0;
                         String query =
                                 "PREFIX : <http://onto.de/default#> " +
                                 "CONSTRUCT { ";
@@ -104,7 +104,11 @@ public class Importer {
                         }
                         query += "} WHERE { ";
                         for (RawTriple wpart : whereParts) {
-                            query += wpart.toQueryLine();
+                            if (wpart.getPredicate().contains("/")) {
+                                query += wpart.toValuesQueryLine(valuesPredCount ++);
+                            } else {
+                                query += wpart.toQueryLine();
+                            }
                         }
                         query += "}";
                         metaHandler.storeIFTTTtriple(triple.getSubject(), "hasPeriodicQuery", query, triple.getObject());

@@ -64,7 +64,16 @@ public class RawTriple {
     }
 
     public String toQueryLine() {
-        return "?" + subject + " :" + predicate + " ?" + object + ". ";
+        return "?" + subject + " :" + predicate + " ?" + object + " . ";
+    }
+
+    public String toValuesQueryLine(int predIdx) {
+        String predVar = "?predVar" + predIdx;
+        String queryLine = "?" + subject + " " + predVar + " ?" + object + " . VALUES " + predVar + " { " ;
+        for (String value : predicate.split("/")) {
+            queryLine += ":" + value + " ";
+        }
+        return queryLine + " } . ";
     }
 
     @Override
