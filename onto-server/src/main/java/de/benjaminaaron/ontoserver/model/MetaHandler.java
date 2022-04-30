@@ -69,8 +69,6 @@ public class MetaHandler {
     }
 
     public void storeNewTripleEvent(Statement addedStmt, StatementOrigin origin, String info, AddStatementResponse response) {
-        logger.info("Statement added: " + addedStmt.getSubject() + ", " + addedStmt.getPredicate() + ", " + addedStmt.getObject());
-
         Resource subject = addedStmt.getSubject();
         Property predicate = addedStmt.getPredicate();
         RDFNode object = addedStmt.getObject();
@@ -141,6 +139,7 @@ public class MetaHandler {
                 metaDataModel.createResource(ensureUri(sub)),
                 metaDataModel.createProperty(ensureUri(pred)),
                 metaDataModel.createTypedLiteral(obj)));
+        logger.info("Stored query triple: " + sub + ", " + pred + ", " + obj);
     }
 
     public String getPeriodicQueryTemplate(String queryName) {

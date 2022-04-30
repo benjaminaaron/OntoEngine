@@ -116,6 +116,7 @@ public class ModelController {
     public void addStatement(Statement statement, StatementOrigin origin, String info, AddStatementResponse response) {
         metaHandler.storeNewTripleEvent(statement, origin, info, response);
         mainModel.add(statement);
+        logger.info("Statement added: " + statement.getSubject() + ", " + statement.getPredicate() + ", " + statement.getObject());
         graphManager.importStatement(statement);
     }
 
