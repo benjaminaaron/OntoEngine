@@ -9,6 +9,7 @@ import org.apache.jena.ontology.*;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.ResultSet;
+import org.apache.jena.query.ResultSetFormatter;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.riot.RDFLanguages;
 import org.apache.jena.riot.RDFParser;
@@ -173,6 +174,21 @@ public class MetaHandler {
             metaDataModel.createResource(ensureUri(sub)),
             metaDataModel.createProperty(ensureUri("hasOriginalIFTTTstring")),
             metaDataModel.createTypedLiteral(originalIFTTTstring)));
+    }
+
+    public void getAllQueryStringsWithInfos() {
+        String query = "PREFIX : <http://onto.de/default#> "
+            + "SELECT * WHERE { "
+            +   "?queryName ?queryType ?queryString . "
+            +   "VALUES ?queryType { :hasPeriodicQueryTemplate :hasPeriodicQuery } "
+            +   "OPTIONAL { "
+            +       "?queryName ?originInfoType ?originInfo . "
+            +       "VALUES ?originInfo { :wasInstantiatedFromTemplate :hasOriginalIFTTTstring } "
+            + "}}";
+        try(QueryExecution queryExecution = QueryExecutionFactory.create(query, metaDataModel)) {
+            ResultSet resultSet = queryExecution.execSelect();
+            ResultSetFormatter.out(resultSet);
+        }
     }
 
     public enum StatementOrigin {

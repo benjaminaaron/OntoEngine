@@ -1,5 +1,6 @@
 package de.benjaminaaron.ontoserver.model.io;
 
+import de.benjaminaaron.ontoserver.model.MetaHandler;
 import de.benjaminaaron.ontoserver.model.ModelController;
 import de.benjaminaaron.ontoserver.model.Utils;
 import de.benjaminaaron.ontoserver.model.graph.Edge;
@@ -48,6 +49,9 @@ public class Exporter {
 
     @Autowired
     private ModelController modelController;
+
+    @Autowired
+    private MetaHandler metaHandler;
 
     public void exportRDF(String modelName) {
         Model model = null;
@@ -98,7 +102,9 @@ public class Exporter {
             }
         } catch (IOException ignored) {}
 
-        // Write QUERIES.md TODO
+        // Write QUERIES.md
+        metaHandler.getAllQueryStringsWithInfos();
+        // TODO
 
         // Write an .md file for each vertex
         Graph<RDFNode, Edge> graph = modelController.getGraphManager().getGraph();
