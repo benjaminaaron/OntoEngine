@@ -138,6 +138,12 @@ public class Utils {
         fw.write(line + System.getProperty("line.separator"));
     }
 
+    public static void writeSectionHeadline(FileWriter fw, String line) throws IOException {
+        fw.write(System.getProperty("line.separator") +
+                "// ---------- " + line.toUpperCase() + "----------" +
+                System.getProperty("line.separator") + System.getProperty("line.separator"));
+    }
+
     public static String determineShortestUriRepresentation(Map<String, String> prefixes, RDFNode rdfNode) {
         Resource resource = rdfNode.asResource();
         String ns = resource.getNameSpace();

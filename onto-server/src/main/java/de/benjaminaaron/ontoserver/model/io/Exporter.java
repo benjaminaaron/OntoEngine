@@ -119,9 +119,11 @@ public class Exporter {
             +   "} "
             + "BIND(IF(BOUND(?originInfoType), ?originInfoType, IF(?queryType = :hasPeriodicQuery, :zz_direct, :z_template)) AS ?auxiliaryTypeIndicator) . "
             + "} ORDER BY DESC(?auxiliaryTypeIndicator)";
-        try(QueryExecution queryExecution = QueryExecutionFactory.create(query, metaHandler.getMetaDataModel())) {
+        try(QueryExecution queryExecution = QueryExecutionFactory.create(query, metaHandler.getMetaDataModel());
+            FileWriter fw = new FileWriter(markdownDir.resolve("QUERIES.md").toFile())) {
             ResultSet resultSet = queryExecution.execSelect();
             // ResultSetFormatter.out(resultSet);
+            String previousSectionName = "", sectionName = "";
             while(resultSet.hasNext()) {
                 QuerySolution qs = resultSet.next();
                 String queryName = qs.get("queryName").asResource().getLocalName();
@@ -133,15 +135,25 @@ public class Exporter {
                     originInfo = qs.get("originInfo").asLiteral().getString();
                 }
                 switch (qs.get("auxiliaryTypeIndicator").asResource().getLocalName()) {
-                    case "zz_template":
+                    case "zz_direct":
+                        sectionName = "periodic queries";
                         break;
-                    case "z_direct":
+                    case "z_template":
+                        sectionName = "periodic query templates";
                         break;
-                    case "wasInstantiatedFromTemplate>":
+                    case "wasInstantiatedFromTemplate":
+                        sectionName = "periodic queries instantiated from templates";
                         break;
-                    case "hasOriginalIFTTTstring>":
+                    case "hasOriginalIFTTTstring":
+                        sectionName = "IFTTT definitions";
                         break;
                 }
+                if (!previousSectionName.equals(sectionName)) {
+                    writeSectionHeadline(fw, sectionName);
+                    previousSectionName = sectionName;
+                }
+
+                // TODO
             }
         }
 
