@@ -1,5 +1,7 @@
 package de.benjaminaaron.ontoserver.model.io;
 
+import static de.benjaminaaron.ontoserver.model.Utils.NEW_LINE_CHAR;
+
 import lombok.Data;
 import org.apache.jena.atlas.lib.Pair;
 
@@ -27,7 +29,7 @@ public class RawTriple {
     }
 
     public void appendToObject(String objectStringPart) {
-        object += objectStringPart.trim() + " "; // System.getProperty("line.separator");
+        object += objectStringPart + " " + NEW_LINE_CHAR;
     }
 
     public String getObject() {
