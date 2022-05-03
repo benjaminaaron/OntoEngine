@@ -6,6 +6,10 @@ import de.benjaminaaron.ontoserver.model.Utils;
 import de.benjaminaaron.ontoserver.model.graph.Edge;
 import lombok.SneakyThrows;
 import org.apache.commons.io.FileUtils;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.QuerySolution;
+import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.rdfconnection.RDFConnection;
 import org.apache.jena.rdfconnection.RDFConnectionFactory;
@@ -103,8 +107,42 @@ public class Exporter {
         } catch (IOException ignored) {}
 
         // Write QUERIES.md
-        metaHandler.getAllQueryStringsWithInfos();
-        // TODO
+        // get all query strings with infos
+        String query = "PREFIX : <http://onto.de/default#> "
+            + "SELECT * WHERE { "
+            +   "?queryName ?queryType ?queryString . "
+            +   "VALUES ?queryType { :hasPeriodicQueryTemplate :hasPeriodicQuery } "
+            +   "OPTIONAL { "
+            +       "?queryName ?originInfoType ?originInfo . "
+            +       "VALUES ?originInfoType { :wasInstantiatedFromTemplate :hasOriginalIFTTTstring } "
+            +   "} "
+            + "BIND(IF(BOUND(?originInfoType), ?originInfoType, IF(?queryType = :hasPeriodicQuery, :zz_direct, :z_template)) AS ?auxiliaryTypeIndicator) . "
+            + "} ORDER BY DESC(?auxiliaryTypeIndicator)";
+        try(QueryExecution queryExecution = QueryExecutionFactory.create(query, metaHandler.getMetaDataModel())) {
+            ResultSet resultSet = queryExecution.execSelect();
+            // ResultSetFormatter.out(resultSet);
+            while(resultSet.hasNext()) {
+                QuerySolution qs = resultSet.next();
+                String queryName = qs.get("queryName").asResource().getLocalName();
+                String queryType = qs.get("queryType").asResource().getLocalName();
+                String queryString = qs.get("queryString").asLiteral().getString();
+                String originInfoType, originInfo;
+                if (qs.contains("originInfoType")) {
+                    originInfoType = qs.get("originInfoType").asResource().getLocalName();
+                    originInfo = qs.get("originInfo").asLiteral().getString();
+                }
+                switch (qs.get("auxiliaryTypeIndicator").asResource().getLocalName()) {
+                    case "zz_template":
+                        break;
+                    case "z_direct":
+                        break;
+                    case "wasInstantiatedFromTemplate>":
+                        break;
+                    case "hasOriginalIFTTTstring>":
+                        break;
+                }
+            }
+        }
 
         // Write an .md file for each vertex
         Graph<RDFNode, Edge> graph = modelController.getGraphManager().getGraph();

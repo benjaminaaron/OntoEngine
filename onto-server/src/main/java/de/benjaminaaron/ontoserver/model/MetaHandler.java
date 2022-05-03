@@ -176,21 +176,6 @@ public class MetaHandler {
             metaDataModel.createTypedLiteral(originalIFTTTstring)));
     }
 
-    public void getAllQueryStringsWithInfos() {
-        String query = "PREFIX : <http://onto.de/default#> "
-            + "SELECT * WHERE { "
-            +   "?queryName ?queryType ?queryString . "
-            +   "VALUES ?queryType { :hasPeriodicQueryTemplate :hasPeriodicQuery } "
-            +   "OPTIONAL { "
-            +       "?queryName ?originInfoType ?originInfo . "
-            +       "VALUES ?originInfoType { :wasInstantiatedFromTemplate :hasOriginalIFTTTstring } "
-            + "}} ORDER BY ?queryType ?originInfoType";
-        try(QueryExecution queryExecution = QueryExecutionFactory.create(query, metaDataModel)) {
-            ResultSet resultSet = queryExecution.execSelect();
-            ResultSetFormatter.out(resultSet);
-        }
-    }
-
     public enum StatementOrigin {
         ADD, IMPORT, INFERENCE
     }
