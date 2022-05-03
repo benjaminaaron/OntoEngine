@@ -159,13 +159,18 @@ public class MetaHandler {
         return queryTemplate;
     }
 
-    public void storeInstantiatedTemplateQueryTriple(String sub, String pred, String obj, String templateName) {
+    public void storeInstantiatedTemplateQueryTriple(String sub, String pred, String obj,
+        String templateName, String paramsString) {
         // recreate short template+instantiation-command syntax in (markdown) export TODO
         storeQueryTriple(sub, pred, obj);
         metaDataModel.add(ResourceFactory.createStatement(
                 metaDataModel.createResource(ensureUri(sub)),
                 metaDataModel.createProperty(ensureUri("wasInstantiatedFromTemplate")),
                 metaDataModel.createTypedLiteral(templateName)));
+        metaDataModel.add(ResourceFactory.createStatement(
+            metaDataModel.createResource(ensureUri(sub)),
+            metaDataModel.createProperty(ensureUri("hasInstantiationParameters")),
+            metaDataModel.createTypedLiteral(paramsString)));
     }
 
     public void storeIFTTTtriple(String sub, String pred, String obj, String originalIFTTTstring) {

@@ -88,8 +88,9 @@ public class Importer {
                             instantiatedQueryName += "_" + param;
                             queryStrReplaced = queryStrReplaced.replaceAll("<var" + (i + 1) + ">", ":" + param);
                         }
-                        metaHandler.storeInstantiatedTemplateQueryTriple(
-                                instantiatedQueryName, ensureUri("hasPeriodicQuery"), queryStrReplaced, triple.getSubject());
+                        metaHandler.storeInstantiatedTemplateQueryTriple(instantiatedQueryName,
+                            ensureUri("hasPeriodicQuery"), queryStrReplaced,
+                            triple.getSubject(), triple.getObject());
                         break;
                     case "ifttt":
                         Pair<List<RawTriple>, List<RawTriple>> parts = triple.getObjectParamsIFTTT();
