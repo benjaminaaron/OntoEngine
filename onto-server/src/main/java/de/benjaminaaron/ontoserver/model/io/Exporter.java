@@ -81,6 +81,7 @@ public class Exporter {
         modelController.getGraphManager().exportGraphml(getExportFile(EXPORT_DIRECTORY, "model", "graphml"), fullUri);
     }
 
+    @SneakyThrows
     public void exportMarkdown(String folderName) {
         Path markdownDir = Utils.getObsidianICloudDir(folderName);
         // sync mechanism? TODO
@@ -104,7 +105,7 @@ public class Exporter {
             for (String key : prefixes.keySet()) {
                 writeLine(fw, key + ":" + prefixes.get(key));
             }
-        } catch (IOException ignored) {}
+        }
 
         // Write QUERIES.md
         // get all query strings with infos
@@ -162,7 +163,7 @@ public class Exporter {
                     writeLine(fw, determineShortestUriRepresentation(prefixes, edge.property)
                         + " " + getObjectString(target));
                 }
-            } catch (IOException ignored) {}
+            }
         }
     }
 
