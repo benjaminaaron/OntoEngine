@@ -22,6 +22,7 @@ public class Utils {
 
     public static String DEFAULT_URI_NAMESPACE;
     private final static Slugify slugifier = new Slugify().withLowerCase(false);
+    public static final String NEW_LINE_CHAR = System.getProperty("line.separator");
 
     public static String buildDefaultNsUri(String word) {
         return DEFAULT_URI_NAMESPACE + slugifier.slugify(word);
@@ -135,13 +136,12 @@ public class Utils {
     }
 
     public static void writeLine(FileWriter fw, String line) throws IOException {
-        fw.write(line + System.getProperty("line.separator"));
+        fw.write(line + NEW_LINE_CHAR);
     }
 
     public static void writeSectionHeadline(FileWriter fw, String line) throws IOException {
-        fw.write(System.getProperty("line.separator") +
-                "// ---------- " + line.toUpperCase() + "----------" +
-                System.getProperty("line.separator") + System.getProperty("line.separator"));
+        fw.write(NEW_LINE_CHAR + "// ---------- " + line.toUpperCase() + "----------" +
+            NEW_LINE_CHAR + NEW_LINE_CHAR);
     }
 
     public static String determineShortestUriRepresentation(Map<String, String> prefixes, RDFNode rdfNode) {
