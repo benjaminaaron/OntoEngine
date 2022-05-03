@@ -144,6 +144,12 @@ public class Utils {
             NEW_LINE_CHAR + NEW_LINE_CHAR);
     }
 
+    public static void writeQueryLine(FileWriter fw, String queryName, String queryType,
+        String queryString) throws IOException {
+        fw.write(queryName + " " + queryType + NEW_LINE_CHAR + "\"" + NEW_LINE_CHAR +
+            queryString + NEW_LINE_CHAR + "\"" + NEW_LINE_CHAR);
+    }
+
     public static String determineShortestUriRepresentation(Map<String, String> prefixes, RDFNode rdfNode) {
         Resource resource = rdfNode.asResource();
         String ns = resource.getNameSpace();

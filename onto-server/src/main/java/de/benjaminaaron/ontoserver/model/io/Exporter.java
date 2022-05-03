@@ -108,17 +108,19 @@ public class Exporter {
         }
 
         // Write QUERIES.md
-        // get all query strings with infos
         String query = "PREFIX : <http://onto.de/default#> "
             + "SELECT * WHERE { "
             +   "?queryName ?queryType ?queryString . "
             +   "VALUES ?queryType { :hasPeriodicQueryTemplate :hasPeriodicQuery } "
             +   "OPTIONAL { "
-            +       "?queryName ?originInfoType ?originInfo . "
-            +       "VALUES ?originInfoType { :wasInstantiatedFromTemplate :hasOriginalIFTTTstring } "
+            +       "?queryName :wasInstantiatedFromTemplate ?instTemplate . "
+            +       "?queryName :hasInstantiationParameters ?instParams . "
+            +   "}"
+            +   "OPTIONAL { "
+            +       "?queryName :hasOriginalIFTTTstring ?iftttString . "
             +   "} "
-            + "BIND(IF(BOUND(?originInfoType), ?originInfoType, IF(?queryType = :hasPeriodicQuery, :zz_direct, :z_template)) AS ?auxiliaryTypeIndicator) . "
-            + "} ORDER BY DESC(?auxiliaryTypeIndicator)";
+            +   "BIND(IF(BOUND(?instTemplate), :instantiated, IF(BOUND(?iftttString), :z_ifttt, ?queryType)) AS ?auxiliaryTypeIndicator) . "
+            + "} ORDER BY ?auxiliaryTypeIndicator";
         try(QueryExecution queryExecution = QueryExecutionFactory.create(query, metaHandler.getMetaDataModel());
             FileWriter fw = new FileWriter(markdownDir.resolve("QUERIES.md").toFile())) {
             ResultSet resultSet = queryExecution.execSelect();
@@ -129,22 +131,19 @@ public class Exporter {
                 String queryName = qs.get("queryName").asResource().getLocalName();
                 String queryType = qs.get("queryType").asResource().getLocalName();
                 String queryString = qs.get("queryString").asLiteral().getString();
-                String originInfoType, originInfo;
-                if (qs.contains("originInfoType")) {
-                    originInfoType = qs.get("originInfoType").asResource().getLocalName();
-                    originInfo = qs.get("originInfo").asLiteral().getString();
-                }
-                switch (qs.get("auxiliaryTypeIndicator").asResource().getLocalName()) {
-                    case "zz_direct":
+                String auxiliaryTypeIndicator = qs.get("auxiliaryTypeIndicator").asResource().getLocalName();
+                // remove the need for the same switch-statement twice somehow?
+                switch (auxiliaryTypeIndicator) {
+                    case "hasPeriodicQuery":
                         sectionName = "periodic queries";
                         break;
-                    case "z_template":
+                    case "hasPeriodicQueryTemplate":
                         sectionName = "periodic query templates";
                         break;
-                    case "wasInstantiatedFromTemplate":
+                    case "instantiated":
                         sectionName = "periodic queries instantiated from templates";
                         break;
-                    case "hasOriginalIFTTTstring":
+                    case "z_ifttt":
                         sectionName = "IFTTT definitions";
                         break;
                 }
@@ -152,8 +151,22 @@ public class Exporter {
                     writeSectionHeadline(fw, sectionName);
                     previousSectionName = sectionName;
                 }
-
-                // TODO
+                switch (auxiliaryTypeIndicator) {
+                    case "hasPeriodicQuery":
+                    case "hasPeriodicQueryTemplate":
+                        writeQueryLine(fw, queryName, queryType, queryString);
+                        break;
+                    case "instantiated":
+                        String instTemplate = qs.get("instTemplate").asLiteral().getString();
+                        String instParams = qs.get("instParams").asLiteral().getString();
+                        writeLine(fw, instTemplate + " instantiatePeriodicQueryTemplateFor \""
+                            + instParams + "\"");
+                        break;
+                    case "z_ifttt":
+                        String iftttString = qs.get("iftttString").asLiteral().getString();
+                        writeLine(fw, queryName + " ifttt \"" + iftttString + "\"");
+                        break;
+                }
             }
         }
 
