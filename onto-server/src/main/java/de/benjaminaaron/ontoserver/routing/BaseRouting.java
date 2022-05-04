@@ -46,10 +46,11 @@ public class BaseRouting {
         return handleCommand(commandMessage.getCommand());
     }
 
-    protected String handleCommand(String commandStr) {
+    public String handleCommand(String commandStr) {
         List<String> args = new ArrayList<>(Arrays.asList(commandStr.split(" ")));
         String command = args.remove(0).toLowerCase();
         String format;
+        boolean noKnownCommand = false;
         switch (command) {
             case "print":
                 modelController.printStatements();
@@ -93,12 +94,8 @@ public class BaseRouting {
                 modelController.replaceUris(from, to);
                 break;
             case "add":
-                AddStatementMessage msg = new AddStatementMessage();
-                msg.setSubject(args.get(0));
-                msg.setPredicate(args.get(1));
-                msg.setObject(args.get(2));
-                msg.setObjectIsLiteral(false); // pass as optional args.get(3) boolean? TODO
-                modelController.addStatement(msg);
+            case "+":
+                addStatement(args);
                 break;
             case "accept":
                 String id = args.get(0);
@@ -114,8 +111,29 @@ public class BaseRouting {
                 modelController.dev(args.size() > 1 ? commandStr.substring(4) : null);
                 break;
             default:
-                return "Unknown command";
+                noKnownCommand = true;
+                break;
         }
-        return null;
+        if (!noKnownCommand) {
+            return null;
+        }
+        // if no known command is given, we see if it's a triple to be added
+        args = new ArrayList<>(Arrays.asList(commandStr.split(" ")));
+        if (args.size() == 3) {
+            addStatement(args);
+            return null;
+        } else {
+            return "Unknown command";
+        }
+    }
+
+    private void addStatement(List<String> args) {
+        AddStatementMessage msg = new AddStatementMessage();
+        msg.setSubject(args.get(0));
+        msg.setPredicate(args.get(1));
+        String obj = args.get(2);
+        msg.setObjectIsLiteral(obj.startsWith("\"") && obj.endsWith("\""));
+        msg.setObject(msg.isObjectIsLiteral() ? obj.substring(1, obj.length() - 1) : obj);
+        modelController.addStatement(msg);
     }
 }
