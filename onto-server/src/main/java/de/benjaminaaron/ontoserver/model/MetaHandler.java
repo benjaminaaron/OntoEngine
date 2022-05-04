@@ -140,7 +140,7 @@ public class MetaHandler {
                 metaDataModel.createResource(ensureUri(sub)),
                 metaDataModel.createProperty(ensureUri(pred)),
                 metaDataModel.createTypedLiteral(obj)));
-        logger.info("Stored query triple: " + sub + ", " + pred + ", " + obj);
+        // logger.info("Stored query triple: " + sub + ", " + pred + ", " + obj);
     }
 
     public String getPeriodicQueryTemplate(String queryName) {
