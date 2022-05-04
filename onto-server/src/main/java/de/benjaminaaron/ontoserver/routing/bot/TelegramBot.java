@@ -1,9 +1,11 @@
 package de.benjaminaaron.ontoserver.routing.bot;
 
+import de.benjaminaaron.ontoserver.routing.BaseRouting;
 import java.util.Objects;
 import lombok.SneakyThrows;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -14,6 +16,9 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 public class TelegramBot extends TelegramLongPollingBot {
 
     private final Logger logger = LogManager.getLogger(TelegramBot.class);
+
+    @Autowired
+    private BaseRouting baseRouting;
 
     @Value("${TELEGRAM_BOT_TOKEN}") // set for instance in the run configuration of IntelliJ under environment variables
     private String token;
@@ -44,7 +49,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
         logger.info("Received Telegram message (" + chatId + "): " + msg);
 
-        // TODO
+        baseRouting.handleCommand(msg);
     }
 
     @SneakyThrows
