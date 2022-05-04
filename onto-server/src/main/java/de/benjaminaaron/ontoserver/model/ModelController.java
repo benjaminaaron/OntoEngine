@@ -63,6 +63,8 @@ public class ModelController {
         if (!dataset.containsNamedModel(MAIN_MODEL_NAME)) {
             logger.info("Creating " + MAIN_MODEL_NAME + "-model in TDB location '" + TBD_DIR + "'");
         }
+        // these are actually what is called "named graphs" elsewhere
+        // support adding/querying over entire dataset vs. specific named graphs/models TODO
         mainModel = dataset.getNamedModel(MAIN_MODEL_NAME);
         mainModel.setNsPrefix("onto", DEFAULT_URI_NAMESPACE);
         // Meta Model
