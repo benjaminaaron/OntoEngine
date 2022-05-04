@@ -29,7 +29,7 @@ public class BaseRouting {
     private Exporter exporter;
 
     public AddStatementResponse addStatement(AddStatementMessage statementMsg) {
-        return modelController.addStatement(statementMsg);
+        return modelController.addStatement(statementMsg, true);
     }
 
     public String addStatementStringResponse(String subject, String predicate, String object,
@@ -134,6 +134,6 @@ public class BaseRouting {
         String obj = args.get(2);
         msg.setObjectIsLiteral(obj.startsWith("\"") && obj.endsWith("\""));
         msg.setObject(msg.isObjectIsLiteral() ? obj.substring(1, obj.length() - 1) : obj);
-        modelController.addStatement(msg);
+        modelController.addStatement(msg, true);
     }
 }

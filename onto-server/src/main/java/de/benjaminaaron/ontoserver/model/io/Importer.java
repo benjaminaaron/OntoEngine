@@ -158,10 +158,13 @@ public class Importer {
                         statement.setObject(filenamesToUris.containsKey(object)
                                 ? filenamesToUris.get(object) : buildDefaultNsUri(object));
                     }
-                    modelController.addStatement(statement);
+                    modelController.addStatement(statement, false);
                 });
             } catch (IOException ignored) {}
         });
+
+        // TODO count and log how many statements were read vs. actually added
+        logger.info("Import from markdown files completed");
     }
 
     private List<RawTriple> parseTriples(Path path) throws IOException {
@@ -203,9 +206,12 @@ public class Importer {
                     Property pred = mainModel.createProperty(qs.get("p").toString());
                     RDFNode obj = qs.get("o");
                     modelController.addStatement(
-                            ResourceFactory.createStatement(subj, pred, obj), StatementOrigin.IMPORT, repoUrl, null);
+                        ResourceFactory.createStatement(subj, pred, obj), StatementOrigin.IMPORT,
+                        repoUrl, null, false);
                 });
             });
         }
+        // TODO count and log how many statements were read vs. actually added
+        logger.info("Import from GraphDB completed");
     }
 }

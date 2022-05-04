@@ -95,7 +95,7 @@ public class ModelController {
         vocabularySourcesModel.close();
     }
 
-    public AddStatementResponse addStatement(AddStatementMessage statementMsg) {
+    public AddStatementResponse addStatement(AddStatementMessage statementMsg, boolean doLogging) {
         Resource sub = mainModel.createResource(ensureUri(statementMsg.getSubject()));
         Property pred = mainModel.createProperty(ensureUri(statementMsg.getPredicate()));
         RDFNode obj;
@@ -109,16 +109,18 @@ public class ModelController {
         if (mainModel.contains(statement)) {
             return response;
         }
-        addStatement(statement, StatementOrigin.ADD, "client", response);
+        addStatement(statement, StatementOrigin.ADD, "client", response, doLogging);
         router.sendNewTripleEvent(statement);
         // suggestionEngine.runNewStatementJob(statement);
         return response;
     }
 
-    public void addStatement(Statement statement, StatementOrigin origin, String info, AddStatementResponse response) {
+    public void addStatement(Statement statement, StatementOrigin origin, String info, AddStatementResponse response, boolean doLogging) {
         metaHandler.storeNewTripleEvent(statement, origin, info, response);
         mainModel.add(statement);
-        logger.info("Statement added: " + statement.getSubject() + ", " + statement.getPredicate() + ", " + statement.getObject());
+        if (doLogging) {
+            logger.info("Statement added: " + statement.getSubject() + ", " + statement.getPredicate() + ", " + statement.getObject());
+        }
         graphManager.importStatement(statement);
     }
 
