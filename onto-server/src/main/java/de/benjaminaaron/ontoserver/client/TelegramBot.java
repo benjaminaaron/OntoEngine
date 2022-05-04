@@ -10,7 +10,7 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-//@Component
+@Component
 public class TelegramBot extends TelegramLongPollingBot {
 
     private final Logger logger = LogManager.getLogger(TelegramBot.class);
@@ -18,7 +18,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     @Value("${TELEGRAM_BOT_TOKEN}") // set for instance in the run configuration of IntelliJ under environment variables
     private String token;
 
-    private Long chatId; // for now, we assume we only talk to one account
+    private Long chatId = null; // for now, we assume we only talk to one account
 
     @Override
     public String getBotUsername() {
@@ -35,8 +35,13 @@ public class TelegramBot extends TelegramLongPollingBot {
         if (!(update.hasMessage() && update.getMessage().hasText())) {
             return;
         }
-        chatId = update.getMessage().getChatId();
         String msg = update.getMessage().getText();
+        if (msg.equals("/activate")) {
+            chatId = update.getMessage().getChatId();
+        }
+        if (msg.equals("/deactivate")) {
+            chatId = null;
+        }
         logger.info("Received Telegram message (" + chatId + "): " + msg);
 
         // TODO
