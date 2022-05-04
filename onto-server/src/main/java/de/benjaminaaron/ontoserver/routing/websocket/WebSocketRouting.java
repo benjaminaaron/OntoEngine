@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-public class WebSocketRouting extends BaseRouting {
+public class WebSocketRouting {
 
     private final Logger logger = LogManager.getLogger(WebSocketRouting.class);
 
@@ -29,6 +29,9 @@ public class WebSocketRouting extends BaseRouting {
 
     @Autowired
     private ModelController modelController;
+
+    @Autowired
+    private BaseRouting baseRouting;
 
     @SubscribeMapping("/subscribe")
     public ServerToClientMessage oneTimeMessageUponSubscribe() {
@@ -51,14 +54,14 @@ public class WebSocketRouting extends BaseRouting {
     @SendTo("/topic/serverAddStatementResponse")
     public AddStatementResponse addStatementWebSocket(AddStatementMessage statementMsg) {
         logger.info("AddStatement via WebSocket received: " + statementMsg);
-        return addStatement(statementMsg);
+        return baseRouting.addStatement(statementMsg);
     }
 
     @MessageMapping("/serverReceiveCommand")
     @SendTo("/topic/serverBroadcasting")
     public ServerToClientMessage receiveCommand(CommandMessage commandMessage) {
         logger.info("Received " + commandMessage);
-        String response = handleCommand(commandMessage);
+        String response = baseRouting.handleCommand(commandMessage);
         ServerToClientMessage responseMessage = new ServerToClientMessage();
         if (response == null) {
             responseMessage.setMessage("Command received");
@@ -71,7 +74,7 @@ public class WebSocketRouting extends BaseRouting {
     @MessageMapping("/requestWhileTypingSuggestions")
     @SendTo("/topic/whileTypingSuggestionsResponse")
     public WhileTypingSuggestionsMessage whileTypingSuggestions(WhileTypingSuggestionsMessage message) {
-        suggestionEngine.generateWhileTypingSuggestions(message);
+        // suggestionEngine.generateWhileTypingSuggestions(message); TODO
         return message;
     }
 

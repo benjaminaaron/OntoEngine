@@ -4,6 +4,7 @@ import de.benjaminaaron.ontoserver.routing.BaseRouting;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.CommandMessage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -14,15 +15,18 @@ import java.util.Map;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
-public class RestRouting extends BaseRouting {
+public class RestRouting {
 
     private final Logger logger = LogManager.getLogger(RestRouting.class);
+
+    @Autowired
+    private BaseRouting baseRouting;
 
     @RequestMapping(value = "/addStatement", method = POST)
     @ResponseBody
     public String addStatement(@RequestParam Map<String, String> params) {
         logger.info("addStatement via POST request received: " + params);
-        return addStatementStringResponse(params.get("subject"), params.get("predicate"), params.get("object"),
+        return baseRouting.addStatementStringResponse(params.get("subject"), params.get("predicate"), params.get("object"),
                 Boolean.parseBoolean(params.get("objectIsLiteral")));
     }
 
@@ -33,7 +37,7 @@ public class RestRouting extends BaseRouting {
         CommandMessage commandMessage = new CommandMessage();
         String commandStr = params.get("command") + " " + String.join(" ", params.get("args").split(","));
         commandMessage.setCommand(commandStr);
-        String response = handleCommand(commandMessage);
+        String response = baseRouting.handleCommand(commandMessage);
         if (response == null) {
             return "Command received";
         }

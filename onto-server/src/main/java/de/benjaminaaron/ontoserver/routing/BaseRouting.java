@@ -14,8 +14,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import org.springframework.stereotype.Component;
 
-public abstract class BaseRouting {
+@Component
+public class BaseRouting {
 
     @Autowired
     protected ModelController modelController;
@@ -26,11 +28,12 @@ public abstract class BaseRouting {
     @Autowired
     private Exporter exporter;
 
-    protected AddStatementResponse addStatement(AddStatementMessage statementMsg) {
+    public AddStatementResponse addStatement(AddStatementMessage statementMsg) {
         return modelController.addStatement(statementMsg);
     }
 
-    protected String addStatementStringResponse(String subject, String predicate, String object, boolean objectIsLiteral) {
+    public String addStatementStringResponse(String subject, String predicate, String object,
+        boolean objectIsLiteral) {
         AddStatementMessage message = new AddStatementMessage();
         message.setSubject(subject);
         message.setPredicate(predicate);
@@ -39,7 +42,7 @@ public abstract class BaseRouting {
         return addStatement(message).toString();
     }
 
-    protected String handleCommand(CommandMessage commandMessage) {
+    public String handleCommand(CommandMessage commandMessage) {
         return handleCommand(commandMessage.getCommand());
     }
 
