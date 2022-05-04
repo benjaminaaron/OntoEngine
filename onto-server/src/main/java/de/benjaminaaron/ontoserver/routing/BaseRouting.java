@@ -8,6 +8,8 @@ import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementMessag
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementResponse;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.CommandMessage;
 import de.benjaminaaron.ontoserver.suggestion.SuggestionEngine;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -18,6 +20,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class BaseRouting {
+
+    private final Logger logger = LogManager.getLogger(BaseRouting.class);
 
     @Autowired
     protected ModelController modelController;
@@ -123,6 +127,7 @@ public class BaseRouting {
             addStatement(args);
             return null;
         } else {
+            logger.warn("Unknown command: " + commandStr);
             return "Unknown command";
         }
     }

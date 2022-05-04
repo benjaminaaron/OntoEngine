@@ -2,10 +2,10 @@ package de.benjaminaaron.ontoserver.model;
 
 import de.benjaminaaron.ontoserver.model.MetaHandler.StatementOrigin;
 import de.benjaminaaron.ontoserver.model.graph.GraphManager;
+import de.benjaminaaron.ontoserver.routing.ChangeListener;
 import de.benjaminaaron.ontoserver.routing.websocket.WebSocketRouting;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementMessage;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementResponse;
-import de.benjaminaaron.ontoserver.suggestion.LocalVocabularyManager;
 import de.benjaminaaron.ontoserver.suggestion.SuggestionEngine;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.*;
@@ -47,6 +47,8 @@ public class ModelController {
 
     // this should be a @Component
     private final GraphManager graphManager;
+
+    private final Set<ChangeListener> changeListeners = new HashSet<>();
 
     public ModelController(
             @Value("${jena.tdb.directory}") Path TBD_DIR,
@@ -107,6 +109,9 @@ public class ModelController {
         Statement statement = ResourceFactory.createStatement(sub, pred, obj);
         AddStatementResponse response = new AddStatementResponse();
         if (mainModel.contains(statement)) {
+            if (doLogging) {
+                broadcastToChangeListeners("Statement not added: it exists already");
+            }
             return response;
         }
         addStatement(statement, StatementOrigin.ADD, "client", response, doLogging);
@@ -119,7 +124,9 @@ public class ModelController {
         metaHandler.storeNewTripleEvent(statement, origin, info, response);
         mainModel.add(statement);
         if (doLogging) {
-            logger.info("Statement added: " + statement.getSubject() + ", " + statement.getPredicate() + ", " + statement.getObject());
+            String text = "Statement added: " + statement.getSubject() + ", " + statement.getPredicate() + ", " + statement.getObject();
+            logger.info(text);
+            broadcastToChangeListeners(text);
         }
         graphManager.importStatement(statement);
     }
@@ -194,5 +201,17 @@ public class ModelController {
             ResultSet resultSet = queryExecution.execSelect();
             ResultSetFormatter.out(resultSet);
         }
+    }
+
+    public void broadcastToChangeListeners(String msg) {
+        changeListeners.forEach(listener -> listener.broadcast(msg));
+    }
+
+    public void addChangeListener(ChangeListener listener) {
+        changeListeners.add(listener);
+    }
+
+    public void removeChangeListener(ChangeListener listener) {
+        changeListeners.remove(listener);
     }
 }

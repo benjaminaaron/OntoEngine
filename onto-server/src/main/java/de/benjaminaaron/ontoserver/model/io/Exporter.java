@@ -190,6 +190,10 @@ public class Exporter {
                 }
             }
         }
+
+        String text = "Export to markdown files completed";
+        logger.info(text);
+        modelController.broadcastToChangeListeners(text);
     }
 
     private String getObjectString(RDFNode target) {

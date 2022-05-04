@@ -1,6 +1,8 @@
 package de.benjaminaaron.ontoserver.routing.bot;
 
+import de.benjaminaaron.ontoserver.model.ModelController;
 import de.benjaminaaron.ontoserver.routing.BaseRouting;
+import de.benjaminaaron.ontoserver.routing.ChangeListener;
 import java.util.Objects;
 import lombok.SneakyThrows;
 import org.apache.logging.log4j.LogManager;
@@ -13,12 +15,15 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 @Controller
-public class TelegramBot extends TelegramLongPollingBot {
+public class TelegramBot extends TelegramLongPollingBot implements ChangeListener {
 
     private final Logger logger = LogManager.getLogger(TelegramBot.class);
 
     @Autowired
     private BaseRouting baseRouting;
+
+    @Autowired
+    protected ModelController modelController;
 
     @Value("${TELEGRAM_BOT_TOKEN}") // set for instance in the run configuration of IntelliJ under environment variables
     private String token;
@@ -41,15 +46,33 @@ public class TelegramBot extends TelegramLongPollingBot {
             return;
         }
         String msg = update.getMessage().getText();
+        if (msg.equals("/start")) {
+            logger.info("Telegram user started the @OntoEngineBot: " + update.getMessage().getChatId());
+            return;
+        }
         if (msg.equals("/activate")) {
             chatId = update.getMessage().getChatId();
+            modelController.addChangeListener(this);
+            logger.info("Telegram user activated: " + chatId);
+            return;
         }
         if (msg.equals("/deactivate")) {
+            logger.info("Telegram user deactivated: " + chatId);
             chatId = null;
+            modelController.removeChangeListener(this);
+            return;
         }
-        logger.info("Received Telegram message (" + chatId + "): " + msg);
 
-        baseRouting.handleCommand(msg);
+        if (Objects.isNull(chatId)) {
+            logger.warn("Ignoring message from non-activated Telegram user: " + msg);
+            return;
+        }
+
+        logger.info("Received Telegram command message (" + chatId + "): " + msg);
+        String result = baseRouting.handleCommand(msg);
+        if (Objects.nonNull(result)) {
+            sendMessage(result);
+        }
     }
 
     @SneakyThrows
@@ -58,5 +81,10 @@ public class TelegramBot extends TelegramLongPollingBot {
             execute(new SendMessage(chatId.toString(), msg));
             logger.info("Sent Telegram message (" + chatId + "): " + msg);
         }
+    }
+
+    @Override
+    public void broadcast(String msg) {
+        sendMessage(msg);
     }
 }

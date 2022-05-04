@@ -164,7 +164,9 @@ public class Importer {
         });
 
         // TODO count and log how many statements were read vs. actually added
-        logger.info("Import from markdown files completed");
+        String text = "Import from markdown files completed";
+        logger.info(text);
+        modelController.broadcastToChangeListeners(text);
     }
 
     private List<RawTriple> parseTriples(Path path) throws IOException {
