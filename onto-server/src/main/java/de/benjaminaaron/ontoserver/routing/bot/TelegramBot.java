@@ -1,4 +1,4 @@
-package de.benjaminaaron.ontoserver.client;
+package de.benjaminaaron.ontoserver.routing.bot;
 
 import java.util.Objects;
 import lombok.SneakyThrows;
