@@ -46,26 +46,27 @@ public class TelegramBot extends TelegramLongPollingBot implements ChangeListene
             return;
         }
         String msg = update.getMessage().getText();
-        if (msg.equals("/start")) {
-            logger.info("Telegram user started the @OntoEngineBot: " + update.getMessage().getChatId());
-            return;
-        }
-        if (msg.equals("/activate")) {
-            chatId = update.getMessage().getChatId();
-            modelController.addChangeListener(this);
-            logger.info("Telegram user activated: " + chatId);
-            return;
-        }
-        if (msg.equals("/deactivate")) {
-            logger.info("Telegram user deactivated: " + chatId);
-            chatId = null;
-            modelController.removeChangeListener(this);
-            return;
-        }
-
-        if (Objects.isNull(chatId)) {
-            logger.warn("Ignoring message from non-activated Telegram user: " + msg);
-            return;
+        switch (msg) {
+            case "/start":
+                logger.info("Telegram user started the @OntoEngineBot: " + update.getMessage().getChatId());
+                return;
+            case "/activate":
+                chatId = update.getMessage().getChatId();
+                modelController.addChangeListener(this);
+                logger.info("Telegram user activated: " + chatId);
+                return;
+            case "/deactivate":
+                logger.info("Telegram user deactivated: " + chatId);
+                chatId = null;
+                modelController.removeChangeListener(this);
+                return;
+            case "/statistics": // TODO
+            case "/suggestions": // TODO
+            default:
+                if (Objects.isNull(chatId)) {
+                    logger.warn("Ignoring message from non-activated Telegram user: " + msg);
+                    return;
+                }
         }
 
         logger.info("Received Telegram command message (" + chatId + "): " + msg);
