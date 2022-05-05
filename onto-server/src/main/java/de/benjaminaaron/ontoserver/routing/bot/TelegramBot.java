@@ -60,8 +60,9 @@ public class TelegramBot extends TelegramLongPollingBot implements ChangeListene
                 chatId = null;
                 modelController.removeChangeListener(this);
                 return;
-            case "/statistics": // TODO
+            case "/statistics":
             case "/suggestions": // TODO
+                msg = msg.substring(1);
             default:
                 if (Objects.isNull(chatId)) {
                     logger.warn("Ignoring message from non-activated Telegram user: " + msg);

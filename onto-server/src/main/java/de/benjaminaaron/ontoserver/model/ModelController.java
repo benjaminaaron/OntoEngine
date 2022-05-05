@@ -214,4 +214,18 @@ public class ModelController {
     public void removeChangeListener(ChangeListener listener) {
         changeListeners.remove(listener);
     }
+
+    public String generateStatistics() {
+        // add more interesting stats? TODO
+        return "Triples in main model: " + countAllTriples(mainModel)
+            +", triples in meta model: " + countAllTriples(metaModel);
+    }
+
+    private int countAllTriples(Model model) {
+        String query = "SELECT (COUNT(*) AS ?triples) WHERE { ?s ?p ?o . }";
+        try(QueryExecution queryExecution = QueryExecutionFactory.create(query, model)) {
+            ResultSet resultSet = queryExecution.execSelect();
+            return resultSet.next().get("triples").asLiteral().getInt();
+        }
+    }
 }

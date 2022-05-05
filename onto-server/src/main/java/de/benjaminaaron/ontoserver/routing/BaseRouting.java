@@ -114,6 +114,8 @@ public class BaseRouting {
             case "dev":
                 modelController.dev(args.size() > 1 ? commandStr.substring(4) : null);
                 break;
+            case "statistics":
+                return modelController.generateStatistics();
             default:
                 noKnownCommand = true;
                 break;
