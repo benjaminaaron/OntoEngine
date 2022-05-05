@@ -228,4 +228,14 @@ public class ModelController {
             return resultSet.next().get("triples").asLiteral().getInt();
         }
     }
+
+    public void clearAll() {
+        mainModel.removeAll();
+        metaModel.removeAll();
+        graphManager.resetGraph();
+        // pending suggestions etc.? TODO
+        String text = "Everything has been cleared: the persisted main and meta models and the in-memory graph";
+        logger.info(text);
+        broadcastToChangeListeners(text);
+    }
 }

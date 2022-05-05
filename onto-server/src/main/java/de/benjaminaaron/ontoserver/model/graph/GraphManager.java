@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 public class GraphManager {
 
-    private final Graph<RDFNode, Edge> graph;
+    private Graph<RDFNode, Edge> graph;
     private final Model mainModel;
 
     // integrate more tightly with the Jena Graph?
@@ -99,5 +99,10 @@ public class GraphManager {
 
     public Graph<RDFNode, Edge> getGraph() {
         return graph;
+    }
+
+    public void resetGraph() {
+        // is that the best way to do this?
+        graph = new DirectedMultigraphWithSelfLoops<>(Edge.class);
     }
 }
