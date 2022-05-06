@@ -51,7 +51,7 @@ public class SynonymsTask extends JobGraphTask {
                     List<String> lemmas = syn.getWords().stream().map(Word::getLemma).toList();
                     MergeWordsSuggestionMessage message = new MergeWordsSuggestionMessage();
                     message.setTaskName(getClass().getSimpleName());
-                    message.setInfo(thisWord + " and " + otherWord + " (" + syn.getPOS().getLabel()
+                    message.setInfo("\"" + thisWord + "\" and \"" + otherWord + "\" (" + syn.getPOS().getLabel()
                         + ") could be synonyms: " + lemmas + ", " + syn.getGloss());
                     // use rest of MergeWordsSuggestionMessage too or make custom Message? TODO
                     return message;

@@ -43,7 +43,7 @@ public class SuggestionEngine {
     private TaskSchedulingManager taskManager;
     private LocalVocabularyManager localVocabularyManager;
 
-    private final boolean isON = false;
+    private final boolean isON = true;
 
     @SneakyThrows
     @PostConstruct
