@@ -25,6 +25,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static de.benjaminaaron.ontoserver.model.MetaHandler.StatementOrigin.GRAPHDB_IMPORT;
 import static de.benjaminaaron.ontoserver.model.Utils.*;
 import static org.apache.commons.io.FilenameUtils.getBaseName;
 
@@ -208,7 +209,7 @@ public class Importer {
                     Property pred = mainModel.createProperty(qs.get("p").toString());
                     RDFNode obj = qs.get("o");
                     modelController.addStatement(
-                        ResourceFactory.createStatement(subj, pred, obj), StatementOrigin.IMPORT,
+                        ResourceFactory.createStatement(subj, pred, obj), GRAPHDB_IMPORT,
                         repoUrl, null, false);
                 });
             });

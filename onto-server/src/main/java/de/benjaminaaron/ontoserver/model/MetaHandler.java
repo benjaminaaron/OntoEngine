@@ -182,6 +182,6 @@ public class MetaHandler {
     }
 
     public enum StatementOrigin {
-        ADD, IMPORT, INFERENCE
+        ADD, GRAPHDB_IMPORT, RDF_IMPORT, INFERENCE
     }
 }
