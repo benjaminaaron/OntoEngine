@@ -1,7 +1,6 @@
 package de.benjaminaaron.ontoserver.model.io;
 
 import de.benjaminaaron.ontoserver.model.MetaHandler;
-import de.benjaminaaron.ontoserver.model.MetaHandler.StatementOrigin;
 import de.benjaminaaron.ontoserver.model.ModelController;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementMessage;
 import de.benjaminaaron.ontoserver.suggestion.SuggestionEngine;
@@ -26,6 +25,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static de.benjaminaaron.ontoserver.model.MetaHandler.StatementOrigin.GRAPHDB_IMPORT;
+import static de.benjaminaaron.ontoserver.model.MetaHandler.StatementOrigin.RDF_IMPORT;
 import static de.benjaminaaron.ontoserver.model.Utils.*;
 import static org.apache.commons.io.FilenameUtils.getBaseName;
 
@@ -38,6 +38,8 @@ public class Importer {
     private String GRAPHDB_GET_URL;
     @Value("${markdown.export.directory}")
     private Path MARKDOWN_DEFAULT_DIRECTORY;
+    @Value("${model.import.directory}")
+    private Path IMPORT_DIRECTORY;
 
     @Autowired
     private ModelController modelController;
@@ -216,5 +218,23 @@ public class Importer {
         }
         // TODO count and log how many statements were read vs. actually added
         logger.info("Import from GraphDB completed");
+    }
+
+    public void importFromRDF(String pathOrFilename) {
+        // check if path is an absolute path, otherwise append it to IMPORT_DIRECTORY
+        Path path = getFromAbsolutePathOrResolveWithinDir(pathOrFilename, IMPORT_DIRECTORY);
+        if (Objects.isNull(path)) {
+            logger.warn("No file found at " + pathOrFilename +
+                ", either provide absolute path or filename within " + IMPORT_DIRECTORY.toAbsolutePath());
+            return;
+        }
+        Model importModel = ModelFactory.createDefaultModel();
+        importModel.read(path.toString()); // via https://jena.apache.org/documentation/io/rdf-input.html
+        StmtIterator iter = importModel.listStatements();
+        while (iter.hasNext()) {
+            modelController.addStatement(iter.nextStatement(), RDF_IMPORT, pathOrFilename,
+                null, false);
+        }
+        logger.info("Import from RDF file completed");
     }
 }

@@ -85,6 +85,9 @@ public class BaseRouting {
                 if (format.equals("markdown")) {
                     importer.importFromMarkdown(args.get(1)); // folder name
                 }
+                if (format.equals("rdf")) {
+                    importer.importFromRDF(args.get(1)); // path to file
+                }
                 break;
             case "replace":
                 if (!args.get(1).equalsIgnoreCase("with")) {

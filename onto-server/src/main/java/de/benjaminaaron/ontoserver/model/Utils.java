@@ -196,6 +196,17 @@ public class Utils {
                 .filter(path -> FilenameUtils.isExtension(path.toString(), "md"));
     }
 
+    public static Path getFromAbsolutePathOrResolveWithinDir(String pathOrFilename, Path directory) {
+        if ((new File(pathOrFilename)).isFile()) {
+            return Paths.get(pathOrFilename);
+        }
+        Path path = directory.resolve(pathOrFilename);
+        if (path.toFile().isFile()) {
+            return path;
+        }
+        return null;
+    }
+
     public enum ResourceType {
         SUBJECT, PREDICATE, OBJECT;
 
