@@ -60,9 +60,7 @@ public class SuggestionEngine {
         // job.addTask(new CaseSensitivityTask());
         // job.addTask(new GraphSimilarityTask());
         // job.addTask(new PropertyChainsTask());
-        PeriodicQueryTask periodicQueryTask = new PeriodicQueryTask(modelController.getMetaModel());
-        periodicQueryTask.setMainModel(modelController.getMainModel());
-        job.addTask(periodicQueryTask);
+        job.addTask(new PeriodicQueryTask(modelController.getMetaModel()));
         handleNewSuggestions(job.execute());
     }
 
