@@ -1,3 +1,5 @@
+*This branch was created from `main` on May 6, 2022 before moving the `onto-server` directory contents up to root level and deleting the `Archive` folder.*
+
 # DIY Knowledge Graph
 An idea conglomerate for continuous ontologization: an ontology design assistant working with you towards continuous expansion and consolidation.
 
