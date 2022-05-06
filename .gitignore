@@ -3,3 +3,13 @@
 .mvn/
 target/
 .DS_Store
+
+jena-tdb/
+*.rdf
+*.graphml
+logs/
+export/
+markdown/
+
+src/main/resources/static/graph-query-visualizer/*
+!src/main/resources/static/graph-query-visualizer/commit.version
