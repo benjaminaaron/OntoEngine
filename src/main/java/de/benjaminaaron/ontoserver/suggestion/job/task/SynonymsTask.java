@@ -2,6 +2,7 @@ package de.benjaminaaron.ontoserver.suggestion.job.task;
 
 import de.benjaminaaron.ontoserver.model.graph.Edge;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.suggestion.MergeWordsSuggestionMessage;
+import de.benjaminaaron.ontoserver.routing.websocket.messages.suggestion.SuggestionBaseMessage;
 import de.benjaminaaron.ontoserver.suggestion.Suggestion;
 import de.benjaminaaron.ontoserver.suggestion.job.task.base.JobGraphTask;
 import java.util.List;
@@ -35,7 +36,7 @@ public class SynonymsTask extends JobGraphTask {
             for (int j = i + 1; j < vertices.size(); j++) {
                 if (vertices.get(j).isLiteral()) continue;
                 Resource vertex2 = vertices.get(j).asResource();
-                MergeWordsSuggestionMessage message = synonymCheck(vertex1.getLocalName(), indexWordSet1, vertex2.getLocalName());
+                SuggestionBaseMessage message = synonymCheck(vertex1.getLocalName(), indexWordSet1, vertex2.getLocalName());
                 if (Objects.nonNull(message)) {
                     suggestions.add(new Suggestion(message));
                 };
@@ -44,12 +45,12 @@ public class SynonymsTask extends JobGraphTask {
         return suggestions;
     }
 
-    private MergeWordsSuggestionMessage synonymCheck(String thisWord, IndexWordSet indexWordSet, String otherWord) {
+    private SuggestionBaseMessage synonymCheck(String thisWord, IndexWordSet indexWordSet, String otherWord) {
         for (IndexWord indexWord : indexWordSet.getIndexWordCollection()) {
             for (Synset syn : indexWord.getSenses()) {
                 if (syn.containsWord(otherWord)) {
                     List<String> lemmas = syn.getWords().stream().map(Word::getLemma).toList();
-                    MergeWordsSuggestionMessage message = new MergeWordsSuggestionMessage();
+                    SuggestionBaseMessage message = new SuggestionBaseMessage();
                     message.setTaskName(getClass().getSimpleName());
                     message.setInfo("\"" + thisWord + "\" and \"" + otherWord + "\" (" + syn.getPOS().getLabel()
                         + ") could be synonyms: " + lemmas + ", " + syn.getGloss());

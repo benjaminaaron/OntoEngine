@@ -81,6 +81,7 @@ public class SuggestionEngine {
         _suggestions.forEach(this::registerSuggestionIfNew);
         suggestions.values().stream().filter(s -> !s.getIsSent()).forEach(suggestion -> {
             router.sendSuggestion(suggestion.getMessage());
+            modelController.broadcastToChangeListeners(suggestion.getMessage().toBasicString());
             suggestion.markAsSent();
         });
     }
