@@ -59,7 +59,7 @@ public class Exporter {
 
     public void exportRDF(String modelName) {
         Model model = null;
-        String extension = "rdf";
+        String extension = "ttl";
         switch (modelName) {
             case "main":
                 model = modelController.getMainModel();
@@ -71,7 +71,7 @@ public class Exporter {
         }
         try(FileOutputStream fos = new FileOutputStream(getExportFile(EXPORT_DIRECTORY, modelName, extension))) {
             assert model != null;
-            model.write(fos, "RDF/XML");
+            model.write(fos, "TURTLE"); // RDF/XML, via https://jena.apache.org/documentation/io/rdf-output.html
         } catch (IOException e) {
             e.printStackTrace();
         }
