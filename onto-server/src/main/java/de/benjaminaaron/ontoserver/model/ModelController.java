@@ -238,4 +238,12 @@ public class ModelController {
         logger.info(text);
         broadcastToChangeListeners(text);
     }
+
+    public String runSelectQuery(String wherePart) {
+        String query = "PREFIX : <http://onto.de/default#> SELECT * WHERE { " + wherePart + " }";
+        try (QueryExecution queryExecution = QueryExecutionFactory.create(query, mainModel)) {
+            ResultSet resultSet = queryExecution.execSelect();
+            return ResultSetFormatter.asText(resultSet);
+        }
+    }
 }

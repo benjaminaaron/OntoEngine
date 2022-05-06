@@ -114,6 +114,9 @@ public class BaseRouting {
             case "dev":
                 modelController.dev(args.size() > 1 ? commandStr.substring(4) : null);
                 break;
+            case "query":
+                String wherePart = commandStr.substring(6);
+                return modelController.runSelectQuery(wherePart);
             case "clear":
                 if (args.get(0).equalsIgnoreCase("all")) {
                     modelController.clearAll();
