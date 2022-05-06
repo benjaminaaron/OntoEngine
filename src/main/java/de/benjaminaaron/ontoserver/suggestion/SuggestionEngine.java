@@ -9,6 +9,7 @@ import de.benjaminaaron.ontoserver.suggestion.job.PeriodicJob;
 import de.benjaminaaron.ontoserver.suggestion.job.task.CaseSensitivityTask;
 import de.benjaminaaron.ontoserver.suggestion.job.task.LocalVocabularyMatchingTask;
 import de.benjaminaaron.ontoserver.suggestion.job.task.PeriodicQueryTask;
+import de.benjaminaaron.ontoserver.suggestion.job.task.SynonymsTask;
 import de.benjaminaaron.ontoserver.suggestion.job.task.WikidataMatchingTask;
 import lombok.SneakyThrows;
 import org.apache.jena.rdf.model.Resource;
@@ -61,6 +62,7 @@ public class SuggestionEngine {
         // job.addTask(new GraphSimilarityTask());
         // job.addTask(new PropertyChainsTask());
         job.addTask(new PeriodicQueryTask(modelController.getMetaModel()));
+        job.addTask(new SynonymsTask());
         handleNewSuggestions(job.execute());
     }
 
