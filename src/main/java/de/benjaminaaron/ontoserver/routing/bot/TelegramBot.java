@@ -3,6 +3,7 @@ package de.benjaminaaron.ontoserver.routing.bot;
 import de.benjaminaaron.ontoserver.model.ModelController;
 import de.benjaminaaron.ontoserver.routing.BaseRouting;
 import de.benjaminaaron.ontoserver.routing.ChangeListener;
+import java.nio.file.Path;
 import java.util.Objects;
 import lombok.SneakyThrows;
 import org.apache.logging.log4j.LogManager;
@@ -11,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 @Controller
@@ -42,10 +45,14 @@ public class TelegramBot extends TelegramLongPollingBot implements ChangeListene
 
     @Override
     public void onUpdateReceived(Update update) {
-        if (!(update.hasMessage() && update.getMessage().hasText())) {
-            return;
-        }
-        String msg = update.getMessage().getText();
+        if (!update.hasMessage()) return;
+        if (update.getMessage().hasDocument() && Objects.isNull(update.getMessage().getCaption())) return;
+
+        String msg = update.getMessage().hasDocument()
+            ? update.getMessage().getCaption() : update.getMessage().getText();
+
+        // deal with document TODO
+
         switch (msg) {
             case "/start":
                 logger.info("Telegram user started the @OntoEngineBot: " + update.getMessage().getChatId());
@@ -79,10 +86,18 @@ public class TelegramBot extends TelegramLongPollingBot implements ChangeListene
 
     @SneakyThrows
     public void sendMessage(String msg) {
-        if (Objects.nonNull(chatId)) {
-            execute(new SendMessage(chatId.toString(), msg));
-            logger.info("Sent Telegram message (" + chatId + "): " + msg);
-        }
+        if (Objects.isNull(chatId)) return;
+        execute(new SendMessage(chatId.toString(), msg));
+        logger.info("Sent Telegram message (" + chatId + "): " + msg);
+    }
+
+    @SneakyThrows
+    public void sendFile(Path path, String caption) {
+        if (Objects.isNull(chatId)) return;
+        SendDocument doc = new SendDocument(chatId.toString(), new InputFile(path.toFile()));
+        if (Objects.nonNull(caption)) doc.setCaption(caption);
+        execute(doc);
+        logger.info("Sent Telegram message with file (" + chatId + "): " + path);
     }
 
     @Override
