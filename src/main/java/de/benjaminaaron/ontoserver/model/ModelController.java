@@ -7,6 +7,7 @@ import de.benjaminaaron.ontoserver.routing.websocket.WebSocketRouting;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementMessage;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementResponse;
 import de.benjaminaaron.ontoserver.suggestion.SuggestionEngine;
+import org.apache.jena.fuseki.main.FusekiServer;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.tdb.TDBFactory;
@@ -35,9 +36,12 @@ public class ModelController {
     @Autowired
     private SuggestionEngine suggestionEngine;
 
+    private final Dataset dataset;
     private final Model mainModel;
     private final Model metaModel;
     private final Model vocabularySourcesModel;
+
+    private final FusekiServer fusekiServer;
 
     @Value("classpath:meta.owl")
     private Path META_OWL;
@@ -59,7 +63,7 @@ public class ModelController {
     ) {
         Utils.DEFAULT_URI_NAMESPACE = DEFAULT_URI_NAMESPACE;
 
-        Dataset dataset = TDBFactory.createDataset(TBD_DIR.toString());
+        dataset = TDBFactory.createDataset(TBD_DIR.toString());
 
         // Main Model
         if (!dataset.containsNamedModel(MAIN_MODEL_NAME)) {
@@ -83,6 +87,11 @@ public class ModelController {
 
         graphManager = new GraphManager(mainModel);
         printStatements();
+
+        fusekiServer = FusekiServer.create()
+            .add("/", dataset)
+            .build();
+        fusekiServer.start();
     }
 
     @PostConstruct
@@ -95,6 +104,7 @@ public class ModelController {
         mainModel.close();
         metaModel.close();
         vocabularySourcesModel.close();
+        fusekiServer.stop();
     }
 
     public AddStatementResponse addStatement(AddStatementMessage statementMsg, boolean doLogging) {

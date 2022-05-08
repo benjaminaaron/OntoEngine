@@ -75,6 +75,11 @@
             <artifactId>jena-rdfconnection</artifactId>
             <version>4.5.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>jena-fuseki-main</artifactId>
+            <version>4.5.0</version>
+        </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.jgrapht/jgrapht-core -->
         <dependency>
