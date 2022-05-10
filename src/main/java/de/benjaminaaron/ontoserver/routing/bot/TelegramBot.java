@@ -100,7 +100,7 @@ public class TelegramBot extends TelegramLongPollingBot implements ChangeListene
         getFile.setFileId(doc.getFileId());
         File target = IMPORT_DIRECTORY.resolve(doc.getFileName()).toFile();
         downloadFile(execute(getFile), target);
-        sendMessage("File deposited at " + target);
+        sendMessage("Download successful");
         return doc.getFileName();
     }
 
