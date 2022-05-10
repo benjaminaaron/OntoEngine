@@ -77,6 +77,9 @@ public class TelegramBot extends TelegramLongPollingBot implements ChangeListene
             case "deposit": // also via reply to previous message?
                 downloadFile(update.getMessage().getDocument());
                 return;
+            case "import":
+                msg = "import rdf " + downloadFile(update.getMessage().getDocument());
+                break;
             case "/statistics":
             case "/suggestions": // TODO
                 msg = msg.substring(1);
