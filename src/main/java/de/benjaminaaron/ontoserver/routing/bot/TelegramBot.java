@@ -3,6 +3,7 @@ package de.benjaminaaron.ontoserver.routing.bot;
 import de.benjaminaaron.ontoserver.model.ModelController;
 import de.benjaminaaron.ontoserver.routing.BaseRouting;
 import de.benjaminaaron.ontoserver.routing.ChangeListener;
+import java.io.File;
 import java.nio.file.Path;
 import java.util.Objects;
 import lombok.SneakyThrows;
@@ -12,8 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Document;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -30,6 +33,8 @@ public class TelegramBot extends TelegramLongPollingBot implements ChangeListene
 
     @Value("${TELEGRAM_BOT_TOKEN}") // set for instance in the run configuration of IntelliJ under environment variables
     private String token;
+    @Value("${model.import.directory}")
+    private Path IMPORT_DIRECTORY;
 
     private Long chatId = null; // for now, we assume we only talk to one account
 
@@ -69,6 +74,9 @@ public class TelegramBot extends TelegramLongPollingBot implements ChangeListene
                 chatId = null;
                 modelController.removeChangeListener(this);
                 return;
+            case "deposit": // also via reply to previous message?
+                downloadFile(update.getMessage().getDocument());
+                return;
             case "/statistics":
             case "/suggestions": // TODO
                 msg = msg.substring(1);
@@ -79,6 +87,17 @@ public class TelegramBot extends TelegramLongPollingBot implements ChangeListene
         if (Objects.nonNull(result)) {
             sendMessage(result);
         }
+    }
+
+    @SneakyThrows
+    private String downloadFile(Document doc) {
+        IMPORT_DIRECTORY.toFile().mkdirs();
+        GetFile getFile = new GetFile();
+        getFile.setFileId(doc.getFileId());
+        File target = IMPORT_DIRECTORY.resolve(doc.getFileName()).toFile();
+        downloadFile(execute(getFile), target);
+        sendMessage("File deposited at " + target);
+        return doc.getFileName();
     }
 
     @SneakyThrows
