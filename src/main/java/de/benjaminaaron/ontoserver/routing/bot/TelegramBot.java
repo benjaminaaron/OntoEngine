@@ -61,6 +61,7 @@ public class TelegramBot extends TelegramLongPollingBot implements ChangeListene
             chatId = update.getMessage().getChatId();
             modelController.addChangeListener(this);
             logger.info("Telegram user activated: " + chatId);
+            return;
         }
 
         if (Objects.isNull(chatId)) {
