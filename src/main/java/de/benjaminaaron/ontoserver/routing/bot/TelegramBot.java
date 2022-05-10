@@ -51,17 +51,19 @@ public class TelegramBot extends TelegramLongPollingBot implements ChangeListene
         String msg = update.getMessage().hasDocument()
             ? update.getMessage().getCaption() : update.getMessage().getText();
 
-        // deal with document TODO
+        if (msg.equals("/start")) return;
+        if (msg.equals("/activate")) {
+            chatId = update.getMessage().getChatId();
+            modelController.addChangeListener(this);
+            logger.info("Telegram user activated: " + chatId);
+        }
+
+        if (Objects.isNull(chatId)) {
+            logger.warn("Ignoring message from non-activated Telegram user: " + msg);
+            return;
+        }
 
         switch (msg) {
-            case "/start":
-                logger.info("Telegram user started the @OntoEngineBot: " + update.getMessage().getChatId());
-                return;
-            case "/activate":
-                chatId = update.getMessage().getChatId();
-                modelController.addChangeListener(this);
-                logger.info("Telegram user activated: " + chatId);
-                return;
             case "/deactivate":
                 logger.info("Telegram user deactivated: " + chatId);
                 chatId = null;
@@ -70,11 +72,6 @@ public class TelegramBot extends TelegramLongPollingBot implements ChangeListene
             case "/statistics":
             case "/suggestions": // TODO
                 msg = msg.substring(1);
-            default:
-                if (Objects.isNull(chatId)) {
-                    logger.warn("Ignoring message from non-activated Telegram user: " + msg);
-                    return;
-                }
         }
 
         logger.info("Received Telegram command message (" + chatId + "): " + msg);
