@@ -220,6 +220,7 @@ public class Importer {
         logger.info("Import from GraphDB completed");
     }
 
+    @SneakyThrows
     public void importFromRDF(String pathOrFilename) {
         // check if path is an absolute path, otherwise append it to IMPORT_DIRECTORY
         Path path = getFromAbsolutePathOrResolveWithinDir(pathOrFilename, IMPORT_DIRECTORY);
@@ -235,6 +236,10 @@ public class Importer {
             modelController.addStatement(iter.nextStatement(), RDF_IMPORT, pathOrFilename,
                 null, false);
         }
+
+        Path imported = IMPORT_DIRECTORY.resolve("imported");
+        imported.toFile().mkdirs();
+        Files.move(path, imported);
         logger.info("Import from RDF file completed");
     }
 }

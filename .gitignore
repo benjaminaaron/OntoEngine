@@ -12,6 +12,7 @@ jena-tdb/
 *.graphml
 logs/
 export/
+import/
 markdown/
 
 src/main/resources/static/graph-query-visualizer/*
