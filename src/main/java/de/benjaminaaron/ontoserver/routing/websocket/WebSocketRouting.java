@@ -61,7 +61,7 @@ public class WebSocketRouting {
     @SendTo("/topic/serverBroadcasting")
     public ServerToClientMessage receiveCommand(CommandMessage commandMessage) {
         logger.info("Received " + commandMessage);
-        String response = baseRouting.handleCommand(commandMessage);
+        String response = baseRouting.handleCommand(commandMessage.getCommand());
         ServerToClientMessage responseMessage = new ServerToClientMessage();
         if (response == null) {
             responseMessage.setMessage("Command received");

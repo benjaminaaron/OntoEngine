@@ -46,10 +46,6 @@ public class BaseRouting {
         return addStatement(message).toString();
     }
 
-    public String handleCommand(CommandMessage commandMessage) {
-        return handleCommand(commandMessage.getCommand());
-    }
-
     public String handleCommand(String commandStr) {
         List<String> args = new ArrayList<>(Arrays.asList(commandStr.split(" ")));
         String command = args.remove(0).toLowerCase();

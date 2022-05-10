@@ -37,7 +37,7 @@ public class RestRouting {
         CommandMessage commandMessage = new CommandMessage();
         String commandStr = params.get("command") + " " + String.join(" ", params.get("args").split(","));
         commandMessage.setCommand(commandStr);
-        String response = baseRouting.handleCommand(commandMessage);
+        String response = baseRouting.handleCommand(commandMessage.getCommand());
         if (response == null) {
             return "Command received";
         }
