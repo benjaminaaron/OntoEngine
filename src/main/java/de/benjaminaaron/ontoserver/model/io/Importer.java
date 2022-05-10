@@ -239,7 +239,7 @@ public class Importer {
 
         Path imported = IMPORT_DIRECTORY.resolve("imported");
         imported.toFile().mkdirs();
-        Files.move(path, imported);
+        Files.move(path, imported.resolve(path.getFileName()));
         logger.info("Import from RDF file completed");
     }
 }
