@@ -63,7 +63,7 @@ public class BaseRouting {
                 }
                 String model = args.get(1).toLowerCase(); // main or meta
                 if (format.equals("rdf")) {
-                    exporter.exportRDF(model);
+                    return exporter.exportRDF(model).toString();
                 }
                 if (format.equals("graphml")) {
                     exporter.exportGraphml(args.size() >= 3 && args.get(2).equalsIgnoreCase("full"));

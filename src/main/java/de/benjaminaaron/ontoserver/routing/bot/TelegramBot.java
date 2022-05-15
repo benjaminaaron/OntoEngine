@@ -5,6 +5,7 @@ import de.benjaminaaron.ontoserver.routing.BaseRouting;
 import de.benjaminaaron.ontoserver.routing.ChangeListener;
 import java.io.File;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Objects;
 import lombok.SneakyThrows;
 import org.apache.logging.log4j.LogManager;
@@ -69,6 +70,8 @@ public class TelegramBot extends TelegramLongPollingBot implements ChangeListene
             return;
         }
 
+        boolean sendFileFlag = false;
+
         switch (msg) {
             case "/deactivate":
                 logger.info("Telegram user deactivated: " + chatId);
@@ -81,15 +84,22 @@ public class TelegramBot extends TelegramLongPollingBot implements ChangeListene
             case "import":
                 msg = "import rdf " + downloadFile(update.getMessage().getDocument());
                 break;
+            case "export":
+                msg = "export rdf main";
+                sendFileFlag = true;
+                break;
             case "/statistics":
             case "/suggestions": // TODO
                 msg = msg.substring(1);
         }
 
         logger.info("Received Telegram command message (" + chatId + "): " + msg);
-        String result = baseRouting.handleCommand(msg);
-        if (Objects.nonNull(result)) {
-            sendMessage(result);
+        String response = baseRouting.handleCommand(msg);
+        if (Objects.nonNull(response) && !sendFileFlag) {
+            sendMessage(response);
+        }
+        if (sendFileFlag) {
+            sendFile(Paths.get(response), null);
         }
     }
 

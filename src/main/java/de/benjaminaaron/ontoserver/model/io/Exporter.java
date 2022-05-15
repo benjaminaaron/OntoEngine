@@ -4,6 +4,7 @@ import de.benjaminaaron.ontoserver.model.MetaHandler;
 import de.benjaminaaron.ontoserver.model.ModelController;
 import de.benjaminaaron.ontoserver.model.Utils;
 import de.benjaminaaron.ontoserver.model.graph.Edge;
+import java.io.File;
 import lombok.SneakyThrows;
 import org.apache.commons.io.FileUtils;
 import org.apache.jena.query.QueryExecution;
@@ -57,7 +58,7 @@ public class Exporter {
     @Autowired
     private MetaHandler metaHandler;
 
-    public void exportRDF(String modelName) {
+    public Path exportRDF(String modelName) {
         Model model = null;
         String extension = "ttl";
         switch (modelName) {
@@ -69,12 +70,14 @@ public class Exporter {
                 extension = "owl";
                 break;
         }
-        try(FileOutputStream fos = new FileOutputStream(getExportFile(EXPORT_DIRECTORY, modelName, extension))) {
+        File exportFile = getExportFile(EXPORT_DIRECTORY, modelName, extension);
+        try (FileOutputStream fos = new FileOutputStream(exportFile)) {
             assert model != null;
             model.write(fos, "TURTLE"); // RDF/XML, via https://jena.apache.org/documentation/io/rdf-output.html
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return exportFile.toPath();
     }
 
     public void exportGraphml(boolean fullUri) {
