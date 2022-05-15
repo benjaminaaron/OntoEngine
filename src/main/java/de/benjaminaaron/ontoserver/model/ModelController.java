@@ -87,10 +87,14 @@ public class ModelController {
         graphManager = new GraphManager(mainModel);
         printStatements();
 
-        /*fusekiServer = FusekiServer.create()
+        /*
+        https://jena.apache.org/documentation/fuseki2/fuseki-embedded.html
+        https://jena.apache.org/documentation/txn/txn.html
+        fusekiServer = FusekiServer.create()
             .add("/", dataset)
             .build();
-        fusekiServer.start();*/
+        fusekiServer.start();
+        */
     }
 
     @PostConstruct
