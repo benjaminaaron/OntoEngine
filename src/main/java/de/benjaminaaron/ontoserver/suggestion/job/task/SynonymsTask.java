@@ -25,7 +25,7 @@ public class SynonymsTask extends JobGraphTask {
         Dictionary dictionary = Dictionary.getDefaultResourceInstance();
         Graph<RDFNode, Edge> graph = graphManager.getGraph();
         List<RDFNode> vertices = graph.vertexSet().stream().toList();
-        List<Edge> edges = graph.edgeSet().stream().toList();
+        List<Edge> edges = graph.edgeSet().stream().toList(); // TODO
         // multi buckets (like in CaseSensitivityTask) instead of just pairs? HashSet of all local names to nodes maybe... TODO
 
         // double-for with moving index = number of unique handshakes
@@ -39,7 +39,7 @@ public class SynonymsTask extends JobGraphTask {
                 SuggestionBaseMessage message = synonymCheck(vertex1.getLocalName(), indexWordSet1, vertex2.getLocalName());
                 if (Objects.nonNull(message)) {
                     suggestions.add(new Suggestion(message));
-                };
+                }
             }
         }
         return suggestions;
