@@ -5,6 +5,7 @@ import de.benjaminaaron.ontoserver.model.Utils;
 import de.benjaminaaron.ontoserver.routing.BaseRouting;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.*;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.suggestion.SuggestionBaseMessage;
+import java.util.Objects;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.logging.log4j.LogManager;
@@ -63,11 +64,7 @@ public class WebSocketRouting {
         logger.info("Received " + commandMessage);
         String response = baseRouting.handleCommand(commandMessage.getCommand());
         ServerToClientMessage responseMessage = new ServerToClientMessage();
-        if (response == null) {
-            responseMessage.setMessage("Command received");
-        } else {
-            responseMessage.setMessage("Command failed: " + response);
-        }
+        responseMessage.setMessage("Command received" + (Objects.isNull(response) ? "" : ", response: " + response));
         return responseMessage;
     }
 

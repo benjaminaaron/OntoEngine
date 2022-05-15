@@ -2,6 +2,7 @@ package de.benjaminaaron.ontoserver.routing.rest;
 
 import de.benjaminaaron.ontoserver.routing.BaseRouting;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.CommandMessage;
+import java.util.Objects;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +39,6 @@ public class RestRouting {
         String commandStr = params.get("command") + " " + String.join(" ", params.get("args").split(","));
         commandMessage.setCommand(commandStr);
         String response = baseRouting.handleCommand(commandMessage.getCommand());
-        if (response == null) {
-            return "Command received";
-        }
-        return "Command failed: " + response;
+        return "Command received" + (Objects.isNull(response) ? "" : ", response: " + response);
     }
 }
