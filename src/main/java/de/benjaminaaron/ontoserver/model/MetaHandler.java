@@ -1,16 +1,35 @@
 package de.benjaminaaron.ontoserver.model;
 
+import static de.benjaminaaron.ontoserver.model.Utils.ensureUri;
+
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementResponse;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.time.Instant;
+import java.util.Objects;
+import java.util.Set;
 import lombok.SneakyThrows;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.ext.com.google.common.collect.Iterators;
 import org.apache.jena.graph.Node;
-import org.apache.jena.ontology.*;
+import org.apache.jena.ontology.DatatypeProperty;
+import org.apache.jena.ontology.Individual;
+import org.apache.jena.ontology.ObjectProperty;
+import org.apache.jena.ontology.OntClass;
+import org.apache.jena.ontology.OntModel;
+import org.apache.jena.ontology.OntModelSpec;
+import org.apache.jena.ontology.ProfileRegistry;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.ResultSet;
-import org.apache.jena.query.ResultSetFormatter;
-import org.apache.jena.rdf.model.*;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.riot.RDFLanguages;
 import org.apache.jena.riot.RDFParser;
 import org.apache.jena.vocabulary.OWL2;
@@ -18,15 +37,6 @@ import org.apache.jena.vocabulary.RDF;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
-
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.nio.file.Path;
-import java.time.Instant;
-import java.util.Objects;
-import java.util.Set;
-
-import static de.benjaminaaron.ontoserver.model.Utils.ensureUri;
 
 @Component
 public class MetaHandler {

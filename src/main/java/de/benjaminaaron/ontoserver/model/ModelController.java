@@ -1,28 +1,41 @@
 package de.benjaminaaron.ontoserver.model;
 
+import static de.benjaminaaron.ontoserver.model.Utils.detectLiteralType;
+import static de.benjaminaaron.ontoserver.model.Utils.ensureUri;
+
 import de.benjaminaaron.ontoserver.model.MetaHandler.StatementOrigin;
+import de.benjaminaaron.ontoserver.model.dataset.DatasetProvider;
 import de.benjaminaaron.ontoserver.model.graph.GraphManager;
 import de.benjaminaaron.ontoserver.routing.ChangeListener;
 import de.benjaminaaron.ontoserver.routing.websocket.WebSocketRouting;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementMessage;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementResponse;
 import de.benjaminaaron.ontoserver.suggestion.SuggestionEngine;
-import org.apache.jena.query.*;
-import org.apache.jena.rdf.model.*;
-import org.apache.jena.tdb.TDBFactory;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import org.apache.jena.query.Dataset;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.ResultSet;
+import org.apache.jena.query.ResultSetFormatter;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import java.nio.file.Path;
-import java.util.*;
-
-import static de.benjaminaaron.ontoserver.model.Utils.detectLiteralType;
-import static de.benjaminaaron.ontoserver.model.Utils.ensureUri;
 
 @Component
 public class ModelController {
@@ -54,6 +67,7 @@ public class ModelController {
     private final Set<ChangeListener> changeListeners = new HashSet<>();
 
     public ModelController(
+            DatasetProvider datasetProvider,
             @Value("${jena.tdb.directory}") Path TBD_DIR,
             @Value("${jena.tdb.model.main.name}") String MAIN_MODEL_NAME,
             @Value("${jena.tdb.model.meta.name}") String META_MODEL_NAME,
@@ -62,7 +76,7 @@ public class ModelController {
     ) {
         Utils.DEFAULT_URI_NAMESPACE = DEFAULT_URI_NAMESPACE;
 
-        dataset = TDBFactory.createDataset(TBD_DIR.toString());
+        dataset = datasetProvider.getDataset();
 
         // Main Model
         if (!dataset.containsNamedModel(MAIN_MODEL_NAME)) {
