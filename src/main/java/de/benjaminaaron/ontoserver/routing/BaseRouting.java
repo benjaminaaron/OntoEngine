@@ -6,16 +6,14 @@ import de.benjaminaaron.ontoserver.model.io.Exporter;
 import de.benjaminaaron.ontoserver.model.io.Importer;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementMessage;
 import de.benjaminaaron.ontoserver.routing.websocket.messages.AddStatementResponse;
-import de.benjaminaaron.ontoserver.routing.websocket.messages.CommandMessage;
 import de.benjaminaaron.ontoserver.suggestion.SuggestionEngine;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
