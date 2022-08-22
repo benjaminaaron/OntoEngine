@@ -1,7 +1,10 @@
 package de.benjaminaaron.ontoengine.model;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import de.benjaminaaron.ontoengine.routing.websocket.messages.AddStatementMessage;
+import java.util.List;
+import org.apache.jena.rdf.model.Statement;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +18,17 @@ public class ModelControllerTest {
 
     @Test
     void modelControllerLoadsModelsCorrectly() {
-        assertNotNull(modelController.getMainModel());
+        AddStatementMessage msg = new AddStatementMessage();
+        msg.setSubject("http://onto.de/default#sub");
+        msg.setPredicate("http://onto.de/default#pred");
+        msg.setObject("http://onto.de/default#obj");
+        msg.setObjectIsLiteral(false);
+        modelController.addStatement(msg, false);
+
+        List<Statement> statements = TestUtils.statementIteratorToList(
+            modelController.getMainModel().listStatements());
+
+        assertEquals(1, statements.size());
+        assertEquals(msg.getSubject(), statements.get(0).getSubject().toString());
     }
 }
