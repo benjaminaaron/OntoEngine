@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class OntoServerApplication {
+public class OntoEngineApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(OntoServerApplication.class, args);
+        SpringApplication.run(OntoEngineApplication.class, args);
     }
 
 }
