@@ -2,8 +2,8 @@ package de.benjaminaaron.ontoengine.routing;
 
 import de.benjaminaaron.ontoengine.model.ModelController;
 import de.benjaminaaron.ontoengine.model.Utils;
-import de.benjaminaaron.ontoengine.model.io.Exporter;
-import de.benjaminaaron.ontoengine.model.io.Importer;
+import de.benjaminaaron.ontoengine.io.exporter.Exporter;
+import de.benjaminaaron.ontoengine.io.importer.Importer;
 import de.benjaminaaron.ontoengine.routing.websocket.messages.AddStatementMessage;
 import de.benjaminaaron.ontoengine.routing.websocket.messages.AddStatementResponse;
 import de.benjaminaaron.ontoengine.suggestion.SuggestionEngine;

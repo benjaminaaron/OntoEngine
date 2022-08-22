@@ -1,27 +1,18 @@
-package de.benjaminaaron.ontoengine.model.io;
+package de.benjaminaaron.ontoengine.io.exporter;
+
+import static de.benjaminaaron.ontoengine.model.Utils.DEFAULT_URI_NAMESPACE;
+import static de.benjaminaaron.ontoengine.model.Utils.determineShortestUriRepresentation;
+import static de.benjaminaaron.ontoengine.model.Utils.getExportFile;
+import static de.benjaminaaron.ontoengine.model.Utils.rdfNodeToGraphDatabaseEntryString;
+import static de.benjaminaaron.ontoengine.model.Utils.writeLine;
+import static de.benjaminaaron.ontoengine.model.Utils.writeQueryLine;
+import static de.benjaminaaron.ontoengine.model.Utils.writeSectionHeadline;
 
 import de.benjaminaaron.ontoengine.model.MetaHandler;
 import de.benjaminaaron.ontoengine.model.ModelController;
 import de.benjaminaaron.ontoengine.model.Utils;
 import de.benjaminaaron.ontoengine.model.graph.Edge;
 import java.io.File;
-import lombok.SneakyThrows;
-import org.apache.commons.io.FileUtils;
-import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
-import org.apache.jena.query.QuerySolution;
-import org.apache.jena.query.ResultSet;
-import org.apache.jena.rdf.model.*;
-import org.apache.jena.rdfconnection.RDFConnection;
-import org.apache.jena.rdfconnection.RDFConnectionFactory;
-import org.apache.jena.system.Txn;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.jgrapht.Graph;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -31,8 +22,26 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
-
-import static de.benjaminaaron.ontoengine.model.Utils.*;
+import lombok.SneakyThrows;
+import org.apache.commons.io.FileUtils;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.QuerySolution;
+import org.apache.jena.query.ResultSet;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.StmtIterator;
+import org.apache.jena.rdfconnection.RDFConnection;
+import org.apache.jena.rdfconnection.RDFConnectionFactory;
+import org.apache.jena.system.Txn;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jgrapht.Graph;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 @Component
 public class Exporter {

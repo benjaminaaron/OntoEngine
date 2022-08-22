@@ -1,4 +1,4 @@
-package de.benjaminaaron.ontoengine.model.io;
+package de.benjaminaaron.ontoengine.io.importer;
 
 import static de.benjaminaaron.ontoengine.model.Utils.NEW_LINE_CHAR;
 

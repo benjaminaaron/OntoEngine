@@ -1,13 +1,41 @@
-package de.benjaminaaron.ontoengine.model.io;
+package de.benjaminaaron.ontoengine.io.importer;
+
+import static de.benjaminaaron.ontoengine.model.MetaHandler.StatementOrigin.GRAPHDB_IMPORT;
+import static de.benjaminaaron.ontoengine.model.MetaHandler.StatementOrigin.RDF_IMPORT;
+import static de.benjaminaaron.ontoengine.model.Utils.buildDefaultNsUri;
+import static de.benjaminaaron.ontoengine.model.Utils.ensureUri;
+import static de.benjaminaaron.ontoengine.model.Utils.expandShortUriRepresentation;
+import static de.benjaminaaron.ontoengine.model.Utils.getFromAbsolutePathOrResolveWithinDir;
+import static de.benjaminaaron.ontoengine.model.Utils.getNormalMarkdownFiles;
+import static de.benjaminaaron.ontoengine.model.Utils.getObsidianICloudDir;
+import static de.benjaminaaron.ontoengine.model.Utils.getSpecialMarkdownFile;
+import static org.apache.commons.io.FilenameUtils.getBaseName;
 
 import de.benjaminaaron.ontoengine.model.MetaHandler;
 import de.benjaminaaron.ontoengine.model.ModelController;
 import de.benjaminaaron.ontoengine.routing.websocket.messages.AddStatementMessage;
 import de.benjaminaaron.ontoengine.suggestion.SuggestionEngine;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.SneakyThrows;
 import org.apache.jena.atlas.lib.Pair;
 import org.apache.jena.query.QueryFactory;
-import org.apache.jena.rdf.model.*;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.rdfconnection.RDFConnection;
 import org.apache.jena.rdfconnection.RDFConnectionFactory;
 import org.apache.jena.system.Txn;
@@ -16,18 +44,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static de.benjaminaaron.ontoengine.model.MetaHandler.StatementOrigin.GRAPHDB_IMPORT;
-import static de.benjaminaaron.ontoengine.model.MetaHandler.StatementOrigin.RDF_IMPORT;
-import static de.benjaminaaron.ontoengine.model.Utils.*;
-import static org.apache.commons.io.FilenameUtils.getBaseName;
 
 @Component
 public class Importer {
