@@ -1,9 +1,12 @@
 package de.benjaminaaron.ontoengine.routing;
 
+import de.benjaminaaron.ontoengine.io.exporter.GraphDbExporter;
+import de.benjaminaaron.ontoengine.io.exporter.GraphmlExporter;
+import de.benjaminaaron.ontoengine.io.exporter.MarkdownExporter;
+import de.benjaminaaron.ontoengine.io.exporter.RdfExporter;
+import de.benjaminaaron.ontoengine.io.importer.Importer;
 import de.benjaminaaron.ontoengine.model.ModelController;
 import de.benjaminaaron.ontoengine.model.Utils;
-import de.benjaminaaron.ontoengine.io.exporter.Exporter;
-import de.benjaminaaron.ontoengine.io.importer.Importer;
 import de.benjaminaaron.ontoengine.routing.websocket.messages.AddStatementMessage;
 import de.benjaminaaron.ontoengine.routing.websocket.messages.AddStatementResponse;
 import de.benjaminaaron.ontoengine.suggestion.SuggestionEngine;
@@ -27,8 +30,6 @@ public class BaseRouting {
     protected SuggestionEngine suggestionEngine;
     @Autowired
     private Importer importer;
-    @Autowired
-    private Exporter exporter;
 
     public AddStatementResponse addStatement(AddStatementMessage statementMsg) {
         return modelController.addStatement(statementMsg, true);
@@ -56,19 +57,19 @@ public class BaseRouting {
             case "export":
                 format = args.get(0).toLowerCase(); // rdf, graphml or graphdb
                 if (format.equals("markdown")) {
-                    exporter.exportMarkdown(args.get(1));
+                    MarkdownExporter.export(modelController, args.get(1));
                     break;
                 }
-                String model = args.get(1).toLowerCase(); // main or meta
+                String modelName = args.get(1).toLowerCase(); // main or meta
                 if (format.equals("rdf")) {
-                    return exporter.exportRDF(model).toString();
+                    return RdfExporter.export(modelController, modelName).toString();
                 }
                 if (format.equals("graphml")) {
-                    exporter.exportGraphml(args.size() >= 3 && args.get(2).equalsIgnoreCase("full"));
+                    GraphmlExporter.export(modelController, args.size() >= 3 && args.get(2).equalsIgnoreCase("full"));
                 }
                 if (format.equals("graphdb")) {
                     String ruleset = args.size() >= 3 ? args.get(2) : "empty"; // rdfsplus-optimized
-                    exporter.exportToGraphDB(model, ruleset);
+                    GraphDbExporter.export(modelController, modelName, ruleset);
                 }
                 break;
             case "import":

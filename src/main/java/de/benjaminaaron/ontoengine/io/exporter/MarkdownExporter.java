@@ -2,24 +2,15 @@ package de.benjaminaaron.ontoengine.io.exporter;
 
 import static de.benjaminaaron.ontoengine.model.Utils.DEFAULT_URI_NAMESPACE;
 import static de.benjaminaaron.ontoengine.model.Utils.determineShortestUriRepresentation;
-import static de.benjaminaaron.ontoengine.model.Utils.getExportFile;
-import static de.benjaminaaron.ontoengine.model.Utils.rdfNodeToGraphDatabaseEntryString;
 import static de.benjaminaaron.ontoengine.model.Utils.writeLine;
 import static de.benjaminaaron.ontoengine.model.Utils.writeQueryLine;
 import static de.benjaminaaron.ontoengine.model.Utils.writeSectionHeadline;
 
-import de.benjaminaaron.ontoengine.model.MetaHandler;
 import de.benjaminaaron.ontoengine.model.ModelController;
 import de.benjaminaaron.ontoengine.model.Utils;
 import de.benjaminaaron.ontoengine.model.graph.Edge;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 import lombok.SneakyThrows;
@@ -28,74 +19,28 @@ import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
-import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.Statement;
-import org.apache.jena.rdf.model.StmtIterator;
-import org.apache.jena.rdfconnection.RDFConnection;
-import org.apache.jena.rdfconnection.RDFConnectionFactory;
-import org.apache.jena.system.Txn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jgrapht.Graph;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Exporter {
+public class MarkdownExporter {
+    private static final Logger logger = LogManager.getLogger(MarkdownExporter.class);
 
-    private final Logger logger = LogManager.getLogger(Exporter.class);
+    private static Path MARKDOWN_DEFAULT_DIRECTORY;
 
-    @Value("${model.export.directory}")
-    private Path EXPORT_DIRECTORY;
     @Value("${markdown.export.directory}")
-    private Path MARKDOWN_DEFAULT_DIRECTORY;
-    @Value("${graphdb.insert-url}")
-    private String GRAPHDB_INSERT_URL;
-    @Value("classpath:graphdb_repo_template.json")
-    private Path GRAPHDB_REPO_TEMPLATE;
-    @Value("${graphdb.rest-url}")
-    private String GRAPHDB_REST_URL;
-    @Value("${graphdb.default-repository}")
-    private String GRAPHDB_DEFAULT_REPOSITORY;
-
-    @Autowired
-    private ModelController modelController;
-
-    @Autowired
-    private MetaHandler metaHandler;
-
-    public Path exportRDF(String modelName) {
-        Model model = null;
-        String extension = "ttl";
-        switch (modelName) {
-            case "main":
-                model = modelController.getMainModel();
-                break;
-            case "meta":
-                model = modelController.getMetaHandler().getMetaDataModel();
-                extension = "owl";
-                break;
-        }
-        File exportFile = getExportFile(EXPORT_DIRECTORY, modelName, extension);
-        try (FileOutputStream fos = new FileOutputStream(exportFile)) {
-            assert model != null;
-            model.write(fos, "TURTLE"); // RDF/XML, via https://jena.apache.org/documentation/io/rdf-output.html
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return exportFile.toPath();
-    }
-
-    public void exportGraphml(boolean fullUri) {
-        modelController.getGraphManager().exportGraphml(getExportFile(EXPORT_DIRECTORY, "model", "graphml"), fullUri);
+    public void setMarkdownDefaultDirectory(Path dir) {
+        MarkdownExporter.MARKDOWN_DEFAULT_DIRECTORY = dir;
     }
 
     @SneakyThrows
-    public void exportMarkdown(String folderName) {
-        Path markdownDir = Utils.getObsidianICloudDir(folderName);
+    public static void export(ModelController modelController, String folderName) {
+        Path markdownDir = Utils.getObsidianICloudDir(folderName); // MARKDOWN_DEFAULT_DIRECTORY
         // sync mechanism? TODO
 
         try {
@@ -133,7 +78,7 @@ public class Exporter {
             +   "} "
             +   "BIND(IF(BOUND(?instTemplate), :instantiated, IF(BOUND(?iftttString), :z_ifttt, ?queryType)) AS ?auxiliaryTypeIndicator) . "
             + "} ORDER BY ?auxiliaryTypeIndicator";
-        try(QueryExecution queryExecution = QueryExecutionFactory.create(query, metaHandler.getMetaDataModel());
+        try(QueryExecution queryExecution = QueryExecutionFactory.create(query, modelController.getMetaHandler().getMetaDataModel());
             FileWriter fw = new FileWriter(markdownDir.resolve("QUERIES.md").toFile())) {
             ResultSet resultSet = queryExecution.execSelect();
             // ResultSetFormatter.out(resultSet);
@@ -198,7 +143,7 @@ public class Exporter {
                 for (Edge edge : graph.outgoingEdgesOf(node)) {
                     RDFNode target = graph.getEdgeTarget(edge);
                     writeLine(fw, determineShortestUriRepresentation(prefixes, edge.property)
-                        + " " + getObjectString(target));
+                        + " " + getObjectString(modelController, target));
                 }
             }
         }
@@ -208,7 +153,7 @@ public class Exporter {
         modelController.broadcastToChangeListeners(text);
     }
 
-    private String getObjectString(RDFNode target) {
+    private static String getObjectString(ModelController modelController, RDFNode target) {
         if (target.isLiteral()) {
             return "\"" + target.asLiteral().getString() + "\"";
         }
@@ -217,56 +162,5 @@ public class Exporter {
             return target.asResource().getLocalName();
         }
         return "[[" + target.asResource().getLocalName() + "]]";
-    }
-
-    @SneakyThrows
-    public void exportToGraphDB(String modelName, String ruleset) {
-        // allow passing of a "clear" flag TODO
-        String repoName = GRAPHDB_DEFAULT_REPOSITORY + "_" + modelName + "_" + ruleset;
-        String insertURL = GRAPHDB_INSERT_URL.replace("<repository>", repoName);
-
-        // delete old repo
-
-        URL url = new URL(insertURL);
-        HttpURLConnection http = (HttpURLConnection) url.openConnection();
-        http.setRequestMethod("DELETE");
-        http.setRequestProperty("Accept", "application/json");
-        if (http.getResponseCode() != 204) {
-            System.out.println("Could not delete the GraphDB repository. Response code: " + http.getResponseCode());
-        }
-        http.disconnect();
-
-        // create new repo
-
-        url = new URL(GRAPHDB_REST_URL);
-        http = (HttpURLConnection) url.openConnection();
-        http.setRequestMethod("POST");
-        http.setDoOutput(true);
-        http.setRequestProperty("Content-Type", "application/json");
-        http.setRequestProperty("Accept", "application/json");
-        String jsonStr = Files.readString(GRAPHDB_REPO_TEMPLATE, StandardCharsets.UTF_8)
-                .replace("<id>", repoName)
-                .replace("<ruleset>", ruleset);
-        http.getOutputStream().write(jsonStr.getBytes(StandardCharsets.UTF_8));
-        if (http.getResponseCode() != 201) {
-            System.out.println("Could not create new GraphDB repository. Response code: " + http.getResponseCode());
-        }
-        http.disconnect();
-
-        // add triples to new repo
-
-        Model model = modelName.equals("main") ? modelController.getMainModel() : modelController.getMetaModel();
-        try (RDFConnection conn = RDFConnectionFactory.connect(insertURL)) {
-            Txn.executeWrite(conn, () -> {
-                StmtIterator iterator = model.listStatements();
-                while (iterator.hasNext()) {
-                    Statement statement = iterator.nextStatement();
-                    String sUri = statement.getSubject().getURI();
-                    String pUri = statement.getPredicate().getURI();
-                    String objStr = rdfNodeToGraphDatabaseEntryString(statement.getObject());
-                    conn.update("INSERT DATA { <" + sUri + "> <" + pUri + "> " + objStr + " }");
-                }
-            });
-        }
     }
 }
