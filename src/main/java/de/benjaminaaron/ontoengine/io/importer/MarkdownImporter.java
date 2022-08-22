@@ -1,11 +1,8 @@
 package de.benjaminaaron.ontoengine.io.importer;
 
-import static de.benjaminaaron.ontoengine.model.MetaHandler.StatementOrigin.GRAPHDB_IMPORT;
-import static de.benjaminaaron.ontoengine.model.MetaHandler.StatementOrigin.RDF_IMPORT;
 import static de.benjaminaaron.ontoengine.model.Utils.buildDefaultNsUri;
 import static de.benjaminaaron.ontoengine.model.Utils.ensureUri;
 import static de.benjaminaaron.ontoengine.model.Utils.expandShortUriRepresentation;
-import static de.benjaminaaron.ontoengine.model.Utils.getFromAbsolutePathOrResolveWithinDir;
 import static de.benjaminaaron.ontoengine.model.Utils.getNormalMarkdownFiles;
 import static de.benjaminaaron.ontoengine.model.Utils.getObsidianICloudDir;
 import static de.benjaminaaron.ontoengine.model.Utils.getSpecialMarkdownFile;
@@ -14,7 +11,6 @@ import static org.apache.commons.io.FilenameUtils.getBaseName;
 import de.benjaminaaron.ontoengine.model.MetaHandler;
 import de.benjaminaaron.ontoengine.model.ModelController;
 import de.benjaminaaron.ontoengine.routing.websocket.messages.AddStatementMessage;
-import de.benjaminaaron.ontoengine.suggestion.SuggestionEngine;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -28,48 +24,29 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.SneakyThrows;
 import org.apache.jena.atlas.lib.Pair;
-import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.Property;
-import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.ResourceFactory;
-import org.apache.jena.rdf.model.StmtIterator;
-import org.apache.jena.rdfconnection.RDFConnection;
-import org.apache.jena.rdfconnection.RDFConnectionFactory;
-import org.apache.jena.system.Txn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Importer {
+public class MarkdownImporter {
 
-    private final Logger logger = LogManager.getLogger(Importer.class);
+    private static final Logger logger = LogManager.getLogger(MarkdownImporter.class);
 
-    @Value("${graphdb.get-url}")
-    private String GRAPHDB_GET_URL;
+    private static Path MARKDOWN_DEFAULT_DIRECTORY;
+
     @Value("${markdown.export.directory}")
-    private Path MARKDOWN_DEFAULT_DIRECTORY;
-    @Value("${model.import.directory}")
-    private Path IMPORT_DIRECTORY;
-
-    @Autowired
-    private ModelController modelController;
-
-    @Autowired
-    private SuggestionEngine suggestionEngine;
-
-    @Autowired
-    private MetaHandler metaHandler;
+    public void setMarkdownDefaultDirectory(Path dir) {
+        MarkdownImporter.MARKDOWN_DEFAULT_DIRECTORY = dir;
+    }
 
     @SneakyThrows
-    public void importFromMarkdown(String folderName) {
+    public static void doImport(ModelController modelController, String folderName) {
         Path markdownDir = getObsidianICloudDir(folderName);
         Model model = modelController.getMainModel();
+        MetaHandler metaHandler = modelController.getMetaHandler();
         Map<String, Path> markdownFiles = new HashMap<>(); // key: resourceLocalName, value: file path
         Map<String, String> filenamesToUris = new HashMap<>();
 
@@ -117,7 +94,7 @@ public class Importer {
                         List<RawTriple> constructParts = parts.getRight();
                         int valuesPredCount = 0;
                         String query =
-                                "PREFIX : <http://onto.de/default#> " +
+                            "PREFIX : <http://onto.de/default#> " +
                                 "CONSTRUCT { ";
                         for (RawTriple cpart : constructParts) {
                             query += cpart.toQueryLine();
@@ -141,22 +118,22 @@ public class Importer {
 
         // collect markdown files and URIs of resources
         getNormalMarkdownFiles(markdownDir)
-                .forEach(path -> {
-                    String filename = getBaseName(path.getFileName().toString()); // = localName of resource
-                    markdownFiles.put(filename, path);
-                    try (Stream<String> stream = Files.lines(path)) {
-                        // means it can be anywhere in the file - restrict its possible location more?
-                        Optional<String> uriDefOptional = stream.filter(line -> !line.isBlank())
-                                .filter(line -> line.split(" ").length == 1).findAny();
-                        if (uriDefOptional.isPresent()) {
-                            String uriDef = uriDefOptional.get().trim();
-                            String uri = uriDef.startsWith("http") ? uriDef : model.getNsPrefixURI(uriDef.split(":")[0].trim()) + filename;
-                            filenamesToUris.put(filename, uri);
-                        } else {
-                            filenamesToUris.put(filename, buildDefaultNsUri(filename));
-                        }
-                    } catch (IOException ignored) {}
-                });
+            .forEach(path -> {
+                String filename = getBaseName(path.getFileName().toString()); // = localName of resource
+                markdownFiles.put(filename, path);
+                try (Stream<String> stream = Files.lines(path)) {
+                    // means it can be anywhere in the file - restrict its possible location more?
+                    Optional<String> uriDefOptional = stream.filter(line -> !line.isBlank())
+                        .filter(line -> line.split(" ").length == 1).findAny();
+                    if (uriDefOptional.isPresent()) {
+                        String uriDef = uriDefOptional.get().trim();
+                        String uri = uriDef.startsWith("http") ? uriDef : model.getNsPrefixURI(uriDef.split(":")[0].trim()) + filename;
+                        filenamesToUris.put(filename, uri);
+                    } else {
+                        filenamesToUris.put(filename, buildDefaultNsUri(filename));
+                    }
+                } catch (IOException ignored) {}
+            });
 
         // run through markdown files to import statements
         markdownFiles.forEach((localName, path) -> {
@@ -175,7 +152,7 @@ public class Importer {
                             object = object.substring(2, object.length() - 2); // remove the [[]]
                         }
                         statement.setObject(filenamesToUris.containsKey(object)
-                                ? filenamesToUris.get(object) : buildDefaultNsUri(object));
+                            ? filenamesToUris.get(object) : buildDefaultNsUri(object));
                     }
                     modelController.addStatement(statement, false);
                 });
@@ -188,11 +165,11 @@ public class Importer {
         modelController.broadcastToChangeListeners(text);
     }
 
-    private List<RawTriple> parseTriples(Path path) throws IOException {
+    private static List<RawTriple> parseTriples(Path path) throws IOException {
         List<String> lines = Files.lines(path)
-                .filter(line -> !line.isBlank()) // ignore empty lines
-                .filter(line -> !line.trim().startsWith("//")) // ignore comments
-                .collect(Collectors.toList());
+            .filter(line -> !line.isBlank()) // ignore empty lines
+            .filter(line -> !line.trim().startsWith("//")) // ignore comments
+            .collect(Collectors.toList());
         List<RawTriple> triples = new ArrayList<>();
         boolean inObjectString = false;
         for (String line : lines) {
@@ -214,48 +191,5 @@ public class Importer {
         }
         triples.forEach(RawTriple::cleanObject);
         return triples;
-    }
-
-    public void importFromGraphDB(String repository) {
-        Model mainModel = modelController.getMainModel();
-        String repoUrl = GRAPHDB_GET_URL.replace("<repository>", repository);
-        try (RDFConnection conn = RDFConnectionFactory.connect(repoUrl)) {
-            Txn.executeRead(conn, () -> {
-                String queryStr = "SELECT ?s ?p ?o WHERE { ?s ?p ?o }"; // LIMIT 5
-                conn.querySelect(QueryFactory.create(queryStr), qs -> {
-                    Resource subj = qs.getResource("s");
-                    Property pred = mainModel.createProperty(qs.get("p").toString());
-                    RDFNode obj = qs.get("o");
-                    modelController.addStatement(
-                        ResourceFactory.createStatement(subj, pred, obj), GRAPHDB_IMPORT,
-                        repoUrl, null, false);
-                });
-            });
-        }
-        // TODO count and log how many statements were read vs. actually added
-        logger.info("Import from GraphDB completed");
-    }
-
-    @SneakyThrows
-    public void importFromRDF(String pathOrFilename) {
-        // check if path is an absolute path, otherwise append it to IMPORT_DIRECTORY
-        Path path = getFromAbsolutePathOrResolveWithinDir(pathOrFilename, IMPORT_DIRECTORY);
-        if (Objects.isNull(path)) {
-            logger.warn("No file found at " + pathOrFilename +
-                ", either provide absolute path or filename within " + IMPORT_DIRECTORY.toAbsolutePath());
-            return;
-        }
-        Model importModel = ModelFactory.createDefaultModel();
-        importModel.read(path.toString()); // via https://jena.apache.org/documentation/io/rdf-input.html
-        StmtIterator iter = importModel.listStatements();
-        while (iter.hasNext()) {
-            modelController.addStatement(iter.nextStatement(), RDF_IMPORT, pathOrFilename,
-                null, false);
-        }
-
-        Path imported = IMPORT_DIRECTORY.resolve("imported");
-        imported.toFile().mkdirs();
-        Files.move(path, imported.resolve(path.getFileName()));
-        logger.info("Import from RDF file completed");
     }
 }

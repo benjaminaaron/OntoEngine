@@ -4,7 +4,9 @@ import de.benjaminaaron.ontoengine.io.exporter.GraphDbExporter;
 import de.benjaminaaron.ontoengine.io.exporter.GraphmlExporter;
 import de.benjaminaaron.ontoengine.io.exporter.MarkdownExporter;
 import de.benjaminaaron.ontoengine.io.exporter.RdfExporter;
-import de.benjaminaaron.ontoengine.io.importer.Importer;
+import de.benjaminaaron.ontoengine.io.importer.GraphDbImporter;
+import de.benjaminaaron.ontoengine.io.importer.MarkdownImporter;
+import de.benjaminaaron.ontoengine.io.importer.RdfImporter;
 import de.benjaminaaron.ontoengine.model.ModelController;
 import de.benjaminaaron.ontoengine.model.Utils;
 import de.benjaminaaron.ontoengine.routing.websocket.messages.AddStatementMessage;
@@ -28,8 +30,6 @@ public class BaseRouting {
     protected ModelController modelController;
     @Autowired
     protected SuggestionEngine suggestionEngine;
-    @Autowired
-    private Importer importer;
 
     public AddStatementResponse addStatement(AddStatementMessage statementMsg) {
         return modelController.addStatement(statementMsg, true);
@@ -75,13 +75,13 @@ public class BaseRouting {
             case "import":
                 format = args.get(0).toLowerCase();
                 if (format.equals("graphdb")) {
-                    importer.importFromGraphDB(args.get(1)); // repo
+                    GraphDbImporter.doImport(modelController, args.get(1)); // repo
                 }
                 if (format.equals("markdown")) {
-                    importer.importFromMarkdown(args.get(1)); // folder name
+                    MarkdownImporter.doImport(modelController, args.get(1)); // folder name
                 }
                 if (format.equals("rdf")) {
-                    importer.importFromRDF(args.get(1)); // path to file
+                    RdfImporter.doImport(modelController, args.get(1)); // path to file
                 }
                 break;
             case "replace":
