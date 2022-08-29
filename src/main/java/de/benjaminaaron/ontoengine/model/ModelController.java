@@ -19,7 +19,6 @@ import java.util.Objects;
 import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import org.apache.jena.query.Dataset;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.ResultSet;
@@ -48,10 +47,11 @@ public class ModelController {
     @Autowired
     private SuggestionEngine suggestionEngine;
 
-    private final Dataset dataset;
-    private final Model mainModel;
-    private final Model metaModel;
-    private final Model vocabularySourcesModel;
+    private final DatasetProvider datasetProvider;
+    private Model mainModel;
+    private Model metaModel;
+    private GraphManager graphManager;
+    private Model vocabularySourcesModel;
 
     // private final FusekiServer fusekiServer;
 
@@ -61,44 +61,15 @@ public class ModelController {
     @Autowired
     private MetaHandler metaHandler;
 
-    // this should be a @Component
-    private final GraphManager graphManager;
-
     private final Set<ChangeListener> changeListeners = new HashSet<>();
 
-    public ModelController(
-            DatasetProvider datasetProvider,
-            @Value("${jena.tdb.directory}") Path TBD_DIR,
-            @Value("${jena.tdb.model.main.name}") String MAIN_MODEL_NAME,
-            @Value("${jena.tdb.model.meta.name}") String META_MODEL_NAME,
-            @Value("${jena.tdb.model.vocabulary-sources.name}") String VOCABULARY_SOURCES_MODEL_NAME,
-            @Value("${uri.default.namespace}") String DEFAULT_URI_NAMESPACE
-    ) {
-        Utils.DEFAULT_URI_NAMESPACE = DEFAULT_URI_NAMESPACE;
+    public ModelController(DatasetProvider datasetProvider) {
+        this.datasetProvider = datasetProvider;
+        mainModel = datasetProvider.getMainModel();
+        metaModel = datasetProvider.getMetaModel();
+        graphManager = datasetProvider.getGraphManager();
+        vocabularySourcesModel = datasetProvider.getVocabularySourcesModel();
 
-        dataset = datasetProvider.getDataset();
-
-        // Main Model
-        if (!dataset.containsNamedModel(MAIN_MODEL_NAME)) {
-            logger.info("Creating " + MAIN_MODEL_NAME + "-model in TDB location '" + TBD_DIR + "'");
-        }
-        // these are actually what is called "named graphs" elsewhere
-        // support adding/querying over entire dataset vs. specific named graphs/models TODO
-        mainModel = dataset.getNamedModel(MAIN_MODEL_NAME);
-        mainModel.setNsPrefix("onto", DEFAULT_URI_NAMESPACE);
-        // Meta Model
-        if (!dataset.containsNamedModel(META_MODEL_NAME)) {
-            logger.info("Creating " + META_MODEL_NAME + "-model in TDB location '" + TBD_DIR + "'");
-        }
-        metaModel = dataset.getNamedModel(META_MODEL_NAME);
-        metaModel.setNsPrefix("meta", MetaHandler.META_NS + "#");
-        // Vocabulary Sources Model
-        if (!dataset.containsNamedModel(VOCABULARY_SOURCES_MODEL_NAME)) {
-            logger.info("Creating " + VOCABULARY_SOURCES_MODEL_NAME + "-model in TDB location '" + TBD_DIR + "'");
-        }
-        vocabularySourcesModel = dataset.getNamedModel(VOCABULARY_SOURCES_MODEL_NAME);
-
-        graphManager = new GraphManager(mainModel);
         printStatements();
 
         /*
@@ -118,9 +89,6 @@ public class ModelController {
 
     @PreDestroy
     private void close() {
-        mainModel.close();
-        metaModel.close();
-        vocabularySourcesModel.close();
         // fusekiServer.stop();
     }
 
