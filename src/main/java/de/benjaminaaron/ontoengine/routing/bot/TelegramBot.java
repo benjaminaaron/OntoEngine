@@ -119,7 +119,11 @@ public class TelegramBot extends TelegramLongPollingBot implements ChangeListene
     @SneakyThrows
     public void sendMessage(String msg) {
         if (Objects.isNull(chatId)) return;
-        execute(new SendMessage(chatId.toString(), msg));
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(chatId.toString());
+        sendMessage.setText(msg);
+        sendMessage.setDisableWebPagePreview(true);
+        execute(sendMessage);
         logger.info("Sent Telegram message (" + chatId + "): " + msg);
     }
 
