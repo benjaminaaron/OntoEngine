@@ -3,11 +3,11 @@ package de.benjaminaaron.ontoengine.suggestion.job.task;
 import de.benjaminaaron.ontoengine.model.Utils.ResourceType;
 import de.benjaminaaron.ontoengine.routing.websocket.messages.suggestion.ExternalMatchMessage;
 import de.benjaminaaron.ontoengine.suggestion.Suggestion;
-import de.benjaminaaron.ontoengine.suggestion.job.task.base.FixedBasicApiConnection;
 import de.benjaminaaron.ontoengine.suggestion.job.task.base.JobStatementTask;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
 import org.wikidata.wdtk.datamodel.helpers.Datamodel;
+import org.wikidata.wdtk.wikibaseapi.BasicApiConnection;
 import org.wikidata.wdtk.wikibaseapi.WbGetEntitiesSearchData;
 import org.wikidata.wdtk.wikibaseapi.WbSearchEntitiesResult;
 import org.wikidata.wdtk.wikibaseapi.WikibaseDataFetcher;
@@ -24,8 +24,11 @@ public class WikidataMatchingTask extends JobStatementTask {
     private final WikibaseDataFetcher wbdf;
 
     public WikidataMatchingTask() {
+        // removed FixedBasicApiConnection.java when upgrading to
+        // org.wikidata.wdtk:wdtk-wikibaseapi:0.14.1 from 0.12.1
+        // verify this works TODO
         wbdf = new WikibaseDataFetcher(
-                FixedBasicApiConnection.getWikidataApiConnection(),
+                BasicApiConnection.getWikidataApiConnection(),
                 Datamodel.SITE_WIKIDATA);
         // https://www.wikidata.org/wiki/Wikidata:Tools/For_programmers
         // https://www.mediawiki.org/wiki/Wikibase/Indexing/RDF_Dump_Format#Full_list_of_prefixes

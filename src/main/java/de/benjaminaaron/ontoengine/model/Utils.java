@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 public class Utils {
 
     public static String DEFAULT_URI_NAMESPACE;
-    private final static Slugify slugifier = new Slugify().withLowerCase(false);
+    private final static Slugify slugifier = Slugify.builder().lowerCase(false).build();
     public static final String NEW_LINE_CHAR = System.getProperty("line.separator");
 
     public static String buildDefaultNsUri(String word) {
