@@ -3,6 +3,7 @@
 .mvn/
 target/
 .gradle/
+build/
 .DS_Store
 
 node_modules/
