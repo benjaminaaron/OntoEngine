@@ -1,6 +1,6 @@
 package de.benjaminaaron.ontoengine.adapter.primary.messages;
 
-import de.benjaminaaron.ontoengine.model.Utils.ResourceType;
+import de.benjaminaaron.ontoengine.domain.Utils.ResourceType;
 import lombok.Data;
 
 import java.util.Map;

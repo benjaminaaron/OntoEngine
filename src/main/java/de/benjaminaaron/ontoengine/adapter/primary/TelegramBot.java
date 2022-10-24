@@ -1,6 +1,6 @@
 package de.benjaminaaron.ontoengine.adapter.primary;
 
-import de.benjaminaaron.ontoengine.model.ModelController;
+import de.benjaminaaron.ontoengine.domain.ModelController;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;

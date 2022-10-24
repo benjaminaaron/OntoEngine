@@ -1,7 +1,7 @@
 package de.benjaminaaron.ontoengine.adapter.primary;
 
-import de.benjaminaaron.ontoengine.model.ModelController;
-import de.benjaminaaron.ontoengine.model.Utils;
+import de.benjaminaaron.ontoengine.domain.ModelController;
+import de.benjaminaaron.ontoengine.domain.Utils;
 import de.benjaminaaron.ontoengine.adapter.primary.messages.*;
 import de.benjaminaaron.ontoengine.adapter.primary.messages.suggestion.SuggestionBaseMessage;
 import java.util.Objects;

@@ -1,17 +1,17 @@
 package de.benjaminaaron.ontoengine.adapter.primary;
 
-import de.benjaminaaron.ontoengine.io.exporter.GraphDbExporter;
-import de.benjaminaaron.ontoengine.io.exporter.GraphmlExporter;
-import de.benjaminaaron.ontoengine.io.exporter.MarkdownExporter;
-import de.benjaminaaron.ontoengine.io.exporter.RdfExporter;
-import de.benjaminaaron.ontoengine.io.importer.GraphDbImporter;
-import de.benjaminaaron.ontoengine.io.importer.MarkdownImporter;
-import de.benjaminaaron.ontoengine.io.importer.RdfImporter;
-import de.benjaminaaron.ontoengine.model.ModelController;
-import de.benjaminaaron.ontoengine.model.Utils;
+import de.benjaminaaron.ontoengine.domain.exporter.GraphDbExporter;
+import de.benjaminaaron.ontoengine.domain.exporter.GraphmlExporter;
+import de.benjaminaaron.ontoengine.domain.exporter.MarkdownExporter;
+import de.benjaminaaron.ontoengine.domain.exporter.RdfExporter;
+import de.benjaminaaron.ontoengine.domain.importer.GraphDbImporter;
+import de.benjaminaaron.ontoengine.domain.importer.MarkdownImporter;
+import de.benjaminaaron.ontoengine.domain.importer.RdfImporter;
+import de.benjaminaaron.ontoengine.domain.ModelController;
+import de.benjaminaaron.ontoengine.domain.Utils;
 import de.benjaminaaron.ontoengine.adapter.primary.messages.AddStatementMessage;
 import de.benjaminaaron.ontoengine.adapter.primary.messages.AddStatementResponse;
-import de.benjaminaaron.ontoengine.suggestion.SuggestionEngine;
+import de.benjaminaaron.ontoengine.domain.suggestion.SuggestionEngine;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

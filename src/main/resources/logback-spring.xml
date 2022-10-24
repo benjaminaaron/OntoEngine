@@ -8,7 +8,7 @@
     </root>
     <property name="LOG_FILE" value="${logging.ModelController.file}"/>
     <include resource="org/springframework/boot/logging/logback/file-appender.xml" />
-    <logger name="de.benjaminaaron.ontoengine.model.MetaHandler" level="INFO">
+    <logger name="de.benjaminaaron.ontoengine.domain.MetaHandler" level="INFO">
         <appender-ref ref="FILE" />
     </logger>
 </configuration>
