@@ -1,7 +1,7 @@
 package de.benjaminaaron.ontoengine.model;
 
 import com.github.slugify.Slugify;
-import de.benjaminaaron.ontoengine.routing.websocket.messages.TripleMessage;
+import de.benjaminaaron.ontoengine.adapter.primary.messages.TripleMessage;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.jena.rdf.model.*;
 

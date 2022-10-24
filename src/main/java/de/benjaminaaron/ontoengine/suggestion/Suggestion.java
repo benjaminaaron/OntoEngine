@@ -1,7 +1,7 @@
 package de.benjaminaaron.ontoengine.suggestion;
 
-import de.benjaminaaron.ontoengine.routing.websocket.messages.suggestion.MergeWordsSuggestionMessage;
-import de.benjaminaaron.ontoengine.routing.websocket.messages.suggestion.SuggestionBaseMessage;
+import de.benjaminaaron.ontoengine.adapter.primary.messages.suggestion.MergeWordsSuggestionMessage;
+import de.benjaminaaron.ontoengine.adapter.primary.messages.suggestion.SuggestionBaseMessage;
 
 public class Suggestion {
 

@@ -1,4 +1,4 @@
-package de.benjaminaaron.ontoengine.routing.websocket.messages.suggestion;
+package de.benjaminaaron.ontoengine.adapter.primary.messages.suggestion;
 
 import de.benjaminaaron.ontoengine.model.Utils.ResourceType;
 import lombok.Data;

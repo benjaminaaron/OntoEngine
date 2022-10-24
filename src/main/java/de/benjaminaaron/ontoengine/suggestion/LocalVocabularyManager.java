@@ -1,7 +1,7 @@
 package de.benjaminaaron.ontoengine.suggestion;
 
 import de.benjaminaaron.ontoengine.model.Utils.ResourceType;
-import de.benjaminaaron.ontoengine.routing.websocket.messages.suggestion.VocabularySuggestionMessage;
+import de.benjaminaaron.ontoengine.adapter.primary.messages.suggestion.VocabularySuggestionMessage;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QuerySolution;

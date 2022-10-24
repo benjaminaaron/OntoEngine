@@ -1,7 +1,7 @@
 package de.benjaminaaron.ontoengine.suggestion.job.task;
 
 import de.benjaminaaron.ontoengine.model.graph.Edge;
-import de.benjaminaaron.ontoengine.routing.websocket.messages.suggestion.SuggestionBaseMessage;
+import de.benjaminaaron.ontoengine.adapter.primary.messages.suggestion.SuggestionBaseMessage;
 import de.benjaminaaron.ontoengine.suggestion.Suggestion;
 import de.benjaminaaron.ontoengine.suggestion.job.task.base.JobGraphTask;
 import java.util.List;

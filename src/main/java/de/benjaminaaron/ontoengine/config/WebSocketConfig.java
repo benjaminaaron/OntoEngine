@@ -1,4 +1,4 @@
-package de.benjaminaaron.ontoengine.routing.websocket;
+package de.benjaminaaron.ontoengine.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;

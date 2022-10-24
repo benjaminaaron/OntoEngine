@@ -1,4 +1,4 @@
-package de.benjaminaaron.ontoengine.routing.websocket.messages;
+package de.benjaminaaron.ontoengine.adapter.primary.messages;
 
 import lombok.Data;
 

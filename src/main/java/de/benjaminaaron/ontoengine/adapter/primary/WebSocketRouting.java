@@ -1,10 +1,9 @@
-package de.benjaminaaron.ontoengine.routing.websocket;
+package de.benjaminaaron.ontoengine.adapter.primary;
 
 import de.benjaminaaron.ontoengine.model.ModelController;
 import de.benjaminaaron.ontoengine.model.Utils;
-import de.benjaminaaron.ontoengine.routing.BaseRouting;
-import de.benjaminaaron.ontoengine.routing.websocket.messages.*;
-import de.benjaminaaron.ontoengine.routing.websocket.messages.suggestion.SuggestionBaseMessage;
+import de.benjaminaaron.ontoengine.adapter.primary.messages.*;
+import de.benjaminaaron.ontoengine.adapter.primary.messages.suggestion.SuggestionBaseMessage;
 import java.util.Objects;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;

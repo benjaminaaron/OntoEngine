@@ -2,7 +2,7 @@ package de.benjaminaaron.ontoengine.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import de.benjaminaaron.ontoengine.routing.websocket.messages.AddStatementMessage;
+import de.benjaminaaron.ontoengine.adapter.primary.messages.AddStatementMessage;
 import java.util.List;
 import org.apache.jena.rdf.model.Statement;
 import org.junit.jupiter.api.Test;

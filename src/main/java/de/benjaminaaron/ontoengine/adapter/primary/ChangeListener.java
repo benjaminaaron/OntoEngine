@@ -1,4 +1,4 @@
-package de.benjaminaaron.ontoengine.routing;
+package de.benjaminaaron.ontoengine.adapter.primary;
 
 public interface ChangeListener {
 

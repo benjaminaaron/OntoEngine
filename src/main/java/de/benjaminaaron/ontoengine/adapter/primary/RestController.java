@@ -1,7 +1,6 @@
-package de.benjaminaaron.ontoengine.routing.rest;
+package de.benjaminaaron.ontoengine.adapter.primary;
 
-import de.benjaminaaron.ontoengine.routing.BaseRouting;
-import de.benjaminaaron.ontoengine.routing.websocket.messages.CommandMessage;
+import de.benjaminaaron.ontoengine.adapter.primary.messages.CommandMessage;
 import java.util.Objects;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,16 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
-@RestController
-public class RestRouting {
+@org.springframework.web.bind.annotation.RestController
+public class RestController {
 
-    private final Logger logger = LogManager.getLogger(RestRouting.class);
+    private final Logger logger = LogManager.getLogger(RestController.class);
 
     @Autowired
     private BaseRouting baseRouting;

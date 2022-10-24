@@ -10,7 +10,7 @@ import static org.apache.commons.io.FilenameUtils.getBaseName;
 
 import de.benjaminaaron.ontoengine.model.MetaHandler;
 import de.benjaminaaron.ontoengine.model.ModelController;
-import de.benjaminaaron.ontoengine.routing.websocket.messages.AddStatementMessage;
+import de.benjaminaaron.ontoengine.adapter.primary.messages.AddStatementMessage;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

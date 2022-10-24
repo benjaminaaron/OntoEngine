@@ -1,7 +1,7 @@
 package de.benjaminaaron.ontoengine.suggestion.job.task;
 
 import de.benjaminaaron.ontoengine.model.Utils;
-import de.benjaminaaron.ontoengine.routing.websocket.messages.suggestion.MergeWordsSuggestionMessage;
+import de.benjaminaaron.ontoengine.adapter.primary.messages.suggestion.MergeWordsSuggestionMessage;
 import de.benjaminaaron.ontoengine.suggestion.Suggestion;
 import de.benjaminaaron.ontoengine.suggestion.job.task.base.JobModelTask;
 import de.benjaminaaron.ontoengine.suggestion.job.task.base.UriStats;

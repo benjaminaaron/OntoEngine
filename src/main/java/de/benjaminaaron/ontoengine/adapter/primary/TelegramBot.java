@@ -1,8 +1,6 @@
-package de.benjaminaaron.ontoengine.routing.bot;
+package de.benjaminaaron.ontoengine.adapter.primary;
 
 import de.benjaminaaron.ontoengine.model.ModelController;
-import de.benjaminaaron.ontoengine.routing.BaseRouting;
-import de.benjaminaaron.ontoengine.routing.ChangeListener;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;

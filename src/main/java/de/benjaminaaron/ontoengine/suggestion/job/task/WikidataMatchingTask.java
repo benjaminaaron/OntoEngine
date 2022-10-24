@@ -1,7 +1,7 @@
 package de.benjaminaaron.ontoengine.suggestion.job.task;
 
 import de.benjaminaaron.ontoengine.model.Utils.ResourceType;
-import de.benjaminaaron.ontoengine.routing.websocket.messages.suggestion.ExternalMatchMessage;
+import de.benjaminaaron.ontoengine.adapter.primary.messages.suggestion.ExternalMatchMessage;
 import de.benjaminaaron.ontoengine.suggestion.Suggestion;
 import de.benjaminaaron.ontoengine.suggestion.job.task.base.JobStatementTask;
 import org.apache.jena.rdf.model.Resource;

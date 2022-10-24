@@ -2,8 +2,8 @@ package de.benjaminaaron.ontoengine.suggestion;
 
 import de.benjaminaaron.ontoengine.model.ModelController;
 import de.benjaminaaron.ontoengine.model.Utils;
-import de.benjaminaaron.ontoengine.routing.websocket.WebSocketRouting;
-import de.benjaminaaron.ontoengine.routing.websocket.messages.WhileTypingSuggestionsMessage;
+import de.benjaminaaron.ontoengine.adapter.primary.WebSocketRouting;
+import de.benjaminaaron.ontoengine.adapter.primary.messages.WhileTypingSuggestionsMessage;
 import de.benjaminaaron.ontoengine.suggestion.job.NewStatementJob;
 import de.benjaminaaron.ontoengine.suggestion.job.PeriodicJob;
 import de.benjaminaaron.ontoengine.suggestion.job.task.CaseSensitivityTask;

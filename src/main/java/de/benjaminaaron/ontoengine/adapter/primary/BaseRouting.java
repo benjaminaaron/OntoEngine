@@ -1,4 +1,4 @@
-package de.benjaminaaron.ontoengine.routing;
+package de.benjaminaaron.ontoengine.adapter.primary;
 
 import de.benjaminaaron.ontoengine.io.exporter.GraphDbExporter;
 import de.benjaminaaron.ontoengine.io.exporter.GraphmlExporter;
@@ -9,8 +9,8 @@ import de.benjaminaaron.ontoengine.io.importer.MarkdownImporter;
 import de.benjaminaaron.ontoengine.io.importer.RdfImporter;
 import de.benjaminaaron.ontoengine.model.ModelController;
 import de.benjaminaaron.ontoengine.model.Utils;
-import de.benjaminaaron.ontoengine.routing.websocket.messages.AddStatementMessage;
-import de.benjaminaaron.ontoengine.routing.websocket.messages.AddStatementResponse;
+import de.benjaminaaron.ontoengine.adapter.primary.messages.AddStatementMessage;
+import de.benjaminaaron.ontoengine.adapter.primary.messages.AddStatementResponse;
 import de.benjaminaaron.ontoengine.suggestion.SuggestionEngine;
 import java.util.ArrayList;
 import java.util.Arrays;

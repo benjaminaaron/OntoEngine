@@ -2,7 +2,7 @@ package de.benjaminaaron.ontoengine.model;
 
 import static de.benjaminaaron.ontoengine.model.Utils.ensureUri;
 
-import de.benjaminaaron.ontoengine.routing.websocket.messages.AddStatementResponse;
+import de.benjaminaaron.ontoengine.adapter.primary.messages.AddStatementResponse;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.file.Path;
