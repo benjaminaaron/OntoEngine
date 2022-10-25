@@ -10,13 +10,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Map;
+import org.springframework.web.bind.annotation.RestController;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
-@org.springframework.web.bind.annotation.RestController
-public class RestController {
+@RestController
+public class RestEndpoints {
 
-    private final Logger logger = LogManager.getLogger(RestController.class);
+    private final Logger logger = LogManager.getLogger(RestEndpoints.class);
 
     @Autowired
     private BaseRouting baseRouting;
