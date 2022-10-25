@@ -1,5 +1,8 @@
 plugins {
     id "java"
+    id "org.springframework.boot" version "2.7.4"
+    id "io.spring.dependency-management" version "1.1.0"
+    id "com.gorylenko.gradle-git-properties" version "2.4.1"
     id "io.freefair.lombok" version "6.5.1"
 }
 
@@ -7,26 +10,29 @@ repositories {
     mavenCentral()
 }
 
+springBoot { buildInfo() }
+
 dependencies {
-    implementation 'org.slf4j:slf4j-log4j12:2.0.3'
-    implementation 'org.springframework.boot:spring-boot-starter-websocket:2.7.4'
-    implementation 'org.webjars:webjars-locator-core:0.52'
+    implementation "org.slf4j:slf4j-log4j12:2.0.3"
+    implementation "org.springframework.boot:spring-boot-starter-actuator"
+    implementation "org.springframework.boot:spring-boot-starter-websocket"
+    implementation "org.webjars:webjars-locator-core:0.52"
     implementation "org.webjars:sockjs-client:1.5.1"
     implementation "org.webjars:stomp-websocket:2.3.4"
-    implementation 'org.webjars:bootstrap:5.2.2'
-    implementation 'org.webjars:jquery:3.6.1'
+    implementation "org.webjars:bootstrap:5.2.2"
+    implementation "org.webjars:jquery:3.6.1"
     implementation "org.apache.jena:jena-core:4.5.0"
     implementation "org.apache.jena:jena-tdb:4.5.0"
     implementation "org.apache.jena:jena-rdfconnection:4.5.0"
     implementation "org.apache.jena:jena-fuseki-main:4.5.0"
     implementation "org.jgrapht:jgrapht-core:1.5.1"
     implementation "org.jgrapht:jgrapht-io:1.5.1"
-    implementation 'com.github.slugify:slugify:3.0.2'
-    implementation 'org.wikidata.wdtk:wdtk-wikibaseapi:0.14.1'
-    implementation 'org.telegram:telegrambots-spring-boot-starter:6.1.0'
+    implementation "com.github.slugify:slugify:3.0.2"
+    implementation "org.wikidata.wdtk:wdtk-wikibaseapi:0.14.1"
+    implementation "org.telegram:telegrambots-spring-boot-starter:6.1.0"
     implementation "net.sf.extjwnl:extjwnl:2.0.5"
     implementation "net.sf.extjwnl:extjwnl-data-wn31:1.2"
-    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.7.4'
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
 }
 
 group = "de.benjaminaaron"
