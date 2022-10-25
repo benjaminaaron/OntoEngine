@@ -1,10 +1,14 @@
 package de.benjaminaaron.ontoengine.adapter.primary;
 
 import de.benjaminaaron.ontoengine.adapter.primary.messages.CommandMessage;
+import de.benjaminaaron.ontoengine.adapter.primary.messages.ProjectCreationInfo;
 import java.util.Objects;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -12,9 +16,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.Map;
 import org.springframework.web.bind.annotation.RestController;
 
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
+@RequestMapping("api/v1/ontoengine")
 public class RestEndpoints {
 
     private final Logger logger = LogManager.getLogger(RestEndpoints.class);
@@ -22,7 +26,7 @@ public class RestEndpoints {
     @Autowired
     private BaseRouting baseRouting;
 
-    @RequestMapping(value = "/addStatement", method = POST)
+    @PostMapping(value = "/addStatement")
     @ResponseBody
     public String addStatement(@RequestParam Map<String, String> params) {
         logger.info("addStatement via POST request received: " + params);
@@ -30,7 +34,7 @@ public class RestEndpoints {
                 Boolean.parseBoolean(params.get("objectIsLiteral")));
     }
 
-    @RequestMapping(value = "/command", method = POST)
+    @PostMapping(value = "/command")
     @ResponseBody
     public String command(@RequestParam Map<String, String> params) {
         logger.info("command POST request received with params: " + params);
@@ -39,5 +43,11 @@ public class RestEndpoints {
         commandMessage.setCommand(commandStr);
         String response = baseRouting.handleCommand(commandMessage.getCommand());
         return "Command received" + (Objects.isNull(response) ? "" : ", response: " + response);
+    }
+
+    @PostMapping(value = "/new")
+    public ResponseEntity<String> newProject(@RequestBody ProjectCreationInfo projectCreationInfo) {
+        // TODO
+        return ResponseEntity.ok("");
     }
 }
