@@ -1,13 +1,13 @@
-const path = require('path');
+const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
 const NodePolyfillPlugin = require("node-polyfill-webpack-plugin")
 
 module.exports = {
-    entry: './src/index.js',
+    entry: "./src/index.js",
     // mode: 'development',
     output: {
-        filename: 'bundle.js',
-        path: path.resolve(__dirname, 'dist'),
+        filename: "bundle.js",
+        path: path.resolve(__dirname, "../../src/main/resources/static/graph-query-visualizer"),
     },
     // watch: true
     plugins: [
