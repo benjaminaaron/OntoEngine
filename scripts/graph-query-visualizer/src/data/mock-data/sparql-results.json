@@ -1,0 +1,47 @@
+{
+    "query": "PREFIX : <http://onto.de/default#>\nSELECT * WHERE {\n  ?someone :isA :Human ;\n  \t:rentsA ?flat .\n  ?flat :isLocatedIn :Hamburg .\n  ?someone ?opinion :DowntownAbbey .\n  ?flat :isOnFloor 2 .\n}",
+    "variables": [
+        {
+            "termType": "Variable",
+            "value": "someone"
+        },
+        {
+            "termType": "Variable",
+            "value": "flat"
+        },
+        {
+            "termType": "Variable",
+            "value": "opinion"
+        }
+    ],
+    "data": [
+        {
+            "someone": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#Ben"
+            },
+            "flat": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#flat1"
+            },
+            "opinion": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#loves"
+            }
+        },
+        {
+            "someone": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#Linda"
+            },
+            "flat": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#flat1"
+            },
+            "opinion": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#likes"
+            }
+        }
+    ]
+}

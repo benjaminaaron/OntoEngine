@@ -1,0 +1,38 @@
+{
+  "name": "graph-query-visualizer",
+  "version": "0.4.1",
+  "description": "Build a SPARQL query by constructing a visual graph and vice versa",
+  "main": "dist/bundle.js",
+  "scripts": {
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/benjaminaaron/graph-query-builder.git"
+  },
+  "keywords": [
+    "graph",
+    "SPARQL",
+    "query",
+    "triplestore",
+    "RDF"
+  ],
+  "author": "benjaminaaron",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/benjaminaaron/graph-query-visualizer/issues"
+  },
+  "homepage": "https://github.com/benjaminaaron/graph-query-visualizer",
+  "devDependencies": {
+    "codemirror": "^5.62.2",
+    "copy-webpack-plugin": "^9.0.1",
+    "webpack": "^5.45.1",
+    "webpack-cli": "^4.7.2",
+    "@triply/yasgui": "^4.2.16",
+    "fetch-sparql-endpoint": "^2.3.1",
+    "file-saver": "^2.0.5",
+    "force-graph": "^1.42.1",
+    "node-polyfill-webpack-plugin": "^1.1.4",
+    "sparqljs": "^3.4.2"
+  }
+}

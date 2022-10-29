@@ -1,0 +1,192 @@
+{
+    "query": "SELECT * WHERE { ?s ?p ?o }",
+    "variables": [
+        {
+            "termType": "Variable",
+            "value": "s"
+        },
+        {
+            "termType": "Variable",
+            "value": "p"
+        },
+        {
+            "termType": "Variable",
+            "value": "o"
+        }
+    ],
+    "data": [
+        {
+            "s": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#Ben"
+            },
+            "p": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#isA"
+            },
+            "o": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#Human"
+            }
+        },
+        {
+            "s": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#Tessy"
+            },
+            "p": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#isA"
+            },
+            "o": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#Cat"
+            }
+        },
+        {
+            "s": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#Linda"
+            },
+            "p": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#isA"
+            },
+            "o": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#Human"
+            }
+        },
+        {
+            "s": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#Freddie"
+            },
+            "p": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#isA"
+            },
+            "o": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#Cat"
+            }
+        },
+        {
+            "s": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#Ben"
+            },
+            "p": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#rentsA"
+            },
+            "o": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#flat1"
+            }
+        },
+        {
+            "s": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#Tessy"
+            },
+            "p": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#rentsA"
+            },
+            "o": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#flat1"
+            }
+        },
+        {
+            "s": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#Linda"
+            },
+            "p": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#rentsA"
+            },
+            "o": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#flat1"
+            }
+        },
+        {
+            "s": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#Freddie"
+            },
+            "p": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#rentsA"
+            },
+            "o": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#flat1"
+            }
+        },
+        {
+            "s": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#flat1"
+            },
+            "p": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#isLocatedIn"
+            },
+            "o": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#Hamburg"
+            }
+        },
+        {
+            "s": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#Ben"
+            },
+            "p": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#loves"
+            },
+            "o": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#DowntownAbbey"
+            }
+        },
+        {
+            "s": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#Linda"
+            },
+            "p": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#likes"
+            },
+            "o": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#DowntownAbbey"
+            }
+        },
+        {
+            "s": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#flat1"
+            },
+            "p": {
+                "termType": "NamedNode",
+                "value": "http://onto.de/default#isOnFloor"
+            },
+            "o": {
+                "termType": "Literal",
+                "value": "2",
+                "language": "",
+                "datatype": {
+                    "termType": "NamedNode",
+                    "value": "http://www.w3.org/2001/XMLSchema#integer"
+                }
+            }
+        }
+    ]
+}
