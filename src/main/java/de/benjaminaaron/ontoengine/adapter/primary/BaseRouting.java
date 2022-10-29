@@ -11,6 +11,7 @@ import de.benjaminaaron.ontoengine.domain.ModelController;
 import de.benjaminaaron.ontoengine.domain.Utils;
 import de.benjaminaaron.ontoengine.adapter.primary.messages.AddStatementMessage;
 import de.benjaminaaron.ontoengine.adapter.primary.messages.AddStatementResponse;
+import de.benjaminaaron.ontoengine.domain.importer.TgfImporter;
 import de.benjaminaaron.ontoengine.domain.suggestion.SuggestionEngine;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -82,6 +83,9 @@ public class BaseRouting {
                 }
                 if (format.equals("rdf")) {
                     RdfImporter.doImport(modelController, args.get(1)); // path to file
+                }
+                if (format.equals("tgf")) {
+                    TgfImporter.doImport(modelController, args.get(1)); // path to file
                 }
                 break;
             case "replace":
