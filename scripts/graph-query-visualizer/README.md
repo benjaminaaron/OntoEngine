@@ -1,7 +1,7 @@
 # graph-query-visualizer
-Build a SPARQL query by constructing a visual graph and vice versa. I moved this out of my [OntoEngine](https://github.com/benjaminaaron/OntoEngine) coding project to make it also useful independent of it.
+Build a SPARQL query by constructing a visual graph and vice versa.
 
-📺 Demo [from 18:24](https://youtu.be/-AwxUrsVxsI?t=1104) in the [42min presentation video](https://github.com/benjaminaaron/OntoEngine#-video-presentation-of-the-project) of the OntoEngine project.
+📺 Demo [from 18:24](https://youtu.be/-AwxUrsVxsI?t=1104) in the [42min presentation video](https://github.com/benjaminaaron/OntoEngine#-video-presentation-of-the-project).
 
 ## Tech stack
 
@@ -11,21 +11,6 @@ Build a SPARQL query by constructing a visual graph and vice versa. I moved this
 
 ## Usage
 
-### Setup this repo for development
-
 `npm install`
 
 `npm run build` creates the `bundle.js` (via webpack) in `dist/` which is used by `example/index.html`
-
-### Use this as dependency in your project
-
-I developed this for usage in HTML. I might see later how to make it useful as `import` and `require`.
-
-`npm i --save graph-query-visualizer`
-
-Import `bundle.js` and `yasgui.min.css` into your `.html` file:
-
-```html
-<script src="./node_modules/graph-query-visualizer/dist/bundle.js"></script>
-<link href="./node_modules/graph-query-visualizer/dist/yasgui.min.css" rel="stylesheet" />
-```

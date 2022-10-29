@@ -29,8 +29,8 @@ Early work in progress of an ontology engine working with you towards continuous
 - [JGraphT](https://jgrapht.org/) for having all triples available in a graph structure
 - [Wikidata Toolkit](https://github.com/Wikidata/Wikidata-Toolkit) (just the wdtk-wikibaseapi module) to find matching entities on @Wikidata.
 
-For clients I want to prototype a few different options eventually: a neat web app, a command line utility, etc. For now I am using a static site that Spring serves when running. I moved the [graph-query-visualizer](https://github.com/benjaminaaron/graph-query-visualizer) into a separate repository to make it potentially useful elsewhere. It get's imported back in here as `bundle.js`.
+For clients I want to prototype a few different options eventually: a neat web app, a command line utility, etc. For now I am using a static site that Spring serves when running.
 
 ## Setup in IntelliJ IDEA
 
-Use *Open* to navigate to the respective project-`pom.xml` and choose *Open as Project*. This will set it up correctly as Maven project, resolve the dependencies, detect the Spring Boot run configuration etc.
+Use *Open* to navigate to the respective project-`build.gradle` and choose *Open as Project*. This will set it up correctly as Gradle project and download the dependencies.
