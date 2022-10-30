@@ -3,6 +3,8 @@
 {
   "ACCESS_TOKEN": "",
   "BOARD_ID": "",
-  "ROOT_NODE_CONTENT": ""
+  "TGF_DIR": ""
 }
 ```
+
+`node script.js`
