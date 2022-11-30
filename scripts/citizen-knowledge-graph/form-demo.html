@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Formular Demo</title>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="#">
+    <style>
+      html * {
+        font-family: Arial, serif;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Formular zum ausfüllen</h2>
+    <form>
+      <label for="fname">Vorname:</label><br>
+      <input type="text" id="fname"><br><br>
+      <label for="lname">Nachname:</label><br>
+      <input type="text" id="lname"><br><br>
+      <label for="bday">Geburtstag:</label><br>
+      <input type="text" id="bday"><br><br>
+      <label for="taxid">Steueridentifikationsnummer:</label><br>
+      <input type="text" id="taxid"><br><br>
+      <input type="submit" value="Formular einreichen"><br><br>
+      <hr><br>
+      <input type="submit" id="downloadGraphBtn" value="als Graph herunterladen">
+      <small><label for="uploadGraphBtn">oder von Graph importieren:</label></small>
+      <input type="file" id="uploadGraphBtn" value="">
+    </form>
+    <script>
+      document.getElementById("downloadGraphBtn").addEventListener("click", function(event) {
+        let fname = document.getElementById("fname").value;
+        let lname = document.getElementById("lname").value;
+        let bday = document.getElementById("bday").value;
+        let taxid = document.getElementById("taxid").value;
+        //
+      });
+
+      document.getElementById("downloadGraphBtn").addEventListener("click", function(event) {
+        //
+      });
+    </script>
+  </body>
+</html>
