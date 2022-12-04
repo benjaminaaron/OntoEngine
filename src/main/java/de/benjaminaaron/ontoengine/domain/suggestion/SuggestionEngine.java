@@ -53,7 +53,7 @@ public class SuggestionEngine {
         }
         taskManager = new TaskSchedulingManager(this);
         localVocabularyManager = new LocalVocabularyManager(modelController.getVocabularySourcesModel());
-        taskManager.schedulePeriodicJob("runPeriodicJob", 5, 30);
+        // taskManager.schedulePeriodicJob("runPeriodicJob", 5, 30);
     }
 
     public void runPeriodicJob() {
