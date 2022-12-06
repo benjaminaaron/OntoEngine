@@ -8,31 +8,36 @@
       html * {
         font-family: Arial, serif;
       }
+      .input-field {
+        width: 210px;
+      }
     </style>
   </head>
   <body>
-    <h2>Beispiel-Formular 1</h2>
-    Anfrage an Ihren Graphen nach passenden Daten &rarr;&nbsp;
-    <a id="a-copy" href="#" onclick="copyQueryToClipboard()">kopiere Query </a>
-    <img id="img-copy" src="copy-icon.png" width="14"/>
-    <span id="span-result" style="display: none">&rarr;&nbsp;
-      <a id="a-result" href="#" onclick="processQueryResult()">Ergebnis einlesen:</a>
-      <img id="img-result" src="checkmark-icon.png" width="14" style="display: none"/>
-      <input type="text" id="input-result">
+    <h2 id="headline">Beispiel-Formular 1</h2>
+    <span id="span-before" style="background-color: yellow; display: none">
+      Anfrage an Ihren Graphen nach passenden Daten &rarr;&nbsp;
+      <a id="a-copy" href="#" onclick="copyQueryToClipboard()">kopiere Query </a>
+      <img id="img-copy" src="copy-icon.png" width="14"/>
+      <span id="span-result" style="display: none">&rarr;&nbsp;
+        <a id="a-result" href="#" onclick="processQueryResult()">Ergebnis einlesen:</a>
+        <img id="img-result" src="checkmark-icon.png" width="14" style="display: none"/>
+        <input type="text" id="input-result">
+      </span>
     </span>
     <br><br><br>
     <form>
-      <label for="fname">Vorname:</label><br>
-      <input type="text" id="fname"><br><br>
-      <label for="lname">Nachname:</label><br>
-      <input type="text" id="lname"><br><br>
-      <label for="bday">Geburtstag:</label><br>
-      <input type="text" id="bday"><br><br>
-      <label for="taxid">Steueridentifikationsnummer:</label><br>
-      <input type="text" id="taxid">
+      <label for="fname">Vorname</label><br>
+      <input type="text" id="fname" class="input-field"><br><br>
+      <label for="lname">Nachname</label><br>
+      <input type="text" id="lname" class="input-field"><br><br>
+      <label for="bday">Geburtstag</label><br>
+      <input type="text" id="bday" class="input-field"><br><br>
+      <label for="taxid">Steueridentifikationsnummer</label><br>
+      <input type="text" id="taxid" class="input-field">
       <br><br><br><br>
       <input type="submit" value="Formular einreichen">
-      <input type="submit" id="downloadGraphBtn" value="Graph herunterladen">
+      <input type="submit" id="downloadGraphBtn" value="Graph herunterladen" style="background-color: yellow; display: none">
     </form>
     <script>
       function copyQueryToClipboard() {
@@ -59,6 +64,11 @@
         let bday = document.getElementById("bday").value;
         let taxid = document.getElementById("taxid").value;
         // ...
+      });
+
+      document.getElementById("headline").addEventListener("click", function(event) {
+        document.getElementById("span-before").style.display = "inline";
+        document.getElementById("downloadGraphBtn").style.display = "inline";
       });
 
       document.getElementById("downloadGraphBtn").addEventListener("click", function(event) {
