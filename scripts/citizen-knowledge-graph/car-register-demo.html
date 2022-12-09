@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+<head>
+  <title>Auto anmelden Demo</title>
+  <meta charset="utf-8">
+  <link rel="shortcut icon" href="#">
+  <style>
+    html * {
+      font-family: Arial, serif;
+    }
+    .input-field {
+      width: 210px;
+    }
+  </style>
+</head>
+<body>
+  <h2 id="headline">Auto anmelden Formular</h2>
+  <br><br><br>
+  <form>
+    <label for="fname">Vorname</label><br>
+    <input type="text" id="fname" class="input-field"><br><br>
+
+    <label for="lname">Nachname</label><br>
+    <input type="text" id="lname" class="input-field"><br><br>
+
+    <label for="bday">Geburtstag</label><br>
+    <input type="text" id="bday" class="input-field"><br><br>
+
+    <label for="bday-loc">Geburtsort</label><br>
+    <input type="text" id="bday-loc" class="input-field"><br><br>
+
+    <label for="gender">Geschlecht</label><br>
+    <input type="text" id="gender" class="input-field"><br><br>
+
+    <label for="evb-num">elektronische Versicherungsbestätigung (eVB-Nummer)</label><br>
+    <input type="text" id="evb-num" class="input-field"><br><br>
+
+    <label for="perso">Ausweisdokument</label>
+    <input type="file" id="perso" accept="image/*,.pdf"><br><br>
+
+    <label for="zb1">Zulassungsbescheinigung Teil 1</label>
+    <input type="file" id="zb1" accept="image/*,.pdf"><br><br>
+
+    <label for="zb2">Zulassungsbescheinigung Teil 2</label>
+    <input type="file" id="zb2" accept="image/*,.pdf"><br><br>
+
+    <label for="hu">gültige Hauptuntersuchung (HU)</label>
+    <input type="file" id="hu" accept="image/*,.pdf">
+
+    <br><br><br><br>
+    <input type="submit" value="Formular einreichen">
+    <input type="submit" id="downloadGraphBtn" value="Graph herunterladen" style="background-color: yellow; display: none">
+  </form>
+  <script>
+  </script>
+</body>
+</html>
