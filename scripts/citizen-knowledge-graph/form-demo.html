@@ -29,12 +29,31 @@
     <form>
       <label for="fname">Vorname</label><br>
       <input type="text" id="fname" class="input-field"><br><br>
+
       <label for="lname">Nachname</label><br>
       <input type="text" id="lname" class="input-field"><br><br>
+
       <label for="bday">Geburtstag</label><br>
       <input type="text" id="bday" class="input-field"><br><br>
+
+      <label for="bday-loc">Geburtsort</label><br>
+      <input type="text" id="bday-loc" class="input-field"><br><br>
+
+      <label for="marital-status">Familienstand</label><br>
+      <input type="text" id="marital-status" class="input-field"><br><br>
+
+      <label for="insurance-num">Versichertennummer</label><br>
+      <input type="text" id="insurance-num" class="input-field"><br><br>
+
+      <label for="rent-insurance-num">Rentenversicherungsnummer</label><br>
+      <input type="text" id="rent-insurance-num" class="input-field"><br><br>
+
+      <label for="perso-num">Personalausweisnummer</label><br>
+      <input type="text" id="perso-num" class="input-field"><br><br>
+
       <label for="taxid">Steueridentifikationsnummer</label><br>
       <input type="text" id="taxid" class="input-field">
+
       <br><br><br><br>
       <input type="submit" value="Formular einreichen">
       <input type="submit" id="downloadGraphBtn" value="Graph herunterladen" style="background-color: yellow; display: none">
@@ -62,6 +81,11 @@
         let fname = document.getElementById("fname").value;
         let lname = document.getElementById("lname").value;
         let bday = document.getElementById("bday").value;
+        let bdayLoc = document.getElementById("bday-loc").value;
+        let maritalStatus = document.getElementById("marital-status").value;
+        let insuranceNum = document.getElementById("insurance-num").value;
+        let rentInsuranceNum = document.getElementById("rent-insurance-num").value;
+        let persoNum = document.getElementById("perso-num").value;
         let taxid = document.getElementById("taxid").value;
         // ...
       });
