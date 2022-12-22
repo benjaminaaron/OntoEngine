@@ -2,7 +2,11 @@ package de.benjaminaaron.ontoengine.adapter.primary;
 
 import de.benjaminaaron.ontoengine.adapter.primary.messages.CommandMessage;
 import de.benjaminaaron.ontoengine.adapter.primary.messages.ProjectCreationInfo;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.Map;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @RestController
@@ -56,5 +59,24 @@ public class RestEndpoints {
     public ResponseEntity<String> query(@RequestBody String query) {
         System.out.println("Query: " + query);
         return ResponseEntity.ok("OK");
+    }
+
+    @PostMapping(value = "/upload")
+    public ResponseEntity<String> handleFileUpload(@RequestParam("files") List<MultipartFile> files) {
+        StringBuilder fileNames = new StringBuilder();
+        for (MultipartFile file : files) {
+            String fileName = file.getOriginalFilename();
+            fileNames.append(", ").append(fileName);
+            String fileType = FilenameUtils.getExtension(fileName);
+            if (!(fileType.equalsIgnoreCase("rdf") || fileType.equalsIgnoreCase("ttl"))) {
+                return ResponseEntity.badRequest().body("Only .rdf and .ttl files are supported, not: ." + fileType);
+            }
+            try {
+                baseRouting.importUploadedFile(fileName, file.getInputStream());
+            } catch (IOException e) {
+                return ResponseEntity.badRequest().body("Error processing file: " + fileName);
+            }
+        }
+        return ResponseEntity.ok().body("Files uploaded successfully: " + fileNames.substring(2));
     }
 }

@@ -9,6 +9,24 @@
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
     <script src="/index.js"></script>
+    <style>
+        #drop-zone {
+            color: #666;
+            border: 2px dashed #ccc;
+            border-radius: 12px;
+            width: 200px;
+            height: 75px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #drop-zone.drag-over {
+            border-color: #666;
+        }
+        #drop-zone.drag-drop {
+            border-color: #333;
+        }
+    </style>
 </head>
 <body>
     <div style="padding-left: 40px; padding-top: 40px">
@@ -56,6 +74,54 @@ Messages from server
         <br>
         <input style="margin-top: 30px" type="text" id="commandTextField" size="89">
         <button style="margin-left: 14px" id="sendCommandBtn" type="submit">Send command</button>
+        <br><br>
+        <div id="drop-zone">Upload RDF/Turtle file</div>
     </div>
+    <script>
+        const dropZone = document.getElementById('drop-zone');
+        dropZone.addEventListener('dragenter', handleDragEnter);
+        dropZone.addEventListener('dragleave', handleDragLeave);
+        dropZone.addEventListener('dragover', handleDragOver);
+        dropZone.addEventListener('drop', handleDrop);
+
+        function handleDragEnter(event) {
+            event.stopPropagation();
+            event.preventDefault();
+            dropZone.classList.add('drag-over');
+        }
+
+        function handleDragLeave(event) {
+            event.stopPropagation();
+            event.preventDefault();
+            dropZone.classList.remove('drag-over');
+        }
+
+        function handleDragOver(event) {
+            event.stopPropagation();
+            event.preventDefault();
+        }
+
+        function handleDrop(event) {
+            event.stopPropagation();
+            event.preventDefault();
+            dropZone.classList.remove('drag-over');
+            const files = event.dataTransfer.files;
+            console.log(files)
+            uploadFiles(files);
+        }
+
+        function uploadFiles(files) {
+            const formData = new FormData();
+            for (let i = 0; i < files.length; i++)
+                formData.append('files', files[i]);
+            fetch('http://localhost:8080/api/v1/ontoengine/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.error(error))
+        }
+    </script>
 </body>
 </html>

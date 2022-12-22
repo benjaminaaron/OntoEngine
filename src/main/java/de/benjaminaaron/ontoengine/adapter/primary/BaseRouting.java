@@ -13,6 +13,7 @@ import de.benjaminaaron.ontoengine.adapter.primary.messages.AddStatementMessage;
 import de.benjaminaaron.ontoengine.adapter.primary.messages.AddStatementResponse;
 import de.benjaminaaron.ontoengine.domain.importer.TgfImporter;
 import de.benjaminaaron.ontoengine.domain.suggestion.SuggestionEngine;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -81,7 +82,7 @@ public class BaseRouting {
                 if (format.equals("markdown")) {
                     MarkdownImporter.doImport(modelController, args.get(1)); // folder name
                 }
-                if (format.equals("rdf")) {
+                if (format.equals("rdf") || format.equals("ttl")) {
                     RdfImporter.doImport(modelController, args.get(1)); // path to file
                 }
                 if (format.equals("tgf")) {
@@ -152,5 +153,9 @@ public class BaseRouting {
         msg.setObjectIsLiteral(obj.startsWith("\"") && obj.endsWith("\""));
         msg.setObject(msg.isObjectIsLiteral() ? obj.substring(1, obj.length() - 1) : obj);
         modelController.addStatement(msg, true);
+    }
+
+    public void importUploadedFile(String fileName, InputStream inputStream) {
+        RdfImporter.doImportFromInputStream(modelController, fileName, inputStream);
     }
 }

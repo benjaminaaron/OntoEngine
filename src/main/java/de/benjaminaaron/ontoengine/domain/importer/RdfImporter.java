@@ -4,10 +4,12 @@ import static de.benjaminaaron.ontoengine.domain.MetaHandler.StatementOrigin.RDF
 import static de.benjaminaaron.ontoengine.domain.Utils.getFromAbsolutePathOrResolveWithinDir;
 
 import de.benjaminaaron.ontoengine.domain.ModelController;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 import lombok.SneakyThrows;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.StmtIterator;
@@ -48,6 +50,19 @@ public class RdfImporter {
         Path imported = IMPORT_DIRECTORY.resolve("imported");
         imported.toFile().mkdirs();
         Files.move(path, imported.resolve(path.getFileName()));
-        logger.info("Import from RDF file completed");
+        logger.info("Import from RDF/TTL file completed");
+    }
+
+    @SneakyThrows
+    public static void doImportFromInputStream(ModelController modelController, String fileName, InputStream inputStream) {
+        Model importModel = ModelFactory.createDefaultModel();
+        String lang = FilenameUtils.getExtension(fileName).equalsIgnoreCase("rdf") ? "RDF" : "TTL";
+        importModel.read(inputStream, null, lang);
+        StmtIterator iter = importModel.listStatements();
+        while (iter.hasNext()) {
+            modelController.addStatement(iter.nextStatement(), RDF_IMPORT, fileName,
+                null, false);
+        }
+        logger.info("Import of uploaded RDF/TTL file completed");
     }
 }
