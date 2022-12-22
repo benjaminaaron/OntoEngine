@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "papaparse": "^5.3.2",
     "rdflib": "^2.2.21"
   }
 }
