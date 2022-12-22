@@ -17,32 +17,32 @@
     <h2 id="headline">Formular für: Elterngeld beantragen</h2>
     <br><br><br>
     <form>
-      <label for="fname">Vorname</label><br>
-      <input type="text" id="fname" class="input-field"><br><br>
+      <label for="firstName">Vorname</label><br>
+      <input type="text" id="firstName" class="input-field"><br><br>
 
-      <label for="lname">Nachname</label><br>
-      <input type="text" id="lname" class="input-field"><br><br>
+      <label for="lastName">Nachname</label><br>
+      <input type="text" id="lastName" class="input-field"><br><br>
 
-      <label for="bday">Geburtstag</label><br>
-      <input type="text" id="bday" class="input-field"><br><br>
+      <label for="birthday">Geburtstag</label><br>
+      <input type="text" id="birthday" class="input-field"><br><br>
 
-      <label for="bday-loc">Geburtsort</label><br>
-      <input type="text" id="bday-loc" class="input-field"><br><br>
+      <label for="birthplace">Geburtsort</label><br>
+      <input type="text" id="birthplace" class="input-field"><br><br>
 
-      <label for="marital-status">Familienstand</label><br>
-      <input type="text" id="marital-status" class="input-field"><br><br>
+      <label for="maritalStatus">Familienstand</label><br>
+      <input type="text" id="maritalStatus" class="input-field"><br><br>
 
-      <label for="insurance-num">Versichertennummer</label><br>
-      <input type="text" id="insurance-num" class="input-field"><br><br>
+      <label for="insuranceNumber">Versichertennummer</label><br>
+      <input type="text" id="insuranceNumber" class="input-field"><br><br>
 
-      <label for="rent-insurance-num">Rentenversicherungsnummer</label><br>
-      <input type="text" id="rent-insurance-num" class="input-field"><br><br>
+      <label for="rentInsuranceNumber">Rentenversicherungsnummer</label><br>
+      <input type="text" id="rentInsuranceNumber" class="input-field"><br><br>
 
-      <label for="perso-num">Personalausweisnummer</label><br>
-      <input type="text" id="perso-num" class="input-field"><br><br>
+      <label for="identityNumber">Personalausweisnummer</label><br>
+      <input type="text" id="identityNumber" class="input-field"><br><br>
 
-      <label for="taxid">Steueridentifikationsnummer</label><br>
-      <input type="text" id="taxid" class="input-field">
+      <label for="taxId">Steueridentifikationsnummer</label><br>
+      <input type="text" id="taxId" class="input-field">
 
       <br><br><br><br>
       <input type="submit" value="Formular einreichen">
@@ -82,15 +82,15 @@
       document.getElementById("downloadGraphBtn").addEventListener("click", function(event) {
         event.preventDefault();
         const store = rdflib.graph();
-        store.add(statement("mainPerson", "firstName", document.getElementById("fname").value, true));
-        store.add(statement("mainPerson", "lastName", document.getElementById("lname").value, true));
-        store.add(statement("mainPerson", "birthday", document.getElementById("bday").value, true));
-        store.add(statement("mainPerson", "birthplace", document.getElementById("bday-loc").value, true));
-        store.add(statement("mainPerson", "maritalStatus", document.getElementById("marital-status").value, true));
-        store.add(statement("mainPerson", "insuranceNumber", document.getElementById("insurance-num").value, true));
-        store.add(statement("mainPerson", "rentInsuranceNumber", document.getElementById("rent-insurance-num").value, true));
-        store.add(statement("mainPerson", "identityNumber", document.getElementById("perso-num").value, true));
-        store.add(statement("mainPerson", "taxId", document.getElementById("taxid").value, true));
+        store.add(statement("mainPerson", "firstName", document.getElementById("firstName").value, true));
+        store.add(statement("mainPerson", "lastName", document.getElementById("lastName").value, true));
+        store.add(statement("mainPerson", "birthday", document.getElementById("birthday").value, true));
+        store.add(statement("mainPerson", "birthplace", document.getElementById("birthplace").value, true));
+        store.add(statement("mainPerson", "maritalStatus", document.getElementById("maritalStatus").value, true));
+        store.add(statement("mainPerson", "insuranceNumber", document.getElementById("insuranceNumber").value, true));
+        store.add(statement("mainPerson", "rentInsuranceNumber", document.getElementById("rentInsuranceNumber").value, true));
+        store.add(statement("mainPerson", "identityNumber", document.getElementById("identityNumber").value, true));
+        store.add(statement("mainPerson", "taxId", document.getElementById("taxId").value, true));
         const turtle = rdflib.serialize(undefined, store, undefined, 'text/turtle');
         downloadTurtleFile("elterngeld.ttl", turtle);
       });
