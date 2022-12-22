@@ -57,8 +57,7 @@ public class RestEndpoints {
 
     @PutMapping(value = "/query", consumes = "text/plain")
     public ResponseEntity<String> query(@RequestBody String query) {
-        System.out.println("Query: " + query);
-        return ResponseEntity.ok("OK");
+        return ResponseEntity.ok(baseRouting.runSelectQuery(query));
     }
 
     @PostMapping(value = "/upload")

@@ -3,13 +3,13 @@ package de.benjaminaaron.ontoengine.domain;
 import static de.benjaminaaron.ontoengine.domain.Utils.detectLiteralType;
 import static de.benjaminaaron.ontoengine.domain.Utils.ensureUri;
 
-import de.benjaminaaron.ontoengine.domain.MetaHandler.StatementOrigin;
-import de.benjaminaaron.ontoengine.domain.dataset.DatasetProvider;
-import de.benjaminaaron.ontoengine.domain.graph.GraphManager;
 import de.benjaminaaron.ontoengine.adapter.primary.ChangeListener;
 import de.benjaminaaron.ontoengine.adapter.primary.WebSocketRouting;
 import de.benjaminaaron.ontoengine.adapter.primary.messages.AddStatementMessage;
 import de.benjaminaaron.ontoengine.adapter.primary.messages.AddStatementResponse;
+import de.benjaminaaron.ontoengine.domain.MetaHandler.StatementOrigin;
+import de.benjaminaaron.ontoengine.domain.dataset.DatasetProvider;
+import de.benjaminaaron.ontoengine.domain.graph.GraphManager;
 import de.benjaminaaron.ontoengine.domain.suggestion.SuggestionEngine;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -21,6 +21,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.query.ResultSetFormatter;
 import org.apache.jena.rdf.model.Model;
@@ -234,11 +235,27 @@ public class ModelController {
         broadcastToChangeListeners(text);
     }
 
-    public String runSelectQuery(String wherePart) {
-        String query = "PREFIX : <http://onto.de/default#> SELECT * WHERE { " + wherePart + " }";
+    public String runSelectQueryUsingWherePart(String wherePart) {
+        return runSelectQuery("PREFIX : <http://onto.de/default#> SELECT * WHERE { " + wherePart + " }");
+    }
+
+    public String runSelectQuery(String query) {
         try (QueryExecution queryExecution = QueryExecutionFactory.create(query, mainModel)) {
             ResultSet resultSet = queryExecution.execSelect();
-            return ResultSetFormatter.asText(resultSet);
+            StringBuilder resultString = new StringBuilder();
+            while(resultSet.hasNext()) {
+                QuerySolution qs = resultSet.next();
+                resultString
+                    .append("\"")
+                    .append(qs.getResource("s"))
+                    .append("\",\"")
+                    .append(qs.getResource("p"))
+                    .append("\",\"")
+                    .append(qs.get("o"))
+                    .append("\"")
+                    .append("\n");
+            }
+            return resultString.toString();
         }
     }
 }

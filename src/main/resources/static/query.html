@@ -22,7 +22,10 @@
         body: document.getElementById("inputField").value
       })
       .then(response => response.text())
-      .then(data => console.log(data))
+      .then(data => {
+        console.log(data);
+        document.getElementById("outputField").value = data;
+      })
       .catch(error => console.error(error))
     });
   </script>

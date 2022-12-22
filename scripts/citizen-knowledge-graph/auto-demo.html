@@ -70,7 +70,12 @@
     });
 
     function copyQueryToClipboard() {
-      navigator.clipboard.writeText("query...");
+      const query = "PREFIX : <http://onto.de/default#>\n"
+          + "SELECT ?s ?p ?o WHERE { \n"
+          + "  VALUES ?p { :firstName :lastName :birthday :birthplace :gender :eVBnumber :identityNumber }\n"
+          + "  ?s ?p ?o .\n"
+          + "}";
+      navigator.clipboard.writeText(query);
       document.getElementById("a-copy").innerHTML = "Query kopiert ";
       document.getElementById("a-copy").style.textDecoration = "none";
       document.getElementById("img-copy").src = "files/checkmark-icon.png";

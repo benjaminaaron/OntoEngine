@@ -119,7 +119,7 @@ public class BaseRouting {
                 break;
             case "query":
                 String wherePart = commandStr.substring(6);
-                return modelController.runSelectQuery(wherePart);
+                return modelController.runSelectQueryUsingWherePart(wherePart);
             case "clear":
                 if (args.get(0).equalsIgnoreCase("all")) {
                     modelController.clearAll();
@@ -157,5 +157,9 @@ public class BaseRouting {
 
     public void importUploadedFile(String fileName, InputStream inputStream) {
         RdfImporter.doImportFromInputStream(modelController, fileName, inputStream);
+    }
+
+    public String runSelectQuery(String query) {
+        return modelController.runSelectQuery(query);
     }
 }
