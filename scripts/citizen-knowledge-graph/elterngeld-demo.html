@@ -15,16 +15,6 @@
   </head>
   <body>
     <h2 id="headline">Formular für: Elterngeld beantragen</h2>
-    <span id="span-before" style="background-color: yellow; display: none">
-      Anfrage an Ihren Graphen nach passenden Daten &rarr;&nbsp;
-      <a id="a-copy" href="#" onclick="copyQueryToClipboard()">kopiere Query </a>
-      <img id="img-copy" src="files/copy-icon.png" width="14"/>
-      <span id="span-result" style="display: none">&rarr;&nbsp;
-        <a id="a-result" href="#" onclick="processQueryResult()">Ergebnis einlesen:</a>
-        <img id="img-result" src="files/checkmark-icon.png" width="14" style="display: none"/>
-        <input type="text" id="input-result">
-      </span>
-    </span>
     <br><br><br>
     <form>
       <label for="fname">Vorname</label><br>
@@ -59,23 +49,9 @@
       <input type="submit" id="downloadGraphBtn" value="Graph herunterladen" style="background-color: yellow; display: none">
     </form>
     <script>
-      function copyQueryToClipboard() {
-        navigator.clipboard.writeText("query...");
-        document.getElementById("a-copy").innerHTML = "Query kopiert ";
-        document.getElementById("a-copy").style.textDecoration = "none";
-        document.getElementById("img-copy").src = "checkmark-icon.png";
-        document.getElementById("span-result").style.display = "inline";
-      }
-
-      function processQueryResult() {
-        let pastedResult = document.getElementById("input-result").value;
-        document.getElementById("a-result").innerHTML = "Ergebnis eingelesen";
-        document.getElementById("a-result").style.textDecoration = "none";
-        document.getElementById("input-result").style.display = "none";
-        document.getElementById("img-result").style.display = "inline";
-        console.log(pastedResult);
-        // ...
-      }
+      document.getElementById("headline").addEventListener("click", function(event) {
+        document.getElementById("downloadGraphBtn").style.display = "inline";
+      });
 
       document.getElementById("downloadGraphBtn").addEventListener("click", function(event) {
         let fname = document.getElementById("fname").value;
@@ -87,15 +63,6 @@
         let rentInsuranceNum = document.getElementById("rent-insurance-num").value;
         let persoNum = document.getElementById("perso-num").value;
         let taxid = document.getElementById("taxid").value;
-        // ...
-      });
-
-      document.getElementById("headline").addEventListener("click", function(event) {
-        document.getElementById("span-before").style.display = "inline";
-        document.getElementById("downloadGraphBtn").style.display = "inline";
-      });
-
-      document.getElementById("downloadGraphBtn").addEventListener("click", function(event) {
         // ...
       });
     </script>
