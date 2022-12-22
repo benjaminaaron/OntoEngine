@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="shortcut icon" href="#">
+  <title>Query</title>
+</head>
+<body>
+  <div style="padding-left: 40px;">
+    <textarea spellcheck="false" rows="10" id="inputField" style="color: darkblue; padding: 10px; width: 950px; margin: 30px 0 30px 0; font-family: monospace">Input</textarea>
+    <br>
+    <div style="display: flex; justify-content: center; width: 950px">
+      <button style="margin-left: 14px" id="submitBtn" type="submit">Submit</button>
+    </div>
+    <textarea spellcheck="false" rows="14" id="outputField" style="font-size: smaller; border: none; background-color: #eee; color: gray; padding: 10px; width: 950px; margin-top: 30px; font-family: monospace">Output</textarea>
+  </div>
+  <script>
+    document.getElementById("submitBtn").addEventListener("click", function(event) {
+      fetch('http://localhost:8080/api/v1/ontoengine/query', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'text/plain' },
+        body: document.getElementById("inputField").value
+      })
+      .then(response => response.text())
+      .then(data => console.log(data))
+      .catch(error => console.error(error))
+    });
+  </script>
+</body>
+</html>
