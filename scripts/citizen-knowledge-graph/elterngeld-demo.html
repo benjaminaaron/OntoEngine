@@ -55,9 +55,8 @@
       <input type="submit" id="downloadGraphBtn" value="Graph herunterladen" style="background-color: yellow; display: none">
     </form>
     <script src="node_modules/rdflib/dist/rdflib.min.js"></script>
+    <script src="./graph-utils.js"></script>
     <script>
-      const rdflib = $rdf;
-      const baseUri = "http://onto.de/default#";
       let headlineClickCounter = 0;
 
       document.getElementById("headline").addEventListener("click", function(event) {
@@ -71,32 +70,10 @@
         headlineClickCounter ++;
       });
 
-      function namedNode(localName) {
-          return rdflib.namedNode(baseUri + localName);
-      }
-
-      function statement(sub, pred, obj, isLiteral) {
-        return rdflib.st(namedNode(sub), namedNode(pred),
-            isLiteral ? rdflib.literal(obj) : namedNode(obj));
-      }
-
-      function downloadTurtleFile(filename, content) {
-        let blob = new Blob([content], { type: 'text/turtle' });
-        let url = URL.createObjectURL(blob);
-        let link = document.createElement('a');
-        link.href = url;
-        link.download = filename;
-        link.setAttribute('Content-Type', 'text/turtle');
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-      }
-
       document.getElementById("downloadGraphBtn").addEventListener("click", function(event) {
         event.preventDefault();
         document.getElementById("downloadGraphBtn").style.display = "none";
-        const store = rdflib.graph();
+        const store = createStore();
         store.add(statement("mainPerson", "firstName", document.getElementById("firstName").value, true));
         store.add(statement("mainPerson", "lastName", document.getElementById("lastName").value, true));
         store.add(statement("mainPerson", "birthday", document.getElementById("birthday").value, true));
@@ -106,8 +83,7 @@
         store.add(statement("mainPerson", "rentInsuranceNumber", document.getElementById("rentInsuranceNumber").value, true));
         store.add(statement("mainPerson", "identityNumber", document.getElementById("identityNumber").value, true));
         store.add(statement("mainPerson", "taxId", document.getElementById("taxId").value, true));
-        const turtle = rdflib.serialize(undefined, store, undefined, 'text/turtle');
-        downloadTurtleFile("elterngeld.ttl", turtle);
+        downloadAsTurtleFile(store, "elterngeld.ttl");
       });
 
       document.getElementById("addNote").addEventListener('change', (event) => {
