@@ -18,6 +18,8 @@
       <input type="submit" id="download" value="Formular in eigenem CKG ausfüllen" style="background-color: yellow;">
     </div>
   </body>
+  <script src="node_modules/rdflib/dist/rdflib.min.js"></script>
+  <script src="./graph-utils.js"></script>
   <script>
     document.getElementById("headline").addEventListener("click", function(event) {
       document.getElementById("buttons").style.display = "inline";
@@ -25,7 +27,51 @@
 
     document.getElementById("download").addEventListener("click", function(event) {
       event.preventDefault();
-      // ...
+      const store = createStore();
+
+      store.add(statement("ckg-form-workflow-file", "hasTitle", "Auto Anmelden", true));
+      store.add(statement("ckg-form-workflow-file", "hasVersion", "XY.123.45", true));
+      store.add(statement("ckg-form-workflow-file", "hasAuthor", "BehördeXY", true));
+      store.add(statement("ckg-form-workflow-file", "hasContactEmail", "ckg-forms@behoerdexy.de", true));
+      store.add(statement("ckg-form-workflow-file", "hasSubmissionEndpoint", "true", true));
+      store.add(statement("ckg-form-workflow-file", "submissionEndpoint", "http://localhost:8080/api/v1/ontoengine/tbd", true));
+      store.add(statement("ckg-form-workflow-file", "timestamp", getTimestamp(), true));
+
+      store.add(statement("field1", "hasPredicate", "firstName", false));
+      store.add(statement("field1", "isMandatory", "true", true));
+      store.add(statement("field1", "description", "Vorname(n)", true));
+
+      store.add(statement("field2", "hasPredicate", "lastName", false));
+      store.add(statement("field2", "isMandatory", "true", true));
+      store.add(statement("field2", "description", "Nachname", true));
+
+      store.add(statement("field3", "hasPredicate", "birthday", false));
+      store.add(statement("field3", "isMandatory", "true", true));
+      store.add(statement("field3", "description", "Geburtstag", true));
+
+      store.add(statement("field4", "hasPredicate", "age", false));
+      store.add(statement("field4", "isMandatory", "true", true));
+      store.add(statement("field4", "description", "Aktuelles Alter in Jahren", true));
+      store.add(statement("field4", "computableVia", "field3", false));
+      store.add(statement("field4", "computableFormula", "tbd", false));
+
+      store.add(statement("field5", "hasPredicate", "birthplace", false));
+      store.add(statement("field5", "isMandatory", "false", true));
+      store.add(statement("field5", "description", "Geburtsort", true));
+
+      store.add(statement("field6", "hasPredicate", "gender", false));
+      store.add(statement("field6", "isMandatory", "false", true));
+      store.add(statement("field6", "description", "Geschlecht", true));
+
+      store.add(statement("field7", "hasPredicate", "eVBnumber", false));
+      store.add(statement("field7", "isMandatory", "false", true));
+      store.add(statement("field7", "description", "elektronische Versicherungsbestätigung (eVB-Nummer)", true));
+
+      store.add(statement("field8", "hasPredicate", "identityNumber", false));
+      store.add(statement("field8", "isMandatory", "false", true));
+      store.add(statement("field8", "description", "Personalausweisnummer", true));
+
+      downloadAsTurtleFile(store, "AutoAnmelden.ttl");
     });
   </script>
 </html>

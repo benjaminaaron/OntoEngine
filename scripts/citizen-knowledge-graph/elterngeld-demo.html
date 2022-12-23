@@ -74,6 +74,10 @@
         event.preventDefault();
         document.getElementById("downloadGraphBtn").style.display = "none";
         const store = createStore();
+
+        store.add(statement("form-download-for-ckg", "hasTitle", "ElterngeldBeantragen", true));
+        store.add(statement("form-download-for-ckg", "timestamp", getTimestamp(), true));
+
         store.add(statement("mainPerson", "firstName", document.getElementById("firstName").value, true));
         store.add(statement("mainPerson", "lastName", document.getElementById("lastName").value, true));
         store.add(statement("mainPerson", "birthday", document.getElementById("birthday").value, true));
@@ -83,7 +87,7 @@
         store.add(statement("mainPerson", "rentInsuranceNumber", document.getElementById("rentInsuranceNumber").value, true));
         store.add(statement("mainPerson", "identityNumber", document.getElementById("identityNumber").value, true));
         store.add(statement("mainPerson", "taxId", document.getElementById("taxId").value, true));
-        downloadAsTurtleFile(store, "elterngeld.ttl");
+        downloadAsTurtleFile(store, "Elterngeld.ttl");
       });
 
       document.getElementById("addNote").addEventListener('change', (event) => {

@@ -27,3 +27,15 @@ function downloadAsTurtleFile(store, filename) {
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
 }
+
+function getTimestamp() {
+  const date = new Date();
+  return date.toLocaleString('de-DE', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  });
+}
