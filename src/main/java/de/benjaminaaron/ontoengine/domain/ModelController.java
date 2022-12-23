@@ -246,13 +246,11 @@ public class ModelController {
             while(resultSet.hasNext()) {
                 QuerySolution qs = resultSet.next();
                 resultString
-                    .append("\"")
                     .append(qs.getResource("s"))
-                    .append("\",\"")
+                    .append(", ")
                     .append(qs.getResource("p"))
-                    .append("\",\"")
+                    .append(", ")
                     .append(qs.get("o"))
-                    .append("\"")
                     .append("\n");
             }
             return resultString.toString();

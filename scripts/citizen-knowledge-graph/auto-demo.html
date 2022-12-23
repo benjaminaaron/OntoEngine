@@ -22,7 +22,8 @@
       <span id="span-result" style="display: none">&rarr;&nbsp;
         <a id="a-result" href="#" onclick="processQueryResult()">Ergebnis einlesen:</a>
         <img id="img-result" src="files/checkmark-icon.png" width="14" style="display: none"/>
-        <input type="text" id="input-result">
+        &nbsp;
+        <textarea style="font-size: xx-small; color: gray" type="text" id="input-result"></textarea>
       </span>
     </span>
   <br><br><br>
@@ -89,8 +90,9 @@
       document.getElementById("a-result").style.textDecoration = "none";
       document.getElementById("input-result").style.display = "none";
       document.getElementById("img-result").style.display = "inline";
-      pastedResult = pastedResult.replaceAll("\" \"", "\"\n\"");
-      const triples = Papa.parse(pastedResult).data;
+      const triples = Papa.parse(pastedResult.trim(), {
+        transform: (value) => value.trim()
+      }).data;
       for (let triple of triples) {
         let predicateLocalName = triple[1].split('#')[1];
         document.getElementById(predicateLocalName).value = triple[2];
