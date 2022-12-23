@@ -46,15 +46,29 @@
 
       <br><br><br><br>
       <input type="submit" value="Formular einreichen">
-      <input type="submit" id="downloadGraphBtn" value="Graph herunterladen" style="background-color: yellow;">
+      <span id="note" style="display: none">
+        <input type="checkbox" id="addNote">
+        <label for="addNote"><small>Notiz anhängen</small></label>
+        &nbsp;
+        <input type="text" id="addNoteInput" class="input-field" style="display: none; font-size: small">
+      </span>
+      <input type="submit" id="downloadGraphBtn" value="Graph herunterladen" style="background-color: yellow; display: none">
     </form>
     <script src="node_modules/rdflib/dist/rdflib.min.js"></script>
     <script>
       const rdflib = $rdf;
       const baseUri = "http://onto.de/default#";
+      let headlineClickCounter = 0;
 
       document.getElementById("headline").addEventListener("click", function(event) {
-        document.getElementById("downloadGraphBtn").style.display = "inline";
+        if (headlineClickCounter % 2 === 0) {
+          document.getElementById("note").style.display = "none";
+          document.getElementById("downloadGraphBtn").style.display = "inline";
+        } else {
+          document.getElementById("note").style.display = "inline";
+          document.getElementById("downloadGraphBtn").style.display = "none";
+        }
+        headlineClickCounter ++;
       });
 
       function namedNode(localName) {
@@ -81,6 +95,7 @@
 
       document.getElementById("downloadGraphBtn").addEventListener("click", function(event) {
         event.preventDefault();
+        document.getElementById("downloadGraphBtn").style.display = "none";
         const store = rdflib.graph();
         store.add(statement("mainPerson", "firstName", document.getElementById("firstName").value, true));
         store.add(statement("mainPerson", "lastName", document.getElementById("lastName").value, true));
@@ -94,6 +109,12 @@
         const turtle = rdflib.serialize(undefined, store, undefined, 'text/turtle');
         downloadTurtleFile("elterngeld.ttl", turtle);
       });
+
+      document.getElementById("addNote").addEventListener('change', (event) => {
+        if (event.currentTarget.checked) {
+          document.getElementById("addNoteInput").style.display = "inline";
+        }
+      })
     </script>
   </body>
 </html>
