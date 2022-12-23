@@ -16,16 +16,16 @@
 <body>
   <h2 id="headline">Formular für: Auto anmelden</h2>
   <span id="span-before" style="background-color: yellow; display: none">
-      Anfrage an Ihren Graphen nach passenden Daten &rarr;&nbsp;
-      <a id="a-copy" href="#" onclick="copyQueryToClipboard()">kopiere Query </a>
-      <img id="img-copy" src="files/copy-icon.png" width="14"/>
-      <span id="span-result" style="display: none">&rarr;&nbsp;
-        <a id="a-result" href="#" onclick="processQueryResult()">Ergebnis einlesen:</a>
-        <img id="img-result" src="files/checkmark-icon.png" width="14" style="display: none"/>
-        &nbsp;
-        <textarea style="font-size: xx-small; color: gray" type="text" id="input-result"></textarea>
-      </span>
+    Anfrage an Ihren Graphen nach passenden Daten &rarr;&nbsp;
+    <a id="a-copy" href="#" onclick="copyQueryToClipboard()">kopiere Query </a>
+    <img id="img-copy" src="files/copy-icon.png" width="14"/>
+    <span id="span-result" style="display: none">&rarr;&nbsp;
+      <a id="a-result" href="#" onclick="processQueryResult()">Ergebnis einlesen:</a>
+      <img id="img-result" src="files/checkmark-icon.png" width="14" style="display: none"/>
+      &nbsp;
+      <textarea style="font-size: xx-small; color: gray" type="text" id="input-result"></textarea>
     </span>
+  </span>
   <br><br><br>
   <form>
     <label for="firstName">Vorname</label><br>
@@ -63,7 +63,6 @@
 -->
     <br><br><br>
     <input type="submit" value="Formular einreichen">
-    <input type="submit" id="downloadGraphBtn" value="Graph herunterladen" style="background-color: yellow; display: none">
   </form>
   <script src="node_modules/papaparse/papaparse.min.js"></script>
   <script>

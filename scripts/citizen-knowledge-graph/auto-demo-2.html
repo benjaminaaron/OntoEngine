@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Demo 3: Auto anmelden im CKG</title>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="#">
+    <style>
+      html * {
+        font-family: Arial, serif;
+      }
+    </style>
+  </head>
+  <body>
+    <h2 id="headline">Auto anmelden</h2>
+    <br>
+    <div id="buttons" style="display: none">
+      <input type="submit" value="Hier Formular ausfüllen">
+      <input type="submit" id="download" value="Formular in eigenem CKG ausfüllen" style="background-color: yellow;">
+    </div>
+  </body>
+  <script>
+    document.getElementById("headline").addEventListener("click", function(event) {
+      document.getElementById("buttons").style.display = "inline";
+    });
+
+    document.getElementById("download").addEventListener("click", function(event) {
+      event.preventDefault();
+      // ...
+    });
+  </script>
+</html>
