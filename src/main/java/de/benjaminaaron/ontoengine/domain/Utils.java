@@ -78,13 +78,14 @@ public class Utils {
     }
 
     public static String getValueFromLiteral(Literal literal) {
-        // is there a more elegant way to get the value?
+        return literal.toString();
+        /* // is there a more elegant way to get the value?
         String literalStr = literal.toString();
         if (literalStr.contains("http")) {
             String[] parts = literalStr.split("http");
             return parts[0].substring(0, parts[0].length() - 2); // -2 for the ^^
         }
-        return literalStr;
+        return literalStr;*/
     }
 
     public static String rdfNodeToGraphDatabaseEntryString(RDFNode rdfNode) {
