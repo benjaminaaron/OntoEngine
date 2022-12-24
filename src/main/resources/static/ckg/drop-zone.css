@@ -1,0 +1,19 @@
+#drop-zone {
+  color: #666;
+  border: 2px dashed #ccc;
+  border-radius: 12px;
+  width: 250px;
+  height: 75px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 30px;
+}
+
+#drop-zone.drag-over {
+  border-color: #666;
+}
+
+#drop-zone.drag-drop {
+  border-color: #333;
+}

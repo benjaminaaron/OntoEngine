@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="#">
+    <title>CKG Form Workflow</title>
+    <link href="./drop-zone.css" rel="stylesheet">
+    <style>
+      * {
+        font-family: "Ubuntu", serif;
+      }
+    </style>
+  </head>
+  <script src="./drop-zone.js"></script>
+  <body>
+    <div id="drop-zone">Upload form workflow file</div>
+    <script>
+      registerDropZone(document.getElementById('drop-zone'), files => {
+        // ...
+      });
+    </script>
+  </body>
+</html>
