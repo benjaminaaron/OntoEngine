@@ -74,7 +74,7 @@ Messages from server
                 method: 'POST',
                 body: formData
             })
-            .then(response => response.json())
+            .then(response => response.text())
             .then(data => console.log(data))
             .catch(error => console.error(error))
         }
