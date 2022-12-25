@@ -1,0 +1,14 @@
+{
+  "name": "ckg-app",
+  "version": "0.1.0",
+  "description": "For demoing the Citizen Knowledge Graph idea",
+  "main": "main.js",
+  "author": "benjaminaaron",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^22.0.0",
+  }
+}
