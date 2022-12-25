@@ -18,9 +18,8 @@ const createWindow = () => {
     height: 600,
   });
 
-  win.loadFile('index.html').then(() => {
-    win.webContents.openDevTools()
-  });
+  win.loadFile('src/index.html');
+  win.webContents.openDevTools()
 };
 
 app.whenReady().then(() => {
