@@ -34,3 +34,11 @@ function handleDrop(event) {
   const files = event.dataTransfer.files;
   callback(files);
 }
+
+function readFile(file, callback) {
+  const reader = new FileReader();
+  reader.onloadend = function() {
+    callback(reader.result);
+  };
+  reader.readAsText(file);
+}

@@ -11,12 +11,38 @@
       }
     </style>
   </head>
+  <script src="node_modules/rdflib/dist/rdflib.min.js"></script>
   <script src="./drop-zone.js"></script>
   <body>
     <div id="drop-zone">Upload form workflow file</div>
     <script>
+      const rdflib = $rdf;
+      const baseUri = "http://onto.de/default#";
       registerDropZone(document.getElementById('drop-zone'), files => {
-        // ...
+        readFile(files[0], content => {
+          const store = rdflib.graph();
+          rdflib.parse(content, store, baseUri, 'text/turtle');
+          let fields = {};
+          // SPARQL queries with REGEX should be easier, but I couldn't get it to work easily
+          store.statements.forEach(statement => {
+            if ((statement.subject.value + '').startsWith(baseUri + 'field')) {
+              let fieldUri = statement.subject.value;
+              if (!fields[fieldUri]) {
+                fields[fieldUri] = {
+                  fieldUri: fieldUri,
+                  fieldId: Number (statement.subject.value.split('#')[1].substring(5)),
+                };
+              }
+              fields[fieldUri][statement.predicate.value] = statement.object.value;
+            }
+          });
+
+          // TODO
+          // check against endpoint which values we already have
+          // compute the computables
+          // render the form with three categories
+          // mock a choice btwn all-at-once-form or step-by-step-form
+        });
       });
     </script>
   </body>
