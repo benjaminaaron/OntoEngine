@@ -1,7 +1,16 @@
 const { app, BrowserWindow } = require('electron');
+const path = require('path')
 try {
   require('electron-reloader')(module);
 } catch {}
+
+if (process.defaultApp) {
+  if (process.argv.length >= 2) {
+    app.setAsDefaultProtocolClient('ckg-app', process.execPath, [path.resolve(process.argv[1])])
+  }
+} else {
+  app.setAsDefaultProtocolClient('ckg-app')
+}
 
 const createWindow = () => {
   const win = new BrowserWindow({
@@ -28,3 +37,7 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
+
+app.on('open-url', (event, url) => {
+  console.log(`You arrived from: ${url}`);
+})
