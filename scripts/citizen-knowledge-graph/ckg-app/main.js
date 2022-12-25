@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path')
 try {
   require('electron-reloader')(module);
@@ -12,8 +12,14 @@ if (process.defaultApp) {
   app.setAsDefaultProtocolClient('ckg-app')
 }
 
+let win;
+
 const createWindow = () => {
-  const win = new BrowserWindow({
+  win = new BrowserWindow({
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+    },
     width: 800,
     height: 600,
   });
@@ -39,4 +45,10 @@ app.on('window-all-closed', () => {
 
 app.on('open-url', (event, url) => {
   console.log(`You arrived from: ${url}`);
+  win.webContents.send('main-to-site', url);
+})
+
+ipcMain.on('site-to-main', (event, arg) => {
+  console.log(arg);
+  event.sender.send('main-to-site', 'async pong');
 })
