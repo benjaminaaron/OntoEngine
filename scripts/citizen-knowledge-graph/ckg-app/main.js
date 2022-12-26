@@ -46,9 +46,17 @@ app.on('window-all-closed', () => {
 });
 
 app.on('open-url', (event, url) => {
-  console.log(`You arrived from: ${url}`);
-  let content = decodeURIComponent(url.substring("ckg-app://".length));
-  win.webContents.send('main-to-site', content);
+  if (!url.startsWith('ckg-app://')) return;
+  let content = url.substring('ckg-app://'.length);
+  let command = content.split('/')[0];
+  content = decodeURIComponent(content.substring(command.length + 1));
+  switch (command) {
+    case 'import':
+      win.loadFile('src/import.html').then(() =>
+          win.webContents.send('main-to-site', content)
+      );
+      break;
+  }
 })
 
 ipcMain.on('site-to-main', (event, arg) => {

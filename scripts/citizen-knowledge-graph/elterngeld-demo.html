@@ -97,7 +97,7 @@
       document.getElementById("importGraphBtn").addEventListener("click", function(event) {
         event.preventDefault();
         let content = rdflib.serialize(undefined, getFilledStore(), undefined, 'text/turtle');
-        window.open("ckg-app://" + encodeURIComponent(content), "_self");
+        window.open("ckg-app://import/" + encodeURIComponent(content), "_self");
       });
 
       document.getElementById("addNote").addEventListener('change', (event) => {
