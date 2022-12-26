@@ -4,16 +4,29 @@
     <meta charset="UTF-8" />
     <meta http-equiv="Content-Security-Policy" content="script-src 'self';">
     <title>Citizen Knowledge Graph</title>
+    <link href="main.css" rel="stylesheet" />
   </head>
   <style>
-    * {
-      font-family: "Ubuntu", serif;
-      background-color: darkslategray;
-      color: navajowhite;
+    .centeredDiv {
+      width: 340px;
+      border-radius: 20px;
+      margin: 100px auto 0;
+      padding: 20px;
+      background-color: gray;
+    }
+    .centeredDiv * {
+      background-color: gray;
     }
   </style>
   <body>
-    Test123
+    <div class="centeredDiv">
+      <h2>My Citizen Knowledge Graph</h2>
+      <ul>
+        <li>
+          <a href="overview.html">Overview</a>
+        </li>
+      </ul>
+    </div>
     <input type="button" value="dev" id="devBtn" />
     <script src="index.js"></script>
   </body>
