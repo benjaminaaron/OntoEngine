@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import org.apache.jena.atlas.json.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -155,8 +156,8 @@ public class BaseRouting {
         modelController.addStatement(msg, true);
     }
 
-    public void importUploadedFile(String fileName, InputStream inputStream) {
-        RdfImporter.doImportFromInputStream(modelController, fileName, inputStream);
+    public JsonObject importUploadedFile(String fileName, InputStream inputStream) {
+        return RdfImporter.doImportFromInputStream(modelController, fileName, inputStream);
     }
 
     public String runSelectQuery(String query) {

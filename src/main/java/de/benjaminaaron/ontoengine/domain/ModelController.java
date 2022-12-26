@@ -116,6 +116,10 @@ public class ModelController {
         return response;
     }
 
+    public boolean statementAlreadyPresent(Statement statement) {
+        return mainModel.contains(statement);
+    }
+
     public void addStatement(Statement statement, StatementOrigin origin, String info, AddStatementResponse response, boolean doLogging) {
         metaHandler.storeNewTripleEvent(statement, origin, info, response);
         mainModel.add(statement);

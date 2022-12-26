@@ -2,11 +2,16 @@ package de.benjaminaaron.ontoengine.adapter.primary;
 
 import de.benjaminaaron.ontoengine.adapter.primary.messages.CommandMessage;
 import de.benjaminaaron.ontoengine.adapter.primary.messages.ProjectCreationInfo;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.jena.atlas.json.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,5 +82,14 @@ public class RestEndpoints {
             }
         }
         return ResponseEntity.ok().body("Files uploaded successfully: " + fileNames.substring(2));
+    }
+
+    @PostMapping(value = "/importTurtle")
+    public ResponseEntity<String> handleTurtleImport(@RequestBody String turtleData) {
+        String timestamp = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date());
+        String fileName = "imported_" + timestamp + ".ttl";
+        JsonObject report = baseRouting.importUploadedFile(fileName,
+            new ByteArrayInputStream(turtleData.getBytes(StandardCharsets.UTF_8)));
+        return ResponseEntity.ok().body(report.toString());
     }
 }

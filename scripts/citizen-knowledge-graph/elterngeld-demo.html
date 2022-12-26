@@ -73,19 +73,26 @@
         headlineClickCounter ++;
       });
 
+      function addLiteralToMainPerson(store, field) {
+        const value = document.getElementById(field).value;
+        if (value.trim()) {
+          store.add(statement("mainPerson", field, value, true));
+        }
+      }
+
       function getFilledStore() {
         const store = createStore();
-        store.add(statement("form-download-for-ckg", "hasTitle", "ElterngeldBeantragen", true));
-        store.add(statement("form-download-for-ckg", "timestamp", getTimestamp(), true));
-        store.add(statement("mainPerson", "firstName", document.getElementById("firstName").value, true));
-        store.add(statement("mainPerson", "lastName", document.getElementById("lastName").value, true));
-        store.add(statement("mainPerson", "birthday", document.getElementById("birthday").value, true));
-        store.add(statement("mainPerson", "birthplace", document.getElementById("birthplace").value, true));
-        store.add(statement("mainPerson", "maritalStatus", document.getElementById("maritalStatus").value, true));
-        store.add(statement("mainPerson", "insuranceNumber", document.getElementById("insuranceNumber").value, true));
-        store.add(statement("mainPerson", "rentInsuranceNumber", document.getElementById("rentInsuranceNumber").value, true));
-        store.add(statement("mainPerson", "identityNumber", document.getElementById("identityNumber").value, true));
-        store.add(statement("mainPerson", "taxId", document.getElementById("taxId").value, true));
+        // store.add(statement("form-download-for-ckg", "hasTitle", "ElterngeldBeantragen", true));
+        // store.add(statement("form-download-for-ckg", "timestamp", getTimestamp(), true));
+        addLiteralToMainPerson(store, "firstName");
+        addLiteralToMainPerson(store, "lastName");
+        addLiteralToMainPerson(store, "birthday");
+        addLiteralToMainPerson(store, "birthplace");
+        addLiteralToMainPerson(store, "maritalStatus");
+        addLiteralToMainPerson(store, "insuranceNumber");
+        addLiteralToMainPerson(store, "rentInsuranceNumber");
+        addLiteralToMainPerson(store, "identityNumber");
+        addLiteralToMainPerson(store, "taxId");
         return store;
       }
 

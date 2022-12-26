@@ -10,8 +10,11 @@ import java.nio.file.Path;
 import java.util.Objects;
 import lombok.SneakyThrows;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.jena.atlas.json.JsonArray;
+import org.apache.jena.atlas.json.JsonObject;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -54,15 +57,26 @@ public class RdfImporter {
     }
 
     @SneakyThrows
-    public static void doImportFromInputStream(ModelController modelController, String fileName, InputStream inputStream) {
+    public static JsonObject doImportFromInputStream(ModelController modelController, String fileName, InputStream inputStream) {
         Model importModel = ModelFactory.createDefaultModel();
         String lang = FilenameUtils.getExtension(fileName).equalsIgnoreCase("rdf") ? "RDF" : "TTL";
         importModel.read(inputStream, null, lang);
         StmtIterator iter = importModel.listStatements();
+        JsonArray imported = new JsonArray();
+        JsonArray alreadyPresent = new JsonArray();
         while (iter.hasNext()) {
-            modelController.addStatement(iter.nextStatement(), RDF_IMPORT, fileName,
-                null, false);
+            Statement stmt = iter.nextStatement();
+            if (modelController.statementAlreadyPresent(stmt)) {
+                alreadyPresent.add(stmt.toString());
+                continue;
+            }
+            modelController.addStatement(stmt, RDF_IMPORT, fileName, null, false);
+            imported.add(stmt.toString());
         }
         logger.info("Import of uploaded RDF/TTL file completed");
+        JsonObject jsonResponse = new JsonObject();
+        jsonResponse.put("imported", imported);
+        jsonResponse.put("alreadyPresent", alreadyPresent);
+        return jsonResponse;
     }
 }
