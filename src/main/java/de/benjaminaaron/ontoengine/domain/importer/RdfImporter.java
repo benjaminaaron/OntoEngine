@@ -56,6 +56,14 @@ public class RdfImporter {
         logger.info("Import from RDF/TTL file completed");
     }
 
+    private static JsonObject statementToJsonObj(Statement statement) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.put("subject", statement.getSubject().toString());
+        jsonObject.put("predicate", statement.getPredicate().toString());
+        jsonObject.put("object", statement.getObject().toString());
+        return jsonObject;
+    }
+
     @SneakyThrows
     public static JsonObject doImportFromInputStream(ModelController modelController, String fileName, InputStream inputStream) {
         Model importModel = ModelFactory.createDefaultModel();
@@ -67,11 +75,11 @@ public class RdfImporter {
         while (iter.hasNext()) {
             Statement stmt = iter.nextStatement();
             if (modelController.statementAlreadyPresent(stmt)) {
-                alreadyPresent.add(stmt.toString());
+                alreadyPresent.add(statementToJsonObj(stmt));
                 continue;
             }
             modelController.addStatement(stmt, RDF_IMPORT, fileName, null, false);
-            imported.add(stmt.toString());
+            imported.add(statementToJsonObj(stmt));
         }
         logger.info("Import of uploaded RDF/TTL file completed");
         JsonObject jsonResponse = new JsonObject();
