@@ -15,8 +15,7 @@
   </head>
   <body>
     <h2 id="headline">Formular für: Elterngeld beantragen</h2>
-    <a href="ckg-app://foo">Dev: open the native CKG app</a>
-    <br><br><br>
+    <br><br>
     <form>
       <label for="firstName">Vorname</label><br>
       <input type="text" id="firstName" class="input-field"><br><br>
@@ -53,7 +52,10 @@
         &nbsp;
         <input type="text" id="addNoteInput" class="input-field" style="display: none; font-size: small">
       </span>
-      <input type="submit" id="downloadGraphBtn" value="Graph herunterladen" style="background-color: yellow; display: none">
+      <span id="graphBtns" style="display: none;">
+        <input type="submit" id="downloadGraphBtn" value="Daten herunterladen" style="background-color: yellow;">
+        <input type="submit" id="importGraphBtn" value="Daten importieren" style="background-color: yellow;"/>
+      </span>
     </form>
     <script src="node_modules/rdflib/dist/rdflib.min.js"></script>
     <script src="./graph-utils.js"></script>
@@ -63,22 +65,18 @@
       document.getElementById("headline").addEventListener("click", function(event) {
         if (headlineClickCounter % 2 === 0) {
           document.getElementById("note").style.display = "none";
-          document.getElementById("downloadGraphBtn").style.display = "inline";
+          document.getElementById("graphBtns").style.display = "inline";
         } else {
           document.getElementById("note").style.display = "inline";
-          document.getElementById("downloadGraphBtn").style.display = "none";
+          document.getElementById("graphBtns").style.display = "none";
         }
         headlineClickCounter ++;
       });
 
-      document.getElementById("downloadGraphBtn").addEventListener("click", function(event) {
-        event.preventDefault();
-        document.getElementById("downloadGraphBtn").style.display = "none";
+      function getFilledStore() {
         const store = createStore();
-
         store.add(statement("form-download-for-ckg", "hasTitle", "ElterngeldBeantragen", true));
         store.add(statement("form-download-for-ckg", "timestamp", getTimestamp(), true));
-
         store.add(statement("mainPerson", "firstName", document.getElementById("firstName").value, true));
         store.add(statement("mainPerson", "lastName", document.getElementById("lastName").value, true));
         store.add(statement("mainPerson", "birthday", document.getElementById("birthday").value, true));
@@ -88,7 +86,18 @@
         store.add(statement("mainPerson", "rentInsuranceNumber", document.getElementById("rentInsuranceNumber").value, true));
         store.add(statement("mainPerson", "identityNumber", document.getElementById("identityNumber").value, true));
         store.add(statement("mainPerson", "taxId", document.getElementById("taxId").value, true));
-        downloadAsTurtleFile(store, "Elterngeld.ttl");
+        return store;
+      }
+
+      document.getElementById("downloadGraphBtn").addEventListener("click", function(event) {
+        event.preventDefault();
+        downloadAsTurtleFile(getFilledStore(), "Elterngeld.ttl");
+      });
+
+      document.getElementById("importGraphBtn").addEventListener("click", function(event) {
+        event.preventDefault();
+        let content = rdflib.serialize(undefined, getFilledStore(), undefined, 'text/turtle');
+        window.open("ckg-app://" + encodeURIComponent(content), "_self");
       });
 
       document.getElementById("addNote").addEventListener('change', (event) => {

@@ -45,7 +45,8 @@ app.on('window-all-closed', () => {
 
 app.on('open-url', (event, url) => {
   console.log(`You arrived from: ${url}`);
-  win.webContents.send('main-to-site', url);
+  let content = decodeURIComponent(url.substring("ckg-app://".length));
+  win.webContents.send('main-to-site', content);
 })
 
 ipcMain.on('site-to-main', (event, arg) => {
