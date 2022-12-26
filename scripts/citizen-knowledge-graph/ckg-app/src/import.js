@@ -1,8 +1,8 @@
 const { ipcRenderer } = require('electron');
 
-ipcRenderer.on('main-to-site', (event, msg) => {
-  console.log("main-to-site", msg);
-  importTurtle(msg);
+ipcRenderer.on('main-to-site', (event, message) => {
+  console.log("main-to-site", message);
+  importTurtle(message.turtleData);
 })
 
 function clearDiv(div) {

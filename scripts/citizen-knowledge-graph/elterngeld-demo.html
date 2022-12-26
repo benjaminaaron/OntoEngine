@@ -103,8 +103,13 @@
 
       document.getElementById("importGraphBtn").addEventListener("click", function(event) {
         event.preventDefault();
-        let content = rdflib.serialize(undefined, getFilledStore(), undefined, 'text/turtle');
-        window.open("ckg-app://import/" + encodeURIComponent(content), "_self");
+        let message = {
+          command: "import",
+          turtleData: rdflib.serialize(undefined, getFilledStore(), undefined, 'text/turtle'),
+          responseUrl: window.location.href + "/tbd"
+        };
+        let url = "ckg-app://" + encodeURIComponent(JSON.stringify(message));
+        window.open(url, "_self");
       });
 
       document.getElementById("addNote").addEventListener('change', (event) => {

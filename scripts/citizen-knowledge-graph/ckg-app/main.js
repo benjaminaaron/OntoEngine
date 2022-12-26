@@ -47,13 +47,11 @@ app.on('window-all-closed', () => {
 
 app.on('open-url', (event, url) => {
   if (!url.startsWith('ckg-app://')) return;
-  let content = url.substring('ckg-app://'.length);
-  let command = content.split('/')[0];
-  content = decodeURIComponent(content.substring(command.length + 1));
-  switch (command) {
+  let message = JSON.parse(decodeURIComponent(url.substring('ckg-app://'.length)));
+  switch (message.command) {
     case 'import':
       win.loadFile('src/import.html').then(() =>
-          win.webContents.send('main-to-site', content)
+          win.webContents.send('main-to-site', message)
       );
       break;
   }
