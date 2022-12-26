@@ -1,8 +1,10 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
-const path = require('path')
+const contextMenu = require('electron-context-menu');
+const path = require('path');
 try {
   require('electron-reloader')(module);
 } catch {}
+contextMenu();
 
 if (process.defaultApp) {
   if (process.argv.length >= 2) {
