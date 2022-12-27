@@ -160,7 +160,7 @@ public class BaseRouting {
         return RdfImporter.doImportFromInputStream(modelController, fileName, inputStream);
     }
 
-    public String runSelectQuery(String query) {
-        return modelController.runSelectQuery(query);
+    public JsonObject runSelectQuery(String query) {
+        return modelController.runCkgSelectQuery(query);
     }
 }

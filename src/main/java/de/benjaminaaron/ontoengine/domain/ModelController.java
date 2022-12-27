@@ -23,6 +23,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import org.apache.jena.atlas.json.JsonArray;
+import org.apache.jena.atlas.json.JsonObject;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QuerySolution;
@@ -244,33 +246,36 @@ public class ModelController {
     }
 
     public String runSelectQueryUsingWherePart(String wherePart) {
-        return runSelectQuery("PREFIX : <http://onto.de/default#> SELECT * WHERE { " + wherePart + " }");
+        return "TODO restore functionality";
+        // runSelectQuery("PREFIX : <http://onto.de/default#> SELECT * WHERE { " + wherePart + " }");
     }
 
-    public String runSelectQuery(String query) {
+    public JsonObject runCkgSelectQuery(String query) {
         // regex via ChatGPT and cleaned up via IntelliJ suggestions
         // would be nicer to extract it via query.getValuesVariables(), but didn't get that to work, was always null
         Matcher matcher = Pattern.compile("VALUES\\s+\\?\\S+\\s+\\{([^}]+)}").matcher(query);
         if (!matcher.find()) throw new RuntimeException("No VALUES clause found in the query: " + query);
         String valuesStr = matcher.group(1).trim().replace(":", "");
-        Set<String> valuesLocalNames =
+        Set<String> valuesInQuery =
             Arrays.stream(valuesStr.split(" ")).collect(Collectors.toSet());
-        // ... build a JsonObject report TODO
 
         try (QueryExecution queryExecution = QueryExecutionFactory.create(query, mainModel)) {
             ResultSet resultSet = queryExecution.execSelect();
-            StringBuilder resultString = new StringBuilder();
+            JsonObject report = new JsonObject();
+            JsonObject valuesFound = new JsonObject();
             while(resultSet.hasNext()) {
                 QuerySolution qs = resultSet.next();
-                resultString
-                    .append(qs.getResource("s"))
-                    .append(", ")
-                    .append(qs.getResource("p"))
-                    .append(", ")
-                    .append(qs.get("o"))
-                    .append("\n");
+                String predLocalName = qs.getResource("p").getLocalName();
+                if (valuesInQuery.contains(predLocalName)) {
+                    valuesFound.put(predLocalName, qs.get("o").toString());
+                    valuesInQuery.remove(predLocalName);
+                }
             }
-            return resultString.toString();
+            JsonArray valuesNotFound = new JsonArray();
+            valuesInQuery.forEach(valuesNotFound::add);
+            report.put("valuesFound", valuesFound);
+            report.put("valuesNotFound", valuesNotFound);
+            return report;
         }
     }
 }

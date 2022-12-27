@@ -11,6 +11,7 @@ function sendQuery(query) {
   })
   .then(response => response.text())
   .then(data => {
+    console.log(data);
     let reportDiv = document.getElementById('reportDiv');
     reportDiv.innerHTML = data;
     // send back to site via deep link TODO
