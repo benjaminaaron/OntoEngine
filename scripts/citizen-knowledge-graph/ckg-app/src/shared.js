@@ -43,9 +43,10 @@ function buildActionBtn(text, callback) {
   return btn;
 }
 
-function openInExternalBrowser(url, queryParams) {
-  let queryString = querystringify.stringify(queryParams, '');
-  url += '?' + queryString;
-  console.log("url", url);
+function openInExternalBrowser(url, queryParams = undefined) {
+  if (queryParams) {
+    let queryString = querystringify.stringify(queryParams, '');
+    url += '?' + queryString;
+  }
   shell.openExternal(url).then(() => console.log("Opened in external browser: " + url));
 }
