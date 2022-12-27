@@ -61,7 +61,16 @@
     <input type="submit" value="Formular einreichen">
   </form>
   <script src="node_modules/papaparse/papaparse.min.js"></script>
+  <script src="node_modules/querystringify/index.js"></script>
   <script>
+    let encodedQueryParams = window.location.href.split('?')[1];
+    if (encodedQueryParams) {
+      let queryParams = querystring(encodedQueryParams);
+      for (let key of Object.keys(queryParams)) {
+        document.getElementById(key).value = queryParams[key];
+      }
+    }
+
     document.getElementById("headline").addEventListener("click", function(event) {
       document.getElementById("query-part").style.display = "inline";
     });
