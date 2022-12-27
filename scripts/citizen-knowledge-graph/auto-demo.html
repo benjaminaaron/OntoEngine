@@ -60,7 +60,6 @@
     <br><br><br>
     <input type="submit" value="Formular einreichen">
   </form>
-  <script src="node_modules/papaparse/papaparse.min.js"></script>
   <script src="node_modules/querystringify/index.js"></script>
   <script>
     let encodedQueryParams = window.location.href.split('?')[1];
@@ -90,21 +89,6 @@
       let url = "ckg-app://" + encodeURIComponent(JSON.stringify(message));
       window.open(url, "_self");
     });
-
-    /*function processQueryResult() {
-      let pastedResult = document.getElementById("input-result").value;
-      document.getElementById("a-result").innerHTML = "Ergebnis eingelesen";
-      document.getElementById("a-result").style.textDecoration = "none";
-      document.getElementById("input-result").style.display = "none";
-      document.getElementById("img-result").style.display = "inline";
-      const triples = Papa.parse(pastedResult.trim(), {
-        transform: (value) => value.trim()
-      }).data;
-      for (let triple of triples) {
-        let predicateLocalName = triple[1].split('#')[1];
-        document.getElementById(predicateLocalName).value = triple[2];
-      }
-    }*/
   </script>
 </body>
 </html>
