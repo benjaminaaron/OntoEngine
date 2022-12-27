@@ -16,6 +16,7 @@
     "electron-reloader": "^1.2.3"
   },
   "dependencies": {
-    "electron-context-menu": "^3.6.1"
+    "electron-context-menu": "^3.6.1",
+    "querystringify": "^2.2.0"
   }
 }

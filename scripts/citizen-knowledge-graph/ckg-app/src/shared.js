@@ -1,4 +1,5 @@
 const { ipcRenderer, shell} = require('electron');
+const querystringify = require('querystringify');
 
 document.getElementById('headline').addEventListener('click', () => {
   ipcRenderer.send('site-to-main', 'navigate-to-home');
@@ -42,6 +43,9 @@ function buildActionBtn(text, callback) {
   return btn;
 }
 
-function openInExternalBrowser(url) {
-  shell.openExternal(url);
+function openInExternalBrowser(url, queryParams) {
+  let queryString = querystringify.stringify(queryParams, '');
+  url += '?' + queryString;
+  console.log("url", url);
+  shell.openExternal(url).then(() => console.log("Opened in external browser: " + url));
 }

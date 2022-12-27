@@ -24,9 +24,12 @@ function sendQuery(query) {
     if (Object.keys(data.valuesFound).length > 0) {
       buildTableSection(table, "Values found",
           Object.keys(data.valuesFound).map(key => [key, data.valuesFound[key]]));
-
+      let queryParams = {};
+      for (let key of Object.keys(data.valuesFound)) {
+        queryParams[key] = data.valuesFound[key];
+      }
       let btn = buildActionBtn('Fill values on website', () => {
-        openInExternalBrowser(message.responseUrl);
+        openInExternalBrowser(message.responseUrl, queryParams);
       });
       reportDiv.appendChild(btn);
     }
