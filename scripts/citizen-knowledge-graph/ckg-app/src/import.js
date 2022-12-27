@@ -11,19 +11,31 @@ function clearDiv(div) {
   }
 }
 
-function buildTable(triples) {
-  let table = document.createElement('table');
+function buildTableSection(table, text, triples, addPlus = false) {
+  let tr = document.createElement('tr');
+  tr.className = 'headline-row';
+  tr.style.color = 'navajowhite';
+  let td = document.createElement('td');
+  td.colSpan = 3;
+  td.innerHTML = "<b style='color: navajowhite'>" + text + "</b>";
+  tr.appendChild(td);
+  table.appendChild(tr);
   triples.forEach(triple => {
     let tr = document.createElement('tr');
     let td = document.createElement('td');
+    if (addPlus) {
+      td.innerHTML = '+&nbsp;';
+    }
+    tr.appendChild(td);
+    td = document.createElement('td');
+    td.style.color = 'darkgray';
     td.innerHTML = triple.predicate.split('#')[1] + " ";
     tr.appendChild(td);
     td = document.createElement('td');
-    td.innerHTML = triple.object;
+    td.innerHTML = '&nbsp;&nbsp;' + triple.object;
     tr.appendChild(td);
     table.appendChild(tr);
   });
-  return table;
 }
 
 function importTurtle(data) {
@@ -38,15 +50,15 @@ function importTurtle(data) {
     let reportDiv = document.getElementById('reportDiv');
     clearDiv(reportDiv);
 
-    let alreadyPresentHeadline = document.createElement('h4');
-    alreadyPresentHeadline.innerHTML = "Not imported, already present";
-    reportDiv.appendChild(alreadyPresentHeadline);
-    reportDiv.appendChild(buildTable(data.alreadyPresent));
+    let table = document.createElement('table');
+    reportDiv.appendChild(table);
 
-    let importedHeadline = document.createElement('h4');
-    importedHeadline.innerHTML = "Newly imported";
-    reportDiv.appendChild(importedHeadline);
-    reportDiv.appendChild(buildTable(data.imported));
+    if (data.imported.length > 0) {
+      buildTableSection(table, "Newly imported", data.imported, true);
+    }
+    if (data.alreadyPresent.length > 0) {
+      buildTableSection(table, "Not imported, already existing", data.alreadyPresent);
+    }
   })
   .catch(error => console.error(error))
 }
