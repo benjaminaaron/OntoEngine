@@ -5,6 +5,10 @@
   color: white;
 }
 
+h2 {
+  color: navajowhite;
+}
+
 tr.headline-row > td {
   padding-top: 1em;
   padding-bottom: 1em;

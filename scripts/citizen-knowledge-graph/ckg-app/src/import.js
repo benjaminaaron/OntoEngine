@@ -1,4 +1,3 @@
-const { ipcRenderer } = require('electron');
 
 ipcRenderer.on('main-to-site', (event, message) => {
   console.log("main-to-site", message);
@@ -32,7 +31,7 @@ function buildTableSection(table, text, triples, addPlus = false) {
     td.innerHTML = triple.predicate.split('#')[1] + " ";
     tr.appendChild(td);
     td = document.createElement('td');
-    td.innerHTML = '&nbsp;&nbsp;' + triple.object;
+    td.innerHTML = '&nbsp;&nbsp;&nbsp;' + triple.object;
     tr.appendChild(td);
     table.appendChild(tr);
   });

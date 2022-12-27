@@ -57,7 +57,9 @@ app.on('open-url', (event, url) => {
   }
 })
 
-ipcMain.on('site-to-main', (event, arg) => {
-  console.log(arg);
-  event.sender.send('main-to-site', 'async pong');
+ipcMain.on('site-to-main', (event, message) => {
+  if (message === 'navigate-to-home') {
+    win.loadFile('src/index.html');
+  }
+  // event.sender.send('main-to-site', 'async pong');
 })
