@@ -16,11 +16,11 @@ function importTurtle(data) {
     let table = document.createElement('table');
     reportDiv.appendChild(table);
     const convertToDataRows = (triples => triples.map(triple => [triple.predicate.split('#')[1], triple.object]));
-    if (data.imported.length > 0) {
-      buildTableSection(table, "Newly imported", convertToDataRows(data.imported), true);
-    }
     if (data.alreadyPresent.length > 0) {
       buildTableSection(table, "Not imported, already existing", convertToDataRows(data.alreadyPresent));
+    }
+    if (data.imported.length > 0) {
+      buildTableSection(table, "Newly imported", convertToDataRows(data.imported), true);
     }
   })
   .catch(error => console.error(error))

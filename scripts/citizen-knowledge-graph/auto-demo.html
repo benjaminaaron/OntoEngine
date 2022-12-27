@@ -76,8 +76,7 @@
       let message = {
         command: "query",
         query: query,
-        sourceURL: window.location.href,
-        responseUrl: window.location.href + "/tbd"
+        responseUrl: window.location.href
       };
       let url = "ckg-app://" + encodeURIComponent(JSON.stringify(message));
       window.open(url, "_self");
