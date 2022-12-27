@@ -51,6 +51,11 @@ app.on('open-url', (event, url) => {
           win.webContents.send('main-to-site', message)
       );
       break;
+    case 'query':
+      win.loadFile('src/query.html').then(() =>
+          win.webContents.send('main-to-site', message)
+      );
+      break;
   }
 })
 

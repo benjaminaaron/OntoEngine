@@ -1,6 +1,6 @@
 
 ipcRenderer.on('main-to-site', (event, message) => {
-  console.log("main-to-site", message);
+  console.log("import.js, main-to-site", message);
   importTurtle(message.turtleData);
 })
 

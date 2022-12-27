@@ -106,7 +106,8 @@
         let message = {
           command: "import",
           turtleData: rdflib.serialize(undefined, getFilledStore(), undefined, 'text/turtle'),
-          responseUrl: window.location.href + "/tbd"
+          sourceUrl: window.location.href,
+          responseUrl: "",
         };
         let url = "ckg-app://" + encodeURIComponent(JSON.stringify(message));
         window.open(url, "_self");
