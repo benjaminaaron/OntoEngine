@@ -9,11 +9,19 @@ function sendQuery(query) {
     method: 'PUT',
     body: query
   })
-  .then(response => response.text())
+  .then(response => response.json())
   .then(data => {
-    console.log(data);
     let reportDiv = document.getElementById('reportDiv');
-    reportDiv.innerHTML = data;
+    clearDiv(reportDiv);
+    let table = document.createElement('table');
+    reportDiv.appendChild(table);
+    if (Object.keys(data.valuesFound).length > 0) {
+      buildTableSection(table, "Values found",
+          Object.keys(data.valuesFound).map(key => [key, data.valuesFound[key]]));
+    }
+    if (data.valuesNotFound.length > 0) {
+      buildTableSection(table, "Values not found", data.valuesNotFound.map(val => [val, '?']));
+    }
     // send back to site via deep link TODO
   })
   .catch(error => console.error(error))
