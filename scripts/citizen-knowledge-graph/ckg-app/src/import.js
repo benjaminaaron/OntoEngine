@@ -5,9 +5,7 @@ ipcRenderer.on('main-to-site', (event, message) => {
 })
 
 function clearDiv(div) {
-  while (div.firstChild) {
-    div.removeChild(div.lastChild);
-  }
+  while (div.firstChild) div.removeChild(div.lastChild);
 }
 
 function buildTableSection(table, text, triples, addPlus = false) {
@@ -22,9 +20,7 @@ function buildTableSection(table, text, triples, addPlus = false) {
   triples.forEach(triple => {
     let tr = document.createElement('tr');
     let td = document.createElement('td');
-    if (addPlus) {
-      td.innerHTML = '+&nbsp;';
-    }
+    if (addPlus) td.innerHTML = '+&nbsp;';
     tr.appendChild(td);
     td = document.createElement('td');
     td.style.color = 'darkgray';
@@ -44,14 +40,10 @@ function importTurtle(data) {
   })
   .then(response => response.json())
   .then(data => {
-    console.log(data);
-
     let reportDiv = document.getElementById('reportDiv');
     clearDiv(reportDiv);
-
     let table = document.createElement('table');
     reportDiv.appendChild(table);
-
     if (data.imported.length > 0) {
       buildTableSection(table, "Newly imported", data.imported, true);
     }

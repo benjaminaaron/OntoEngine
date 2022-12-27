@@ -25,7 +25,6 @@ const createWindow = () => {
     width: 800,
     height: 600,
   });
-
   win.loadFile('src/index.html');
   win.webContents.openDevTools()
 };
@@ -40,9 +39,7 @@ app.whenReady().then(() => {
 });
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
+  if (process.platform !== 'darwin') app.quit();
 });
 
 app.on('open-url', (event, url) => {
@@ -61,5 +58,5 @@ ipcMain.on('site-to-main', (event, message) => {
   if (message === 'navigate-to-home') {
     win.loadFile('src/index.html');
   }
-  // event.sender.send('main-to-site', 'async pong');
+  // event.sender.send('main-to-site', 'async reply');
 })
