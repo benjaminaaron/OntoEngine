@@ -1,7 +1,10 @@
 
-ipcRenderer.on('main-to-site', (event, message) => {
-  console.log("query.js, main-to-site:", message);
-  sendQuery(message.query);
+let message;
+
+ipcRenderer.on('main-to-site', (event, msg) => {
+  console.log("query.js, main-to-site:", msg);
+  message = msg;
+  sendQuery(msg.query);
 })
 
 function sendQuery(query) {
@@ -15,14 +18,18 @@ function sendQuery(query) {
     clearDiv(reportDiv);
     let table = document.createElement('table');
     reportDiv.appendChild(table);
-    if (Object.keys(data.valuesFound).length > 0) {
-      buildTableSection(table, "Values found",
-          Object.keys(data.valuesFound).map(key => [key, data.valuesFound[key]]));
-    }
     if (data.valuesNotFound.length > 0) {
       buildTableSection(table, "Values not found", data.valuesNotFound.map(val => [val, '?']));
     }
-    // send back to site via deep link TODO
+    if (Object.keys(data.valuesFound).length > 0) {
+      buildTableSection(table, "Values found",
+          Object.keys(data.valuesFound).map(key => [key, data.valuesFound[key]]));
+
+      let btn = buildActionBtn('Fill values on website', () => {
+        openInExternalBrowser(message.responseUrl);
+      });
+      reportDiv.appendChild(btn);
+    }
   })
   .catch(error => console.error(error))
 }

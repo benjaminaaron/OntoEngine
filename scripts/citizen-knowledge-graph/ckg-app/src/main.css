@@ -13,3 +13,12 @@ tr.headline-row > td {
   padding-top: 1em;
   padding-bottom: 1em;
 }
+
+.action-btn {
+  margin: 18px;
+  padding: 8px;
+  font-size: medium;
+  font-weight: bold;
+  background-color: dimgray;
+  color: navajowhite;
+}

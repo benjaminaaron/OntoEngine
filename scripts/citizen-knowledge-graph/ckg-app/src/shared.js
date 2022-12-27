@@ -1,4 +1,4 @@
-const { ipcRenderer } = require('electron');
+const { ipcRenderer, shell} = require('electron');
 
 document.getElementById('headline').addEventListener('click', () => {
   ipcRenderer.send('site-to-main', 'navigate-to-home');
@@ -31,4 +31,17 @@ function buildTableSection(table, text, dataRows, addPlus = false) {
     tr.appendChild(td);
     table.appendChild(tr);
   });
+}
+
+function buildActionBtn(text, callback) {
+  let btn = document.createElement('input');
+  btn.type = 'button';
+  btn.className = 'action-btn'
+  btn.value = text;
+  btn.onclick = () => callback();
+  return btn;
+}
+
+function openInExternalBrowser(url) {
+  shell.openExternal(url);
 }
