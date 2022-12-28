@@ -15,10 +15,8 @@
 </head>
 <body>
   <h2 id="headline">Formular für: Auto anmelden</h2>
-  <div id="query-part" style="background-color: yellow; display: none">
-    Anfrage an Ihren Graphen nach passenden Daten &rarr;&nbsp;
-    <input type="button" value="Anfrage senden" id="send-query-btn" />
-  </div>
+  <input type="button" value="Anfrage an Ihren CKG nach passenden Daten"
+         id="send-query-btn" style="background-color: yellow; display: none" />
   <br><br><br>
   <form>
     <label for="firstName">Vorname</label><br>
@@ -71,7 +69,7 @@
     }
 
     document.getElementById("headline").addEventListener("click", function(event) {
-      document.getElementById("query-part").style.display = "inline";
+      document.getElementById("send-query-btn").style.display = "inline";
     });
 
     document.getElementById("send-query-btn").addEventListener("click", function(event) {
