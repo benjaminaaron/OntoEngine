@@ -92,4 +92,11 @@ public class RestEndpoints {
             new ByteArrayInputStream(turtleData.getBytes(StandardCharsets.UTF_8)));
         return ResponseEntity.ok().body(report.toString());
     }
+
+    @PutMapping(value = "/formWorkflow")
+    public ResponseEntity<String> handleFormWorkflowTurtleFile(@RequestBody String turtleData) {
+        JsonObject report = baseRouting.handleFormWorkflowTurtleFile(
+            new ByteArrayInputStream(turtleData.getBytes(StandardCharsets.UTF_8)));
+        return ResponseEntity.ok().body(report.toString());
+    }
 }

@@ -11,6 +11,7 @@ import de.benjaminaaron.ontoengine.domain.MetaHandler.StatementOrigin;
 import de.benjaminaaron.ontoengine.domain.dataset.DatasetProvider;
 import de.benjaminaaron.ontoengine.domain.graph.GraphManager;
 import de.benjaminaaron.ontoengine.domain.suggestion.SuggestionEngine;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,6 +32,7 @@ import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.query.ResultSetFormatter;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
@@ -277,5 +279,21 @@ public class ModelController {
             report.put("valuesNotFound", valuesNotFound);
             return report;
         }
+    }
+
+    public JsonObject handleFormWorkflowTurtleFile(InputStream inputStream) {
+        Model importModel = ModelFactory.createDefaultModel();
+        importModel.read(inputStream, null, "TTL");
+        String query = "PREFIX : <http://onto.de/default#> "
+            + "SELECT * WHERE { "
+            + "  ?fieldId :hasPredicate ?fieldName . "
+            + "}";
+        try (QueryExecution queryExecution = QueryExecutionFactory.create(query, importModel)) {
+            ResultSet resultSet = queryExecution.execSelect();
+            ResultSetFormatter.out(resultSet);
+            // TODO
+        }
+        JsonObject jsonResponse = new JsonObject();
+        return jsonResponse;
     }
 }

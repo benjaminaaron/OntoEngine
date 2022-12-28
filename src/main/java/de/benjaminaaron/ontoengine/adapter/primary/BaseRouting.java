@@ -163,4 +163,8 @@ public class BaseRouting {
     public JsonObject runSelectQuery(String query) {
         return modelController.runCkgSelectQuery(query);
     }
+
+    public JsonObject handleFormWorkflowTurtleFile(InputStream inputStream) {
+        return modelController.handleFormWorkflowTurtleFile(inputStream);
+    }
 }
