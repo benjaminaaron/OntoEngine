@@ -293,10 +293,21 @@ public class ModelController {
             + "}";
         try (QueryExecution queryExecution = QueryExecutionFactory.create(query, importModel)) {
             ResultSet resultSet = queryExecution.execSelect();
-            ResultSetFormatter.out(resultSet);
-            // TODO
+            Set<String> valuesInQuery = new HashSet<>();
+            StringBuilder valuesQueryPart = new StringBuilder();
+            valuesQueryPart.append("  VALUES ?p { ");
+            while (resultSet.hasNext()) {
+                QuerySolution qs = resultSet.next();
+                String fieldNameLocalName = qs.getResource("fieldName").getLocalName();
+                valuesInQuery.add(fieldNameLocalName);
+                valuesQueryPart.append(":").append(fieldNameLocalName).append(" ");
+            }
+            query = "PREFIX : <http://onto.de/default#> "
+                + "SELECT ?s ?p ?o WHERE { "
+                + valuesQueryPart.append("} ").toString()
+                + "  ?s ?p ?o ."
+                + "}";
+            return sortIntoValuesFoundAndNotFound(query, valuesInQuery);
         }
-        JsonObject jsonResponse = new JsonObject();
-        return jsonResponse;
     }
 }
