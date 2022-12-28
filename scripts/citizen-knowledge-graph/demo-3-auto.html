@@ -71,7 +71,11 @@
       store.add(statement("field8", "isMandatory", "false", true));
       store.add(statement("field8", "description", "Personalausweisnummer", true));
 
-      downloadAsTurtleFile(store, "AutoAnmelden.ttl");
+      deepLinkHandoverToElectronApp({
+        command: "form",
+        turtleData: rdflib.serialize(undefined, store, undefined, 'text/turtle'),
+        endpointForSubmissionUrl: "tbd"
+      })
     });
   </script>
 </html>

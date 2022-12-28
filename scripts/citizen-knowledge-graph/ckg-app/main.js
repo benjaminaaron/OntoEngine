@@ -40,23 +40,14 @@ app.whenReady().then(() => {
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
-});
+})
 
 app.on('open-url', (event, url) => {
   if (!url.startsWith('ckg-app://')) return;
   let message = JSON.parse(decodeURIComponent(url.substring('ckg-app://'.length)));
-  switch (message.command) {
-    case 'import':
-      win.loadFile('src/import.html').then(() =>
-          win.webContents.send('main-to-site', message)
-      );
-      break;
-    case 'query':
-      win.loadFile('src/query.html').then(() =>
-          win.webContents.send('main-to-site', message)
-      );
-      break;
-  }
+  win.loadFile('src/' + message.command + '.html').then(() =>
+      win.webContents.send('main-to-site', message)
+  );
 })
 
 ipcMain.on('site-to-main', (event, message) => {
