@@ -260,7 +260,10 @@ public class ModelController {
         String valuesStr = matcher.group(1).trim().replace(":", "");
         Set<String> valuesInQuery =
             Arrays.stream(valuesStr.split(" ")).collect(Collectors.toSet());
+        return sortIntoValuesFoundAndNotFound(query, valuesInQuery);
+    }
 
+    public JsonObject sortIntoValuesFoundAndNotFound(String query, Set<String> valuesInQuery) {
         try (QueryExecution queryExecution = QueryExecutionFactory.create(query, mainModel)) {
             ResultSet resultSet = queryExecution.execSelect();
             JsonObject report = new JsonObject();
