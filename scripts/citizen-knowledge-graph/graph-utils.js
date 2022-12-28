@@ -40,7 +40,7 @@ function getTimestamp() {
   });
 }
 
-function openDeepLinkToElectronApp(message) {
+function deepLinkHandoverToElectronApp(message) {
   let url = "ckg-app://" + encodeURIComponent(JSON.stringify(message));
   window.open(url, "_self");
 }

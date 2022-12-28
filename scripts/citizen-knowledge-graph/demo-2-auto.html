@@ -79,7 +79,7 @@
           + "  VALUES ?p { :firstName :lastName :birthday :birthplace :gender :eVBnumber :identityNumber }\n"
           + "  ?s ?p ?o .\n"
           + "}";
-      openDeepLinkToElectronApp({
+      deepLinkHandoverToElectronApp({
         command: "query",
         query: query,
         responseUrl: window.location.href

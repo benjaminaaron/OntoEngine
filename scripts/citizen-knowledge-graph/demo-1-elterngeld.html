@@ -103,12 +103,10 @@
 
       document.getElementById("importGraphBtn").addEventListener("click", function(event) {
         event.preventDefault();
-        let message = {
+        deepLinkHandoverToElectronApp({
           command: "import",
           turtleData: rdflib.serialize(undefined, getFilledStore(), undefined, 'text/turtle')
-        };
-        let url = "ckg-app://" + encodeURIComponent(JSON.stringify(message));
-        window.open(url, "_self");
+        });
       });
 
       document.getElementById("addNote").addEventListener('change', (event) => {
