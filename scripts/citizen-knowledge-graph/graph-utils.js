@@ -39,3 +39,8 @@ function getTimestamp() {
     second: '2-digit'
   });
 }
+
+function openDeepLinkToElectronApp(message) {
+  let url = "ckg-app://" + encodeURIComponent(JSON.stringify(message));
+  window.open(url, "_self");
+}

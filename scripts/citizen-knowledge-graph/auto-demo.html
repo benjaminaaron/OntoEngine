@@ -79,13 +79,11 @@
           + "  VALUES ?p { :firstName :lastName :birthday :birthplace :gender :eVBnumber :identityNumber }\n"
           + "  ?s ?p ?o .\n"
           + "}";
-      let message = {
+      openDeepLinkToElectronApp({
         command: "query",
         query: query,
         responseUrl: window.location.href
-      };
-      let url = "ckg-app://" + encodeURIComponent(JSON.stringify(message));
-      window.open(url, "_self");
+      });
     });
   </script>
 </body>
