@@ -72,6 +72,11 @@
       document.getElementById("send-query-btn").style.display = "inline";
     });
 
+    function deepLinkHandoverToElectronApp(message) {
+      let url = "ckg-app://" + encodeURIComponent(JSON.stringify(message));
+      window.open(url, "_self");
+    }
+
     document.getElementById("send-query-btn").addEventListener("click", function(event) {
       event.preventDefault();
       const query = "PREFIX : <http://onto.de/default#>\n"
