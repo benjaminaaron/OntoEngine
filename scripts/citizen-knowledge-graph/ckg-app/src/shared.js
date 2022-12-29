@@ -34,7 +34,7 @@ function buildTableSection(table, text, dataRows, addPlus = false) {
   });
 }
 
-function buildActionBtn(text, callback) {
+function buildActionBtn(text, callback = () => {}) {
   let btn = document.createElement('input');
   btn.type = 'button';
   btn.className = 'action-btn'
