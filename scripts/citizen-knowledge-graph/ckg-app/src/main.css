@@ -22,3 +22,21 @@ tr.headline-row > td {
   background-color: dimgray;
   color: navajowhite;
 }
+
+.form-input-field {
+  border: none;
+  background-color: dimgray;
+  padding: 5px;
+}
+
+.form-input-field-already-known {
+  color: silver;
+  font-size: small;
+  width: 145px;
+}
+
+.form-input-field-computed {
+  color: yellow;
+  font-weight: bold;
+  width: 145px;
+}
