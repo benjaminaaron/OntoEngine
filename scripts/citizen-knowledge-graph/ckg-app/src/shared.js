@@ -10,14 +10,17 @@ function clearDiv(div) {
 }
 
 function buildTableSection(table, text, dataRows, addPlus = false) {
-  let tr = document.createElement('tr');
-  tr.className = 'headline-row';
-  tr.style.color = 'navajowhite';
-  let td = document.createElement('td');
-  td.colSpan = 3;
-  td.innerHTML = "<b style='color: navajowhite'>" + text + "</b>";
-  tr.appendChild(td);
-  table.appendChild(tr);
+  let tr, td;
+  if (text) {
+    tr = document.createElement('tr');
+    tr.className = 'headline-row';
+    tr.style.color = 'navajowhite';
+    td = document.createElement('td');
+    td.colSpan = 3;
+    td.innerHTML = "<b style='color: navajowhite'>" + text + "</b>";
+    tr.appendChild(td);
+    table.appendChild(tr);
+  }
   dataRows.forEach(dataRow => {
     let tr = document.createElement('tr');
     let td = document.createElement('td');
