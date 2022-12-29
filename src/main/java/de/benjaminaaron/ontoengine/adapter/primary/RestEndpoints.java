@@ -16,6 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -105,5 +106,10 @@ public class RestEndpoints {
         boolean wasAdded = baseRouting.addLocalNamesStatement(
             statementParts.get(0), statementParts.get(1), statementParts.get(2));
         return ResponseEntity.ok().body("Was added: " + wasAdded);
+    }
+
+    @GetMapping(value = "/getAllTriples")
+    public ResponseEntity<String> getAllTriples() {
+        return ResponseEntity.ok().body(baseRouting.getAllTriples().toString());
     }
 }

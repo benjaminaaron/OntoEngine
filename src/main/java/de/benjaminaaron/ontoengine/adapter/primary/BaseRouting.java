@@ -171,4 +171,8 @@ public class BaseRouting {
     public boolean addLocalNamesStatement(String sub, String pred, String obj) {
         return modelController.addLocalNamesStatement(sub, pred, obj);
     }
+
+    public JsonObject getAllTriples() {
+        return modelController.getAllTriples();
+    }
 }

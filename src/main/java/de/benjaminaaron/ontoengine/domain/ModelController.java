@@ -333,4 +333,18 @@ public class ModelController {
         addStatement(statement, ADD, "", null, false);
         return true;
     }
+
+    public JsonObject getAllTriples() {
+        JsonArray triples = new JsonArray();
+        mainModel.listStatements().forEachRemaining(statement -> {
+            JsonObject triple = new JsonObject();
+            triple.put("subject", statement.getSubject().getURI());
+            triple.put("predicate", statement.getPredicate().getURI());
+            triple.put("object", statement.getObject().toString());
+            triples.add(triple);
+        });
+        JsonObject result = new JsonObject();
+        result.put("triples", triples);
+        return result;
+    }
 }

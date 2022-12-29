@@ -18,3 +18,19 @@ document.getElementById('submitBtn').addEventListener('click', () => {
   })
   .catch(error => console.error(error))
 });
+
+function fetchAllTriples() {
+  fetch('http://localhost:8080/api/v1/ontoengine/getAllTriples')
+  .then(response => response.json())
+  .then(response => {
+    console.log("response:", response);
+    let triplesDiv = document.getElementById('triples');
+    clearDiv(triplesDiv);
+    for (let triple of reponse.triples) {
+      // ...
+    }
+  })
+  .catch(error => console.error(error))
+}
+
+fetchAllTriples();
