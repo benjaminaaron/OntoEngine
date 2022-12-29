@@ -260,13 +260,12 @@ public class ModelController {
         String valuesStr = matcher.group(1).trim().replace(":", "");
         Set<String> valuesInQuery =
             Arrays.stream(valuesStr.split(" ")).collect(Collectors.toSet());
-        return sortIntoValuesFoundAndNotFound(query, valuesInQuery);
+        return sortIntoValuesFoundAndNotFound(query, valuesInQuery, new JsonObject());
     }
 
-    public JsonObject sortIntoValuesFoundAndNotFound(String query, Set<String> valuesInQuery) {
+    public JsonObject sortIntoValuesFoundAndNotFound(String query, Set<String> valuesInQuery, JsonObject report) {
         try (QueryExecution queryExecution = QueryExecutionFactory.create(query, mainModel)) {
             ResultSet resultSet = queryExecution.execSelect();
-            JsonObject report = new JsonObject();
             JsonObject valuesFound = new JsonObject();
             while(resultSet.hasNext()) {
                 QuerySolution qs = resultSet.next();
@@ -289,8 +288,9 @@ public class ModelController {
         importModel.read(inputStream, null, "TTL");
         String query = "PREFIX : <http://onto.de/default#> "
             + "SELECT * WHERE { "
-            + "  ?fieldId :hasPredicate ?fieldName . "
+            + "  ?s ?p ?o . "
             + "}";
+        JsonObject fields = new JsonObject();
         try (QueryExecution queryExecution = QueryExecutionFactory.create(query, importModel)) {
             ResultSet resultSet = queryExecution.execSelect();
             Set<String> valuesInQuery = new HashSet<>();
@@ -298,16 +298,25 @@ public class ModelController {
             valuesQueryPart.append("  VALUES ?p { ");
             while (resultSet.hasNext()) {
                 QuerySolution qs = resultSet.next();
-                String fieldNameLocalName = qs.getResource("fieldName").getLocalName();
-                valuesInQuery.add(fieldNameLocalName);
-                valuesQueryPart.append(":").append(fieldNameLocalName).append(" ");
+                String subLocalName = qs.getResource("s").getLocalName();
+                if (!subLocalName.startsWith("field")) continue;
+                if (!fields.hasKey(subLocalName)) fields.put(subLocalName, new JsonObject());
+                String predLocalName = qs.getResource("p").getLocalName();
+                String obj = qs.get("o").isLiteral() ? qs.getLiteral("o").getString() : qs.getResource("o").getLocalName();
+                fields.getObj(subLocalName).put(predLocalName, obj);
+                if (predLocalName.equals("hasPredicate")) {
+                    valuesInQuery.add(obj);
+                    valuesQueryPart.append(":").append(obj).append(" ");
+                }
             }
             query = "PREFIX : <http://onto.de/default#> "
                 + "SELECT ?s ?p ?o WHERE { "
-                + valuesQueryPart.append("} ").toString()
+                + valuesQueryPart.append("} ")
                 + "  ?s ?p ?o ."
                 + "}";
-            return sortIntoValuesFoundAndNotFound(query, valuesInQuery);
+            JsonObject report = new JsonObject();
+            report.put("fields", fields);
+            return sortIntoValuesFoundAndNotFound(query, valuesInQuery, report);
         }
     }
 }
