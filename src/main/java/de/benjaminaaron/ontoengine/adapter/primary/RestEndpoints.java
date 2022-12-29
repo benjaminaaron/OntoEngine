@@ -99,4 +99,11 @@ public class RestEndpoints {
             new ByteArrayInputStream(turtleData.getBytes(StandardCharsets.UTF_8)));
         return ResponseEntity.ok().body(report.toString());
     }
+
+    @PostMapping(value = "/addLocalNamesStatement")
+    public ResponseEntity<String> addLocalNamesStatement(@RequestBody List<String> statementParts) {
+        boolean wasAdded = baseRouting.addLocalNamesStatement(
+            statementParts.get(0), statementParts.get(1), statementParts.get(2));
+        return ResponseEntity.ok().body("Was added: " + wasAdded);
+    }
 }

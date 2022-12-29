@@ -5,10 +5,23 @@
     <meta http-equiv="Content-Security-Policy" content="script-src 'self';">
     <title>Overview</title>
     <link href="main.css" rel="stylesheet" />
+    <style>
+      input[type="text"]::placeholder {
+        color: silver;
+      }
+    </style>
   </head>
   <body>
     <h2 id="headline">Overview</h2>
     <!-- visual graph + direct triple input -->
+    <br>
+    Add a triple:
+    <input type="text" id="sub" class="form-input-field" placeholder="subject">
+    <input type="text" id="pred" class="form-input-field" placeholder="predicate">
+    <input type="text" id="obj" class="form-input-field" placeholder="object">
+    <input type="button" id="submitBtn" value="Submit">
+    <br>
     <script src="shared.js"></script>
+    <script src="overview.js"></script>
   </body>
 </html>

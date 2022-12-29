@@ -1,5 +1,6 @@
 package de.benjaminaaron.ontoengine.domain;
 
+import static de.benjaminaaron.ontoengine.domain.MetaHandler.StatementOrigin.ADD;
 import static de.benjaminaaron.ontoengine.domain.Utils.detectLiteralType;
 import static de.benjaminaaron.ontoengine.domain.Utils.ensureUri;
 
@@ -118,7 +119,7 @@ public class ModelController {
             }
             return response;
         }
-        addStatement(statement, StatementOrigin.ADD, "client", response, doLogging);
+        addStatement(statement, ADD, "client", response, doLogging);
         router.sendNewTripleEvent(statement);
         // suggestionEngine.runNewStatementJob(statement);
         return response;
@@ -318,5 +319,18 @@ public class ModelController {
             report.put("fields", fields);
             return sortIntoValuesFoundAndNotFound(query, valuesInQuery, report);
         }
+    }
+
+    public boolean addLocalNamesStatement(String sub, String pred, String obj) {
+        Statement statement = mainModel.createStatement(
+            mainModel.createResource(ensureUri(sub)),
+            mainModel.createProperty(ensureUri(pred)),
+            mainModel.createLiteral(obj)
+        );
+        if (statementAlreadyPresent(statement)) {
+            return false;
+        }
+        addStatement(statement, ADD, "", null, false);
+        return true;
     }
 }
