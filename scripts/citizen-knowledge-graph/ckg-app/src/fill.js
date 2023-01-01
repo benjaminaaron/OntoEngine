@@ -2,7 +2,7 @@
 let message;
 
 ipcRenderer.on('main-to-site', (event, msg) => {
-  console.log("query.js, main-to-site:", msg);
+  console.log("fill.js, main-to-site:", msg);
   message = msg;
   sendQuery(msg.query);
 })
