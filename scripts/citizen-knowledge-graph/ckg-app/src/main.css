@@ -40,3 +40,12 @@ tr.headline-row > td {
   font-weight: bold;
   width: 145px;
 }
+
+.datapoint {
+  font-size: small;
+  margin: 0;
+  background-color: dimgray;
+  color: white;
+  padding: 4px;
+  border-radius: 5px;
+}
