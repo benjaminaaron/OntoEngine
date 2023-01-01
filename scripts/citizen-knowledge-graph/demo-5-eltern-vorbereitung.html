@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Demo 4: Nachhaltigkeit-Checkups laden</title>
+    <title>Demo 5: Vorbereitung für Eltern werden</title>
     <meta charset="UTF-8">
     <link rel="shortcut icon" href="#">
     <style>
@@ -11,15 +11,12 @@
     </style>
   </head>
   <body>
-    <h2 id="headline">Naturschutzbund Checkups</h2>
-    Eine Reihe von sorgfältig zusammengestellten Checkups, die nach Potenzial<br>
-    für mehr Nachhaltigkeit in deinem Citizen Knowledge Graph suchen.
+    <h2 id="headline">Eltern-werden Checkup</h2>
+    ...
     <br><br>
-    <input type="submit" id="load-btn" value="Alle laden und ausführen">
+    <input type="submit" id="load-btn" value="Laden und ausführen">
     <br><br>
-    Du hast einen Vorschlag für einen weiteren Checkup? Sehr gerne her damit!
-    <br><br>
-    <img width="700" src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e">
+    <img width="700" src="https://images.unsplash.com/photo-1542037104857-ffbb0b9155fb">
   </body>
   <script>
     function deepLinkHandoverToElectronApp(message) {
@@ -30,7 +27,7 @@
     document.getElementById("load-btn").addEventListener("click", function(event) {
       event.preventDefault();
       deepLinkHandoverToElectronApp({
-        command: "inquiry-nature",
+        command: "inquiry-parents",
         queries: []
       });
     });
