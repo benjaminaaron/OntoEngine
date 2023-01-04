@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "electron-context-menu": "^3.6.1",
-    "querystringify": "^2.2.0"
+    "querystringify": "^2.2.0",
+    "three": "^0.148.0"
   }
 }
