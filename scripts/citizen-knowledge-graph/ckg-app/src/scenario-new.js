@@ -31,31 +31,32 @@ scene.add(plane);
 renderer.render(scene, camera);
 
 canvas.addEventListener("click", event => {
-  let interval = 50;
   let duration = 3000;
   let startPos = [0, 0, 10];
   let endPos = [0, 0, 1];
   let startLook = [0, 0, 0];
   let endLook = [0, 2, 0];
 
-  let steps = duration / interval;
-  let step = 0;
   let elapsed = 0;
+  let progress = 0;
   let pos = startPos;
   let look = startLook;
+  let animationId;
+  const startTime = performance.now();
 
-  const intervalId = setInterval(() => {
-    elapsed += interval;
+  function animate() {
+    animationId = requestAnimationFrame(animate);
+    elapsed = performance.now() - startTime;
+    progress = elapsed / duration;
 
-    pos = startPos.map((s, i) => s + (endPos[i] - s) * step / steps);
-    look = startLook.map((s, i) => s + (endLook[i] - s) * step / steps);
+    pos = startPos.map((s, i) => s + (endPos[i] - s) * progress);
+    look = startLook.map((s, i) => s + (endLook[i] - s) * progress);
 
     camera.position.set(pos[0], pos[1], pos[2]);
     camera.lookAt(new THREE.Vector3(look[0], look[1], look[2]));
     renderer.render(scene, camera);
+  }
 
-    step ++;
-
-    if (elapsed >= duration) clearInterval(intervalId);
-  }, interval);
+  animate();
+  setTimeout(() => cancelAnimationFrame(animationId), duration);
 });
