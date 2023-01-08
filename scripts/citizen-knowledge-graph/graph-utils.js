@@ -15,13 +15,17 @@ function statement(sub, pred, obj, isLiteral) {
 }
 
 function downloadAsTurtleFile(store, filename) {
-  let content = rdflib.serialize(undefined, store, undefined, 'text/turtle');
-  let blob = new Blob([content], { type: 'text/turtle' });
+  download(rdflib.serialize(undefined, store, undefined, 'text/turtle'),
+      'text/turtle', filename);
+}
+
+function download(content, type, filename) {
+  let blob = new Blob([content], { type: type });
   let url = URL.createObjectURL(blob);
   let link = document.createElement('a');
   link.href = url;
   link.download = filename;
-  link.setAttribute('Content-Type', 'text/turtle');
+  link.setAttribute('Content-Type', type);
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);

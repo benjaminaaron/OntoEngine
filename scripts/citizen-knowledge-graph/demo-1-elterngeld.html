@@ -45,10 +45,7 @@
         &nbsp;
         <input type="text" id="addNoteInput" class="input-field" style="display: none; font-size: small">
       </span>
-      <span id="graphBtns" style="display: none;">
-        <input type="submit" id="downloadGraphBtn" value="Daten herunterladen" style="background-color: yellow;">
-        <input type="submit" id="importGraphBtn" value="Daten importieren" style="background-color: yellow;"/>
-      </span>
+      <input type="submit" id="importGraphBtn" value="Daten für Ihren CKG exportieren" style="background-color: yellow; display: none;"/>
     </form>
     <script src="node_modules/rdflib/dist/rdflib.min.js"></script>
     <script src="./graph-utils.js"></script>
@@ -58,10 +55,10 @@
       document.getElementById("headline").addEventListener("click", function(event) {
         if (headlineClickCounter % 2 === 0) {
           document.getElementById("note").style.display = "none";
-          document.getElementById("graphBtns").style.display = "inline";
+          document.getElementById("importGraphBtn").style.display = "inline";
         } else {
           document.getElementById("note").style.display = "inline";
-          document.getElementById("graphBtns").style.display = "none";
+          document.getElementById("importGraphBtn").style.display = "none";
         }
         headlineClickCounter ++;
       });
@@ -89,17 +86,19 @@
         return store;
       }
 
-      document.getElementById("downloadGraphBtn").addEventListener("click", function(event) {
-        event.preventDefault();
-        downloadAsTurtleFile(getFilledStore(), "Elterngeld.ttl");
-      });
+      let btnClickCount = 0;
 
       document.getElementById("importGraphBtn").addEventListener("click", function(event) {
         event.preventDefault();
-        deepLinkHandoverToElectronApp({
-          command: "import",
-          turtleData: rdflib.serialize(undefined, getFilledStore(), undefined, 'text/turtle')
-        });
+        if (btnClickCount % 2 === 0) {
+          deepLinkHandoverToElectronApp({
+            command: "import",
+            turtleData: rdflib.serialize(undefined, getFilledStore(), undefined, 'text/turtle')
+          });
+        } else {
+          downloadAsTurtleFile(getFilledStore(), "Elterngeld.ttl");
+        }
+        btnClickCount ++;
       });
 
       document.getElementById("addNote").addEventListener('change', (event) => {

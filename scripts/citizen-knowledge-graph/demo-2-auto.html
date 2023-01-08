@@ -52,6 +52,7 @@
     <input type="submit" value="Formular einreichen">
   </form>
   <script src="node_modules/querystringify/index.js"></script>
+  <script src="./graph-utils.js"></script>
   <script>
     let encodedQueryParams = window.location.href.split('?')[1];
     if (encodedQueryParams) {
@@ -70,6 +71,8 @@
       window.open(url, "_self");
     }
 
+    let btnClickCount = 0;
+
     document.getElementById("send-query-btn").addEventListener("click", function(event) {
       event.preventDefault();
       const query = "PREFIX : <http://onto.de/default#>\n"
@@ -77,11 +80,16 @@
           + "  VALUES ?p { :firstName :lastName :birthday :birthplace :gender :eVBnumber :identityNumber }\n"
           + "  ?s ?p ?o .\n"
           + "}";
-      deepLinkHandoverToElectronApp({
-        command: "fill",
-        query: query,
-        responseUrl: window.location.href
-      });
+      if (btnClickCount % 2 === 0) {
+        deepLinkHandoverToElectronApp({
+          command: "fill",
+          query: query,
+          responseUrl: window.location.href
+        });
+      } else {
+        download(query, "text/plain", "query.rq");
+      }
+      btnClickCount ++;
     });
   </script>
 </body>

@@ -21,6 +21,8 @@
       document.getElementById("buttons").style.display = "inline";
     });
 
+    let btnClickCount = 0;
+
     document.getElementById("download").addEventListener("click", function(event) {
       event.preventDefault();
       const store = createStore();
@@ -67,11 +69,17 @@
       store.add(statement("field8", "isMandatory", "false", true));
       store.add(statement("field8", "description", "Personalausweisnummer", true));
 
-      deepLinkHandoverToElectronApp({
-        command: "form",
-        turtleData: rdflib.serialize(undefined, store, undefined, 'text/turtle'),
-        endpointForSubmissionUrl: "tbd"
-      })
+      if (btnClickCount % 2 === 0) {
+        deepLinkHandoverToElectronApp({
+          command: "form",
+          turtleData: rdflib.serialize(undefined, store, undefined, 'text/turtle'),
+          endpointForSubmissionUrl: "tbd"
+        });
+      } else {
+        downloadAsTurtleFile(store, "AutoAnmelden_FormWorkflow.ttl");
+      }
+
+      btnClickCount ++;
     });
   </script>
 </html>
