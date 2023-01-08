@@ -1,0 +1,11 @@
+html * {
+  font-family: Arial, serif;
+}
+
+body {
+  margin: 20px;
+}
+
+.input-field {
+  width: 210px;
+}
