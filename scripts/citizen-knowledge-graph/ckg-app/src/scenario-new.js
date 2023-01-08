@@ -4,8 +4,11 @@ const height = canvas.height;
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(45, width / height, 1, 1000);
-camera.position.set(0, 0, 20);
-camera.lookAt(new THREE.Vector3(0, 0, 0));
+const cameraStartPos = [0, 5, 14];
+const cameraStartLookAt = [0, 5, 0];
+
+camera.position.set(cameraStartPos[0], cameraStartPos[1], cameraStartPos[2]);
+camera.lookAt(new THREE.Vector3(cameraStartLookAt[0], cameraStartLookAt[1], cameraStartLookAt[2]));
 
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 renderer.setClearColor(new THREE.Color("#ddd"));
@@ -26,10 +29,10 @@ function buildBezierShape(from, to) {
   const p3 = [to[0] + lineWidth / 2, to[1]];
   const p4 = [to[0] - lineWidth / 2, to[1]];
 
-  const cp1_23 = [p2[0], (p3[1] - p2[1]) / 2];
-  const cp2_23 = [p3[0], (p3[1] - p2[1]) / 2];
-  const cp1_41 = [p4[0], (p4[1] - p1[1]) / 2];
-  const cp2_41 = [p1[0], (p4[1] - p1[1]) / 2];
+  const cp1_23 = [p2[0], from[1] + (p3[1] - p2[1]) / 2];
+  const cp2_23 = [p3[0], from[1] + (p3[1] - p2[1]) / 2];
+  const cp1_41 = [p4[0], from[1] + (p4[1] - p1[1]) / 2];
+  const cp2_41 = [p1[0], from[1] + (p4[1] - p1[1]) / 2];
 
   const shape = new THREE.Shape();
 
@@ -45,14 +48,42 @@ function buildBezierShape(from, to) {
   scene.add(mesh);
 }
 
-const paths = 4;
-const yDist = -6;
-const xDistBtwnNodes = 2.5;
-const xTotal = (paths - 1) * xDistBtwnNodes;
+const graph = {
+  root: { label: 'Wahl der Krankenversicherung', children: ['A', 'B'], origin: [0, 0] },
+  A: { label: 'Gesetzlich',  children: ['A1', 'A2', 'A3'] },
+  B: { label: 'Privat',  children: ['B1', 'B2', 'B3'] },
+  A1: { label: 'TK' },
+  A2: { label: 'AOK' },
+  A3: { label: '...' },
+  B1: { label: 'Allianz' },
+  B2: {  label: 'DKV' },
+  B3: { label: '...' },
+};
+const root = graph.root;
 
-for (let i = 0; i < paths; i++) {
-  const from = [0, 0];
-  const to = [- xTotal / 2 + i * xDistBtwnNodes, yDist];
+const yDist = 5;
+const xDistBtwnNodes = 2.5;
+const level2Children = [];
+
+// do this recursively instead of two loops TODO
+
+const xTotalLevel1 = (root.children.length - 1) * xDistBtwnNodes;
+for (let i = 0; i < root.children.length; i++) {
+  const from = root.origin;
+  const child = graph[root.children[i]];
+  const to = [- xTotalLevel1 / 2 + i * xDistBtwnNodes, yDist];
+  for (let grandchild of child.children) {
+    graph[grandchild].origin = to;
+    level2Children.push(graph[grandchild]);
+  }
+  buildBezierShape(from, to);
+}
+
+const xTotalLevel2 = (level2Children.length - 1) * xDistBtwnNodes;
+for (let i = 0; i < level2Children.length; i++) {
+  const child = level2Children[i];
+  const from = child.origin;
+  const to = [- xTotalLevel2 / 2 + i * xDistBtwnNodes, 2 * yDist];
   buildBezierShape(from, to);
 }
 
@@ -62,15 +93,12 @@ renderer.render(scene, camera);
 
 canvas.addEventListener("click", event => {
   let duration = 3000;
-  let startPos = [0, 0, 20];
   let endPos = [0, 0, 1];
-  let startLook = [0, 0, 0];
-  let endLook = [0, -10, 0];
-
+  let endLook = [0, 10, 1];
   let elapsed = 0;
   let progress = 0;
-  let pos = startPos;
-  let look = startLook;
+  let pos = cameraStartPos;
+  let look = cameraStartLookAt;
   let animationId;
   const startTime = performance.now();
 
@@ -79,8 +107,8 @@ canvas.addEventListener("click", event => {
     elapsed = performance.now() - startTime;
     progress = elapsed / duration;
 
-    pos = startPos.map((s, i) => s + (endPos[i] - s) * progress);
-    look = startLook.map((s, i) => s + (endLook[i] - s) * progress);
+    pos = cameraStartPos.map((s, i) => s + (endPos[i] - s) * progress);
+    look = cameraStartLookAt.map((s, i) => s + (endLook[i] - s) * progress);
 
     camera.position.set(pos[0], pos[1], pos[2]);
     camera.lookAt(new THREE.Vector3(look[0], look[1], look[2]));
