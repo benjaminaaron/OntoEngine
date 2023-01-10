@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { FlyControls } from 'three/addons/controls/FlyControls.js';
 
 const canvas = document.querySelector("canvas");
 const width = canvas.width;
@@ -14,6 +15,12 @@ camera.lookAt(new THREE.Vector3(cameraStartLookAt[0], cameraStartLookAt[1], came
 
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 renderer.setClearColor(new THREE.Color("#ddd"));
+
+const controls = new FlyControls(camera, renderer.domElement);
+// controls.listenToKeyEvents( window );
+controls.movementSpeed = 4;
+controls.rollSpeed = Math.PI / 24;
+controls.dragToLook = true;
 
 function buildLine(coords, color) {
   const mat = new THREE.LineBasicMaterial({ color: color });
@@ -103,30 +110,35 @@ console.log(graph);
 
 renderer.render(scene, camera);
 
-canvas.addEventListener("click", event => {
-  let duration = 3000;
-  let endPos = [0, 0, 1];
-  let endLook = [0, 10, 1];
-  let elapsed = 0;
-  let progress = 0;
-  let pos = cameraStartPos;
-  let look = cameraStartLookAt;
-  let animationId;
-  const startTime = performance.now();
+let flyingToStreetView = false;
+let startTime;
+let duration = 3000;
+let endPos = [0, 0, 1];
+let endLook = [0, 10, 1];
+let elapsed = 0;
+let progress = 0;
 
-  function animate() {
-    animationId = requestAnimationFrame(animate);
+function animate() {
+  requestAnimationFrame(animate);
+  controls.update(0.05);
+  if (flyingToStreetView) {
     elapsed = performance.now() - startTime;
     progress = elapsed / duration;
-
-    pos = cameraStartPos.map((s, i) => s + (endPos[i] - s) * progress);
-    look = cameraStartLookAt.map((s, i) => s + (endLook[i] - s) * progress);
-
-    camera.position.set(pos[0], pos[1], pos[2]);
-    camera.lookAt(new THREE.Vector3(look[0], look[1], look[2]));
-    renderer.render(scene, camera);
+    if (progress <= 1) {
+      let pos = cameraStartPos.map((s, i) => s + (endPos[i] - s) * progress);
+      let look = cameraStartLookAt.map((s, i) => s + (endLook[i] - s) * progress);
+      camera.position.set(pos[0], pos[1], pos[2]);
+      camera.lookAt(new THREE.Vector3(look[0], look[1], look[2]));
+    } else {
+      flyingToStreetView = false;
+    }
   }
+  renderer.render(scene, camera);
+}
 
-  animate();
-  setTimeout(() => cancelAnimationFrame(animationId), duration);
+animate();
+
+document.getElementById("devBtn").addEventListener("click", () => {
+  flyingToStreetView = true;
+  startTime = performance.now();
 });
