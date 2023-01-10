@@ -51,7 +51,7 @@ function buildBezierShape(from, to) {
 }
 
 const graph = {
-  root: { label: 'Wahl der Krankenversicherung', children: ['A', 'B'], origin: [0, 0] },
+  root: { label: 'Wahl der Krankenversicherung', children: ['A', 'B'], pos: [0, 0], level: 0 },
   A: { label: 'Gesetzlich',  children: ['A1', 'A2', 'A3'] },
   B: { label: 'Privat',  children: ['B1', 'B2', 'B3'] },
   A1: { label: 'TK' },
@@ -61,33 +61,43 @@ const graph = {
   B2: {  label: 'DKV' },
   B3: { label: '...' },
 };
-const root = graph.root;
+
+const levelCounts = {};
+
+function traverseEnrich(parent, level = 0) {
+  if (!levelCounts[level]) levelCounts[level] = { total: 0, running: 0 };
+  levelCounts[level].total += 1;
+  level += 1;
+  if (!parent.children) parent.children = [];
+  for (let childKey of parent.children) {
+    let child = graph[childKey];
+    child.parent = parent;
+    child.level = level;
+    traverseEnrich(child, level);
+  }
+}
 
 const yDist = 5;
 const xDistBtwnNodes = 2.5;
-const level2Children = [];
 
-// do this recursively instead of two loops TODO
-
-const xTotalLevel1 = (root.children.length - 1) * xDistBtwnNodes;
-for (let i = 0; i < root.children.length; i++) {
-  const from = root.origin;
-  const child = graph[root.children[i]];
-  const to = [- xTotalLevel1 / 2 + i * xDistBtwnNodes, yDist];
-  for (let grandchild of child.children) {
-    graph[grandchild].origin = to;
-    level2Children.push(graph[grandchild]);
+function traverseDraw(parent) {
+  for (let i = 0; i < parent.children.length; i++) {
+    let child = graph[parent.children[i]];
+    const from = parent.pos;
+    const levelCount = levelCounts[child.level];
+    const xTotalLevel = (levelCount.total - 1) * xDistBtwnNodes;
+    const to = [- xTotalLevel / 2 + levelCount.running * xDistBtwnNodes, child.level * yDist];
+    levelCount.running += 1;
+    child.pos = to;
+    buildBezierShape(from, to);
+    traverseDraw(child);
   }
-  buildBezierShape(from, to);
 }
 
-const xTotalLevel2 = (level2Children.length - 1) * xDistBtwnNodes;
-for (let i = 0; i < level2Children.length; i++) {
-  const child = level2Children[i];
-  const from = child.origin;
-  const to = [- xTotalLevel2 / 2 + i * xDistBtwnNodes, 2 * yDist];
-  buildBezierShape(from, to);
-}
+traverseEnrich(graph.root);
+traverseDraw(graph.root);
+
+console.log(graph);
 
 // buildLine([[0, 0, 0], [3, 3, 0]], "#000");
 
