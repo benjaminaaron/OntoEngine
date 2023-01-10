@@ -36,6 +36,7 @@ function buildLine(coords, color) {
   const line = new THREE.Line(geo, mat);
   scene.add(line);
 }
+// buildLine([[0, 0, 0], [3, 3, 0]], "#000");
 
 function buildBezierShape(from, to) {
   // compensate for the two straight lines looking more bold than the curves
@@ -44,42 +45,41 @@ function buildBezierShape(from, to) {
   const p2 = [from[0] + lineWidth / 2, from[1]];
   const p3 = [to[0] + lineWidth / 2, to[1]];
   const p4 = [to[0] - lineWidth / 2, to[1]];
-
   const cp1_23 = [p2[0], from[1] + (p3[1] - p2[1]) / 2];
   const cp2_23 = [p3[0], from[1] + (p3[1] - p2[1]) / 2];
   const cp1_41 = [p4[0], from[1] + (p4[1] - p1[1]) / 2];
   const cp2_41 = [p1[0], from[1] + (p4[1] - p1[1]) / 2];
 
   const shape = new THREE.Shape();
-
   shape.moveTo(p1[0], p1[1]);
   shape.lineTo(p2[0], p2[1]);
   shape.bezierCurveTo(cp1_23[0], cp1_23[1], cp2_23[0], cp2_23[1], p3[0], p3[1]);
   shape.lineTo(p4[0], p4[1]);
   shape.bezierCurveTo(cp1_41[0], cp1_41[1], cp2_41[0], cp2_41[1], p1[0], p1[1]);
 
-  const g = new THREE.ShapeGeometry(shape);
-  const m = new THREE.MeshBasicMaterial({ color: pathsColor });
-  const mesh = new THREE.Mesh(g, m);
+  const mesh = new THREE.Mesh(
+      new THREE.ShapeGeometry(shape),
+      new THREE.MeshBasicMaterial({ color: pathsColor })
+  );
   scene.add(mesh);
 }
 
 function buildRoundedRect(pos, dim) {
-  let widthHalf = dim[0] / 2;
-  let heightHalf = dim[1] / 2;
-  let rrSub = 0.4;
-  let p1 = [- widthHalf, - heightHalf];
-  let p12 = [- widthHalf + rrSub, - heightHalf];
-  let p21 = [widthHalf - rrSub, - heightHalf];
-  let p2 = [widthHalf, - heightHalf];
-  let p23 = [widthHalf, - heightHalf + rrSub];
-  let p32 = [widthHalf, heightHalf - rrSub];
-  let p3 = [widthHalf, heightHalf];
-  let p34 = [widthHalf - rrSub, heightHalf];
-  let p43 = [- widthHalf + rrSub, heightHalf];
-  let p4 = [- widthHalf, heightHalf];
-  let p41 = [- widthHalf, heightHalf - rrSub];
-  let p14 = [- widthHalf, - heightHalf + rrSub];
+  let wh = dim[0] / 2; // width / 2
+  let hh = dim[1] / 2; // height / 2
+  let rr = 0.4; // rounded corner radius
+  let p1 = [- wh, - hh];
+  let p12 = [- wh + rr, - hh];
+  let p21 = [wh - rr, - hh];
+  let p2 = [wh, - hh];
+  let p23 = [wh, - hh + rr];
+  let p32 = [wh, hh - rr];
+  let p3 = [wh, hh];
+  let p34 = [wh - rr, hh];
+  let p43 = [- wh + rr, hh];
+  let p4 = [- wh, hh];
+  let p41 = [- wh, hh - rr];
+  let p14 = [- wh, - hh + rr];
 
   let path = new THREE.Shape();
   // path.absellipse(0, 0, 1.2, 0.4, 0, Math.PI * 2, false, 0);
@@ -93,17 +93,17 @@ function buildRoundedRect(pos, dim) {
   path.lineTo(p14[0], p14[1]);
   path.quadraticCurveTo(p1[0], p1[1], p12[0], p12[1]);
 
-  let ellipse = new THREE.Mesh(
+  let mesh = new THREE.Mesh(
       new THREE.ShapeBufferGeometry(path),
       new THREE.MeshBasicMaterial({ color: nodeBackgroundColor })
   );
-  ellipse.position.set(pos[0], pos[1], 0.0001);
-  scene.add(ellipse);
+  mesh.position.set(pos[0], pos[1], 0.0001);
+  scene.add(mesh);
 }
 
 function buildText(label, pos, callback) {
   let loader = new FontLoader();
-  loader.load('../node_modules/three/examples/fonts/helvetiker_regular.typeface.json', function (font) {
+  loader.load('../node_modules/three/examples/fonts/helvetiker_regular.typeface.json', function(font) {
     let textGeometry = new TextGeometry(label, {
       font: font,
       size: 0.3,
@@ -173,10 +173,6 @@ for (let key of Object.keys(graph)) {
     buildRoundedRect(node.pos, [bbox[0] + 0.6, bbox[1] + 0.6]);
   });
 }
-
-console.log(graph);
-
-// buildLine([[0, 0, 0], [3, 3, 0]], "#000");
 
 renderer.render(scene, camera);
 
