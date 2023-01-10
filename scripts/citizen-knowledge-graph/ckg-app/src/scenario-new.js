@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 import { FlyControls } from 'three/addons/controls/FlyControls.js';
+import { FontLoader } from 'three/addons/loaders/FontLoader.js';
+import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
 const canvas = document.querySelector("canvas");
 const width = canvas.width;
@@ -57,6 +59,35 @@ function buildBezierShape(from, to) {
   scene.add(mesh);
 }
 
+function buildEllipse(pos) {
+  let path = new THREE.Shape();
+  path.absellipse(0,0,1.5,0.5,0, Math.PI*2, false,0);
+  let ellipse = new THREE.Mesh(
+      new THREE.ShapeBufferGeometry(path),
+      new THREE.MeshBasicMaterial({ color: 0x59d1c1})
+  );
+  ellipse.position.set(pos[0], pos[1], 0.0001);
+  scene.add(ellipse);
+}
+
+function buildText(label, pos) {
+  let loader = new FontLoader();
+  loader.load('../node_modules/three/examples/fonts/helvetiker_regular.typeface.json', function (font) {
+    let textGeometry = new TextGeometry(label, {
+      font: font,
+      size: 0.3,
+      height: 0.01,
+    });
+    let text = new THREE.Mesh(textGeometry,
+        new THREE.MeshBasicMaterial({ color: 0x0000ff })
+    );
+    textGeometry.computeBoundingBox()
+    let center = textGeometry.boundingBox.getCenter(new THREE.Vector3());
+    text.position.set(pos[0] - center.x, pos[1] - center.y, 0.0002);
+    scene.add(text);
+  });
+}
+
 const graph = {
   root: { label: 'Wahl der Krankenversicherung', children: ['A', 'B'], pos: [0, 0], level: 0 },
   A: { label: 'Gesetzlich',  children: ['A1', 'A2', 'A3'] },
@@ -103,6 +134,12 @@ function traverseDraw(parent) {
 
 traverseEnrich(graph.root);
 traverseDraw(graph.root);
+
+for (let key of Object.keys(graph)) {
+  let node = graph[key];
+  buildEllipse(node.pos);
+  buildText(node.label, node.pos);
+}
 
 console.log(graph);
 
