@@ -11,12 +11,16 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(45, width / height, 1, 1000);
 const cameraStartPos = [0, 5, 14];
 const cameraStartLookAt = [0, 5, 0];
+const backgroundColor = "darkslategray";
+const pathsColor = "silver";
+const nodeBackgroundColor = "navajowhite";
+const nodeTextColor = "black";
 
 camera.position.set(cameraStartPos[0], cameraStartPos[1], cameraStartPos[2]);
 camera.lookAt(new THREE.Vector3(cameraStartLookAt[0], cameraStartLookAt[1], cameraStartLookAt[2]));
 
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-renderer.setClearColor(new THREE.Color("#ddd"));
+renderer.setClearColor(new THREE.Color(backgroundColor));
 
 const controls = new FlyControls(camera, renderer.domElement);
 // controls.listenToKeyEvents( window );
@@ -34,7 +38,8 @@ function buildLine(coords, color) {
 }
 
 function buildBezierShape(from, to) {
-  const lineWidth = 0.5;
+  // compensate for the two straight lines looking more bold than the curves
+  const lineWidth = from[0] === to[0] ? 0.5 : 0.6;
   const p1 = [from[0] - lineWidth / 2, from[1]];
   const p2 = [from[0] + lineWidth / 2, from[1]];
   const p3 = [to[0] + lineWidth / 2, to[1]];
@@ -54,7 +59,7 @@ function buildBezierShape(from, to) {
   shape.bezierCurveTo(cp1_41[0], cp1_41[1], cp2_41[0], cp2_41[1], p1[0], p1[1]);
 
   const g = new THREE.ShapeGeometry(shape);
-  const m = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+  const m = new THREE.MeshBasicMaterial({ color: pathsColor });
   const mesh = new THREE.Mesh(g, m);
   scene.add(mesh);
 }
@@ -90,7 +95,7 @@ function buildRoundedRect(pos, dim) {
 
   let ellipse = new THREE.Mesh(
       new THREE.ShapeBufferGeometry(path),
-      new THREE.MeshBasicMaterial({ color: 0x59d1c1})
+      new THREE.MeshBasicMaterial({ color: nodeBackgroundColor })
   );
   ellipse.position.set(pos[0], pos[1], 0.0001);
   scene.add(ellipse);
@@ -105,7 +110,7 @@ function buildText(label, pos, callback) {
       height: 0.01,
     });
     let text = new THREE.Mesh(textGeometry,
-        new THREE.MeshBasicMaterial({ color: 0x0000ff })
+        new THREE.MeshBasicMaterial({ color: nodeTextColor })
     );
     textGeometry.computeBoundingBox()
     let center = textGeometry.boundingBox.getCenter(new THREE.Vector3());
@@ -121,10 +126,10 @@ const graph = {
   B: { label: 'Privat',  children: ['B1', 'B2', 'B3'] },
   A1: { label: 'TK' },
   A2: { label: 'AOK' },
-  A3: { label: '...' },
+  A3: { label: '. . .' },
   B1: { label: 'Allianz' },
   B2: {  label: 'DKV' },
-  B3: { label: '...' },
+  B3: { label: '. . .' },
 };
 
 const levelCounts = {};
