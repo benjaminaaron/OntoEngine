@@ -59,9 +59,35 @@ function buildBezierShape(from, to) {
   scene.add(mesh);
 }
 
-function buildEllipse(pos) {
+function buildRoundedRect(pos, dim) {
+  let widthHalf = dim[0] / 2;
+  let heightHalf = dim[1] / 2;
+  let rrSub = 0.4;
+  let p1 = [- widthHalf, - heightHalf];
+  let p12 = [- widthHalf + rrSub, - heightHalf];
+  let p21 = [widthHalf - rrSub, - heightHalf];
+  let p2 = [widthHalf, - heightHalf];
+  let p23 = [widthHalf, - heightHalf + rrSub];
+  let p32 = [widthHalf, heightHalf - rrSub];
+  let p3 = [widthHalf, heightHalf];
+  let p34 = [widthHalf - rrSub, heightHalf];
+  let p43 = [- widthHalf + rrSub, heightHalf];
+  let p4 = [- widthHalf, heightHalf];
+  let p41 = [- widthHalf, heightHalf - rrSub];
+  let p14 = [- widthHalf, - heightHalf + rrSub];
+
   let path = new THREE.Shape();
-  path.absellipse(0,0,1.5,0.5,0, Math.PI*2, false,0);
+  // path.absellipse(0, 0, 1.2, 0.4, 0, Math.PI * 2, false, 0);
+  path.moveTo(p12[0], p12[1]);
+  path.lineTo(p21[0], p21[1]);
+  path.quadraticCurveTo(p2[0], p2[1], p23[0], p23[1]);
+  path.lineTo(p32[0], p32[1]);
+  path.quadraticCurveTo(p3[0], p3[1], p34[0], p34[1]);
+  path.lineTo(p43[0], p43[1]);
+  path.quadraticCurveTo(p4[0], p4[1], p41[0], p41[1]);
+  path.lineTo(p14[0], p14[1]);
+  path.quadraticCurveTo(p1[0], p1[1], p12[0], p12[1]);
+
   let ellipse = new THREE.Mesh(
       new THREE.ShapeBufferGeometry(path),
       new THREE.MeshBasicMaterial({ color: 0x59d1c1})
@@ -70,7 +96,7 @@ function buildEllipse(pos) {
   scene.add(ellipse);
 }
 
-function buildText(label, pos) {
+function buildText(label, pos, callback) {
   let loader = new FontLoader();
   loader.load('../node_modules/three/examples/fonts/helvetiker_regular.typeface.json', function (font) {
     let textGeometry = new TextGeometry(label, {
@@ -85,6 +111,7 @@ function buildText(label, pos) {
     let center = textGeometry.boundingBox.getCenter(new THREE.Vector3());
     text.position.set(pos[0] - center.x, pos[1] - center.y, 0.0002);
     scene.add(text);
+    callback([textGeometry.boundingBox.max.x, textGeometry.boundingBox.max.y]);
   });
 }
 
@@ -137,8 +164,9 @@ traverseDraw(graph.root);
 
 for (let key of Object.keys(graph)) {
   let node = graph[key];
-  buildEllipse(node.pos);
-  buildText(node.label, node.pos);
+  buildText(node.label, node.pos, bbox => {
+    buildRoundedRect(node.pos, [bbox[0] + 0.6, bbox[1] + 0.6]);
+  });
 }
 
 console.log(graph);
