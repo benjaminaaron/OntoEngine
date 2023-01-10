@@ -1,3 +1,5 @@
+import * as THREE from 'three';
+
 const canvas = document.querySelector("canvas");
 const width = canvas.width;
 const height = canvas.height;
