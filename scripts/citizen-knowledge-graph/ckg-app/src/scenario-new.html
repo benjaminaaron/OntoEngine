@@ -70,6 +70,17 @@
       .autocomplete-items div:hover strong {
         background-color: silver;
       }
+      #container {
+        position: relative;
+      }
+      #overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: darkslategray;
+      }
     </style>
   </head>
   <body>
@@ -84,7 +95,10 @@
         <input type="submit" id="makeChoiceBtn">
       </form>
     </div>
-    <canvas width="700" height="400" style="display: none"></canvas>
+    <div id="container">
+      <div id="overlay"></div>
+      <canvas width="700" height="400"></canvas>
+    </div>
     <script src="scenario-new.js"></script>
     <script type="module" src="scenario-new-three.js"></script>
     <script src="shared.js"></script>

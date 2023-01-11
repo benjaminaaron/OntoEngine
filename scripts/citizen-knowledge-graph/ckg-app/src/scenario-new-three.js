@@ -226,8 +226,9 @@ animate();
 
 document.getElementById("makeChoiceBtn").addEventListener("click", e => {
   e.preventDefault();
-  document.getElementById("whichDatapointDiv").style.display = "none";
-  canvas.style.display = "block";
+  fadeOut(document.getElementById('whichDatapointDiv'), 800, () => {
+    fadeOut(document.getElementById("overlay"), 800);
+  });
 });
 
 canvas.addEventListener("click", () => {
@@ -235,3 +236,14 @@ canvas.addEventListener("click", () => {
   startTime = performance.now();
   pause = false;
 });
+
+// adapted from https://stackoverflow.com/a/33424474/2474159
+function fadeOut(el, speed, callback = () => {}) {
+  let seconds = speed / 1000;
+  el.style.transition = "opacity " + seconds + "s ease";
+  el.style.opacity = 0;
+  setTimeout(function() {
+    el.parentNode.removeChild(el);
+    callback();
+  }, speed);
+}
