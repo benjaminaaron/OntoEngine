@@ -148,11 +148,11 @@ function traverseEnrich(parent, level = 0) {
 }
 
 const yDist = 5;
-const xDistBtwnNodes = 2.5;
+const xDistBtwnNodes = 3;
 
 function traverseDraw(parent) {
-  for (let i = 0; i < parent.children.length; i++) {
-    let child = graph[parent.children[i]];
+  for (const childKey of parent.children) {
+    let child = graph[childKey];
     const from = parent.pos;
     const levelCount = levelCounts[child.level];
     const xTotalLevel = (levelCount.total - 1) * xDistBtwnNodes;
@@ -176,27 +176,47 @@ for (let key of Object.keys(graph)) {
 
 renderer.render(scene, camera);
 
-let flyingToStreetView = false;
+let flyPaths = [
+  {
+    endPos: cameraStartPos,
+    endLook: cameraStartLookAt
+  },
+  {
+    duration: 1000,
+    endPos: [0, -3, 2],
+    endLook: [0, 6, 1]
+  },
+  {
+    duration: 1000,
+    endPos: [-2.8, 2, 2],
+    endLook: [-2.8, 6, 1]
+  },
+  {
+    duration: 1000,
+    endPos: [-7.9, 7.25, 2],
+    endLook: [-7.9, 10, 1]
+  }
+]
+let flyPathIdx = 0;
 let startTime;
-let duration = 3000;
-let endPos = [0, 0, 1];
-let endLook = [0, 10, 1];
 let elapsed = 0;
 let progress = 0;
 
 function animate() {
   requestAnimationFrame(animate);
   controls.update(0.05);
-  if (flyingToStreetView) {
+  if (flyPathIdx > 0 && flyPathIdx < flyPaths.length) {
     elapsed = performance.now() - startTime;
-    progress = elapsed / duration;
-    if (progress <= 1) {
-      let pos = cameraStartPos.map((s, i) => s + (endPos[i] - s) * progress);
-      let look = cameraStartLookAt.map((s, i) => s + (endLook[i] - s) * progress);
+    progress = elapsed / flyPaths[flyPathIdx].duration;
+    if (progress >= 1) {
+      flyPathIdx += 1;
+      startTime = performance.now();
+    } else {
+      let flyPath = flyPaths[flyPathIdx];
+      let pos = flyPaths[flyPathIdx - 1].endPos.map((s, i) => s + (flyPath.endPos[i] - s) * progress);
+      let look = flyPaths[flyPathIdx - 1].endLook.map((s, i) => s + (flyPath.endLook[i] - s) * progress);
       camera.position.set(pos[0], pos[1], pos[2]);
       camera.lookAt(new THREE.Vector3(look[0], look[1], look[2]));
-    } else {
-      flyingToStreetView = false;
     }
   }
   renderer.render(scene, camera);
@@ -205,6 +225,6 @@ function animate() {
 animate();
 
 document.getElementById("devBtn").addEventListener("click", () => {
-  flyingToStreetView = true;
+  flyPathIdx = 1;
   startTime = performance.now();
 });
