@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { FlyControls } from 'three/addons/controls/FlyControls.js';
+// import { FlyControls } from 'three/addons/controls/FlyControls.js';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
@@ -22,11 +22,11 @@ camera.lookAt(new THREE.Vector3(cameraStartLookAt[0], cameraStartLookAt[1], came
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 renderer.setClearColor(new THREE.Color(backgroundColor));
 
-const controls = new FlyControls(camera, renderer.domElement);
+/*const controls = new FlyControls(camera, renderer.domElement);
 // controls.listenToKeyEvents( window );
 controls.movementSpeed = 4;
 controls.rollSpeed = Math.PI / 24;
-controls.dragToLook = true;
+controls.dragToLook = true;*/
 
 function buildLine(coords, color) {
   const mat = new THREE.LineBasicMaterial({ color: color });
@@ -182,17 +182,17 @@ let flyPaths = [
     endLook: cameraStartLookAt
   },
   {
-    duration: 1000,
-    endPos: [0, -3, 2],
-    endLook: [0, 6, 1]
+    duration: 3500,
+    endPos: [0, -3, 4],
+    endLook: [0, 6, 2]
   },
   {
-    duration: 1000,
+    duration: 2000,
     endPos: [-2.8, 2, 2],
     endLook: [-2.8, 6, 1]
   },
   {
-    duration: 1000,
+    duration: 2000,
     endPos: [-7.9, 7.25, 2],
     endLook: [-7.9, 10, 1]
   }
@@ -204,7 +204,7 @@ let progress = 0;
 
 function animate() {
   requestAnimationFrame(animate);
-  controls.update(0.05);
+  // controls.update(0.05);
   if (flyPathIdx > 0 && flyPathIdx < flyPaths.length) {
     elapsed = performance.now() - startTime;
     progress = elapsed / flyPaths[flyPathIdx].duration;
