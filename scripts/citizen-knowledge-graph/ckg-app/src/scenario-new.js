@@ -187,7 +187,17 @@ let flyPaths = [
     endLook: [0, 6, 2]
   },
   {
+    duration: 1000, // pause
+    endPos: [0, -3, 4],
+    endLook: [0, 6, 2]
+  },
+  {
     duration: 2000,
+    endPos: [-2.8, 2, 2],
+    endLook: [-2.8, 6, 1]
+  },
+  {
+    duration: 1000, // pause
     endPos: [-2.8, 2, 2],
     endLook: [-2.8, 6, 1]
   },
