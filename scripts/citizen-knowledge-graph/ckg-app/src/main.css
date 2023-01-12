@@ -1,8 +1,11 @@
 * {
-  margin: 10px;
   font-family: "Ubuntu", serif;
   background-color: darkslategray;
   color: white;
+}
+
+html {
+  margin-left: 13px;
 }
 
 h2 {
