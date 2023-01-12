@@ -1,9 +1,9 @@
 
 document.getElementById('submitBtn').addEventListener('click', () => {
-  let sub = document.getElementById('sub');
+  let sub = "http://onto.de/default#mainPerson";
   let pred = document.getElementById('pred');
   let obj = document.getElementById('obj');
-  let statementParts = [sub.value, pred.value, obj.value];
+  let statementParts = [sub, pred.value, obj.value];
   fetch('http://localhost:8080/api/v1/ontoengine/addLocalNamesStatement', {
     method: 'POST',
     headers: {
@@ -15,7 +15,6 @@ document.getElementById('submitBtn').addEventListener('click', () => {
   .then(response => {
     console.log("response:", response);
     fetchAllTriples();
-    sub.value = '';
     pred.value = '';
     obj.value = '';
   })
@@ -31,7 +30,7 @@ function fetchAllTriples() {
     clearDiv(triplesDiv);
     let table = document.createElement('table');
     triplesDiv.appendChild(table);
-    let dataRows = response.triples.map(triple => [triple.predicate, triple.object]);
+    let dataRows = response.triples.map(triple => [triple.predicate.split('#')[1], triple.object]);
     buildTableSection(table, "", dataRows);
   })
   .catch(error => console.error(error))
