@@ -52,3 +52,12 @@ tr.headline-row > td {
   padding: 4px;
   border-radius: 5px;
 }
+
+.fadeIn {
+  opacity: 0;
+  transition: opacity 2s;
+}
+
+.fadeIn.fade {
+  opacity: 1;
+}

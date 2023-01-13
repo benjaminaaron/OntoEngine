@@ -53,3 +53,10 @@ function openInExternalBrowser(url, queryParams = undefined) {
   }
   shell.openExternal(url).then(() => console.log("Opened in external browser: " + url));
 }
+
+let clickCount = 1;
+
+document.addEventListener("click", (event) => {
+  let elements = document.getElementsByClassName("order" + (clickCount ++));
+  if (elements.length > 0) elements[0].classList.add("fade");
+});
