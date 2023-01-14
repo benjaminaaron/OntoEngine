@@ -227,14 +227,18 @@ animate();
 document.getElementById("makeChoiceBtn").addEventListener("click", e => {
   e.preventDefault();
   fadeOut(document.getElementById('whichDatapointDiv'), 800, () => {
-    fadeOut(document.getElementById("overlay"), 800);
+    fadeOut(document.getElementById("overlayBefore"), 800);
   });
 });
 
-canvas.addEventListener("click", () => {
-  flyPathIdx += 1;
-  startTime = performance.now();
-  pause = false;
+document.getElementById("overlayAfter").addEventListener("click", () => {
+  if (flyPathIdx < flyPaths.length - 1) {
+    flyPathIdx += 1;
+    startTime = performance.now();
+    pause = false;
+  } else {
+    document.getElementById("overlayAfter").classList.add("fade");
+  }
 });
 
 // adapted from https://stackoverflow.com/a/33424474/2474159
