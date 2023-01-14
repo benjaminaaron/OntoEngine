@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self';">
+    <title>Settings</title>
+    <link href="main.css" rel="stylesheet" />
+    <style>
+      span {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <h2 id="headline">Settings</h2>
+    <h3>Theme</h3>
+    <span>Adjust the current theme</span> | <span>Import a new theme</span> | <span>Export the current theme</span>
+    <div class="fadeIn order1">
+      <br>
+      <h3>Form Workflow Plugin</h3>
+      <span>Import a plugin</span> for the form workflow (theme and flow)
+    </div>
+    <div class="fadeIn order2">
+      <br>
+      <h3>Import data</h3>
+      <span>From CSV</span> | <span>From Excel</span> | <span>From RDF files</span> | <span>From a custom format</span> (build a mapper)
+    </div>
+    <div class="fadeIn order3">
+      <br>
+      <h3>Export data</h3>
+      <em style="color: red; background-color: black">
+        Warning: I can no longer protect your data if it leaves my system. Be very careful where you store your unencrypted data and where you upload
+        or import it. You are responsible for what is happening to it.
+      </em>
+      <br><br>
+      <span>As CSV</span> | <span>As RDF file</span> | <span>To a graph database</span>
+    </div>
+    <script src="shared.js"></script>
+  </body>
+</html>
