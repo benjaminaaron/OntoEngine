@@ -10,19 +10,88 @@
         margin: 0;
         color: darkgray;
       }
+      td {
+        padding-right: 30px;
+      }
+      .inq-cb {
+        display: none;
+      }
     </style>
   </head>
     <body>
     <h2 id="headline">Subscriptions</h2>
-    <div>
+    <div style="margin-left: 20px">
       You are subscribed to the following inquiry providers:
-      <ul style="color: blue">
-        <li>Verbraucherzentrale Berlin e.V.</li>
-        <li>Deutsche Umwelthilfe</li>
-        <li>Bundesinstitut für Risikobewertung</li>
-        <li>Familienportal des BMFSFJ</li>
-        <li>Forum Bürger helfen Bürgern e.V.</li>
-      </ul>
+      <br><br>
+      <table>
+        <tr>
+          <td>
+            <table style="margin-left: 20px">
+              <tr>
+                <td>
+                  <li>Verbraucherzentrale Berlin e.V.</li>
+                </td>
+                <td>
+                  <input type="checkbox" class="inq-cb">
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <li>Bundesagentur für Arbeit</li>
+                </td>
+                <td>
+                  <input type="checkbox" class="inq-cb">
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <li>Bundesinstitut für Risikobewertung</li>
+                </td>
+                <td>
+                  <input type="checkbox" class="inq-cb">
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <li>Familienportal des BMFSFJ</li>
+                </td>
+                <td>
+                  <input type="checkbox" class="inq-cb">
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <li>Stepstone Job Portal</li>
+                </td>
+                <td>
+                  <input type="checkbox" class="inq-cb">
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <li>Nachbarschaftsinitiative Neukölln</li>
+                </td>
+                <td>
+                  <input type="checkbox" class="inq-cb">
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <li>Forum Bürger helfen Bürgern e.V.</li>
+                </td>
+                <td>
+                  <input type="checkbox" class="inq-cb">
+                </td>
+              </tr>
+            </table>
+          </td>
+          <td>
+            <small style="color: gray" id="new-sub">Create new subscription shortcut</small>
+            <input type="text" id="new-sub-name" style="display: none; margin-top: 10px">
+          </td>
+        </tr>
+      </table>
+      <br>
       &#128269; <small style="text-decoration: underline; margin: 0; color: darkgray;">Find more</small>
       <br>
       <span class="fadeIn order1">
@@ -60,5 +129,6 @@
       </span>
     </div>
     <script src="shared.js"></script>
+    <script src="subscriptions.js"></script>
   </body>
 </html>

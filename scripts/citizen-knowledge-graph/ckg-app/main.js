@@ -54,5 +54,10 @@ ipcMain.on('site-to-main', (event, message) => {
   if (message === 'navigate-to-home') {
     win.loadFile('src/index.html');
   }
+  if (message === 'new-subscription-shortcut') {
+    win.loadFile('src/index.html').then(() =>
+        win.webContents.send('main-to-site')
+    );
+  }
   // event.sender.send('main-to-site', 'async reply');
 })

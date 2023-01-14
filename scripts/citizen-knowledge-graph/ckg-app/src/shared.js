@@ -1,9 +1,13 @@
-const { ipcRenderer, shell} = require('electron');
+const { ipcRenderer, shell } = require('electron');
 const querystringify = require('querystringify');
 
 document.getElementById('headline').addEventListener('click', () => {
   ipcRenderer.send('site-to-main', 'navigate-to-home');
 });
+
+function messageToMain(msg) {
+  ipcRenderer.send('site-to-main', msg);
+}
 
 function clearDiv(div) {
   while (div.firstChild) div.removeChild(div.lastChild);
