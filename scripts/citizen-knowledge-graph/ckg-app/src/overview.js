@@ -30,10 +30,32 @@ function fetchAllTriples() {
     clearDiv(triplesDiv);
     let table = document.createElement('table');
     triplesDiv.appendChild(table);
-    let dataRows = response.triples.map(triple => [triple.predicate.split('#')[1], triple.object]);
+    const buildDataRow = (triple) => {
+      if (mode === "normal") {
+        return [triple.predicate.split('#')[1], triple.object]
+      }
+      return [triple.subject, triple.predicate, triple.object]
+    };
+    let dataRows = response.triples.map(triple => buildDataRow(triple));
     buildTableSection(table, "", dataRows);
   })
   .catch(error => console.error(error))
 }
 
 fetchAllTriples();
+
+let mode = "normal";
+
+document.getElementById("advancedMode").addEventListener("click", function(e) {
+  mode = mode === "normal" ? "advanced" : "normal";
+  if (mode === "advanced") {
+    document.getElementById("sub").style.display = "inline";
+    document.getElementById("pred").placeholder = "predicate";
+    document.getElementById("obj").placeholder = "object";
+  } else {
+    document.getElementById("sub").style.display = "none";
+    document.getElementById("pred").placeholder = "field name";
+    document.getElementById("obj").placeholder = "value";
+  }
+  fetchAllTriples();
+});

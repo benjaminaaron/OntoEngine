@@ -25,17 +25,33 @@ function buildTableSection(table, text, dataRows, addPlus = false) {
     tr.appendChild(td);
     table.appendChild(tr);
   }
+  let isAdvancedMode = dataRows.length > 1  && dataRows[0].length === 3;
+
+  const formatUri = (uri) => {
+    return "<small style='color: silver'>" + uri.split('#')[0] + "#"
+        + "<strong>" + uri.split('#')[1] + "</strong></small>";
+  };
+
   dataRows.forEach(dataRow => {
     let tr = document.createElement('tr');
+    let col1 = "";
+    let col2 = dataRow[0];
+    let col3 = dataRow[1];
+    if (isAdvancedMode) {
+      col1 = dataRow[0];
+      col2 = dataRow[1];
+      col3 = dataRow[2];
+    }
     let td = document.createElement('td');
     if (addPlus) td.innerHTML = '+&nbsp;';
+    if (isAdvancedMode) td.innerHTML = formatUri(col1);
     tr.appendChild(td);
     td = document.createElement('td');
     td.style.color = 'darkgray';
-    td.innerHTML = dataRow[0];
+    td.innerHTML = isAdvancedMode ? "&nbsp;&nbsp;&nbsp;" + formatUri(col2) : col2;
     tr.appendChild(td);
     td = document.createElement('td');
-    td.innerHTML = '&nbsp;&nbsp;&nbsp;' +  dataRow[1];
+    td.innerHTML = '&nbsp;&nbsp;&nbsp;' +  col3;
     tr.appendChild(td);
     table.appendChild(tr);
   });

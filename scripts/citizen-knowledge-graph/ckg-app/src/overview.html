@@ -9,14 +9,23 @@
       input[type="text"]::placeholder {
         color: silver;
       }
+      #advancedMode {
+        float: right;
+        font-size: small;
+        color: gray;
+        margin-right: 10px;
+        text-decoration: underline;
+      }
     </style>
   </head>
   <body>
     <h2 id="headline">Overview</h2>
     <br>
+    <input type="text" id="sub" class="form-input-field" style="display: none" placeholder="subject">
     <input type="text" id="pred" class="form-input-field" placeholder="field name">
     <input type="text" id="obj" class="form-input-field" placeholder="value">
     <input type="button" id="submitBtn" value="Submit">
+    <span id="advancedMode">switch to advanced mode</span>
     <br><br><br>
     <div id="triples"></div>
     <script src="shared.js"></script>
