@@ -1,5 +1,7 @@
 
-document.getElementById('submitBtn').addEventListener('click', () => {
+document.getElementById('submitBtn').addEventListener('click', () => submitTriple());
+
+function submitTriple() {
   let sub = "http://onto.de/default#mainPerson";
   let pred = document.getElementById('pred');
   let obj = document.getElementById('obj');
@@ -19,6 +21,18 @@ document.getElementById('submitBtn').addEventListener('click', () => {
     obj.value = '';
   })
   .catch(error => console.error(error))
+}
+
+document.getElementById("sub").addEventListener("keyup", function(event) {
+  if (event.code === "Enter") submitTriple();
+});
+
+document.getElementById("pred").addEventListener("keyup", function(event) {
+  if (event.code === "Enter") submitTriple();
+});
+
+document.getElementById("obj").addEventListener("keyup", function(event) {
+  if (event.code === "Enter") submitTriple();
 });
 
 function fetchAllTriples() {
