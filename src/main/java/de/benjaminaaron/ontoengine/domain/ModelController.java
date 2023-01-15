@@ -293,11 +293,12 @@ public class ModelController {
     public JsonObject handleFormWorkflowTurtleFile(InputStream inputStream) {
         Model importModel = ModelFactory.createDefaultModel();
         importModel.read(inputStream, null, "TTL");
-        String query = "PREFIX : <http://onto.de/default#> "
-            + "SELECT * WHERE { "
-            + "  ?s ?p ?o . "
-            + "}";
+        String query = "SELECT * WHERE { ?s ?p ?o . }";
         JsonObject fields = new JsonObject();
+        Map<String, String> prefixes = new HashMap<>(); // extract instead of entering values here
+        prefixes.put("http://ckg.de/default#", "ckg");
+        prefixes.put("http://www.w3.org/2006/vcard/ns#", "vcard");
+        prefixes.put("http://xmlns.com/foaf/0.1#", "foaf");
         try (QueryExecution queryExecution = QueryExecutionFactory.create(query, importModel)) {
             ResultSet resultSet = queryExecution.execSelect();
             Set<String> valuesInQuery = new HashSet<>();
@@ -309,14 +310,20 @@ public class ModelController {
                 if (!subLocalName.startsWith("field")) continue;
                 if (!fields.hasKey(subLocalName)) fields.put(subLocalName, new JsonObject());
                 String predLocalName = qs.getResource("p").getLocalName();
-                String obj = qs.get("o").isLiteral() ? qs.getLiteral("o").getString() : qs.getResource("o").getLocalName();
+                String obj = qs.get("o").isLiteral() ? qs.getLiteral("o").getString() : qs.getResource("o").toString();
                 fields.getObj(subLocalName).put(predLocalName, obj);
                 if (predLocalName.equals("hasPredicate")) {
                     valuesInQuery.add(obj);
-                    valuesQueryPart.append(":").append(obj).append(" ");
+                    valuesQueryPart
+                        .append(prefixes.get(obj.split("#")[0] + "#"))
+                        .append(":")
+                        .append(obj.split("#")[1])
+                        .append(" ");
                 }
             }
-            query = "PREFIX : <http://onto.de/default#> "
+            query = "PREFIX ckg: <http://ckg.de/default#> "
+                + "PREFIX vcard: <http://www.w3.org/2006/vcard/ns#> "
+                + "PREFIX foaf: <http://xmlns.com/foaf/0.1#> "
                 + "SELECT ?s ?p ?o WHERE { "
                 + valuesQueryPart.append("} ")
                 + "  ?s ?p ?o ."

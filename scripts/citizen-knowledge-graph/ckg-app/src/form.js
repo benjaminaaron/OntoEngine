@@ -33,10 +33,10 @@ function sendFormWorkflow(turtleData) {
         input.className += ' form-input-field-already-known';
         input.setAttribute('value', data.valuesFound[field.hasPredicate]);
       }
-      if (field.computableVia && data.valuesFound['birthday']) {
+      if (field.computableVia && data.valuesFound['http://www.w3.org/2006/vcard/ns#bday']) {
         input.className += ' form-input-field-computed';
         // hardwired for the demo
-        let age = 2022 - data.valuesFound['birthday'].split('.')[2];
+        let age = 2022 - data.valuesFound['http://www.w3.org/2006/vcard/ns#bday'].split('.')[2];
         input.setAttribute('value', age + '');
         label.innerHTML += ",<b style='color: yellow'>berechnet aus Geburtstag</b>";
       }

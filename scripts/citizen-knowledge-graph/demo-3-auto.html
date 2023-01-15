@@ -35,37 +35,37 @@
       store.add(statement("ckg-form-workflow-file", "submissionEndpoint", "http://localhost:8080/api/v1/ontoengine/tbd", true));
       store.add(statement("ckg-form-workflow-file", "timestamp", getTimestamp(), true));
 
-      store.add(statement("field1", "hasPredicate", "firstName", false));
+      store.add(statement("field1", "hasPredicate", "http://xmlns.com/foaf/0.1#firstName", false));
       store.add(statement("field1", "isMandatory", "true", true));
       store.add(statement("field1", "description", "Vorname(n)", true));
 
-      store.add(statement("field2", "hasPredicate", "lastName", false));
+      store.add(statement("field2", "hasPredicate", "http://xmlns.com/foaf/0.1#surname", false));
       store.add(statement("field2", "isMandatory", "true", true));
       store.add(statement("field2", "description", "Nachname", true));
 
-      store.add(statement("field3", "hasPredicate", "birthday", false));
+      store.add(statement("field3", "hasPredicate", "http://www.w3.org/2006/vcard/ns#bday", false));
       store.add(statement("field3", "isMandatory", "true", true));
       store.add(statement("field3", "description", "Geburtstag", true));
 
-      store.add(statement("field4", "hasPredicate", "age", false));
+      store.add(statement("field4", "hasPredicate", "http://ckg.de/default#age", false));
       store.add(statement("field4", "isMandatory", "true", true));
       store.add(statement("field4", "description", "Aktuelles Alter in Jahren", true));
       store.add(statement("field4", "computableVia", "field3", false));
       store.add(statement("field4", "computableFormula", "tbd", false));
 
-      store.add(statement("field5", "hasPredicate", "birthplace", false));
+      store.add(statement("field5", "hasPredicate", "http://ckg.de/default#birthplace", false));
       store.add(statement("field5", "isMandatory", "false", true));
       store.add(statement("field5", "description", "Geburtsort", true));
 
-      store.add(statement("field6", "hasPredicate", "gender", false));
+      store.add(statement("field6", "hasPredicate", "http://ckg.de/default#gender", false));
       store.add(statement("field6", "isMandatory", "false", true));
       store.add(statement("field6", "description", "Geschlecht", true));
 
-      store.add(statement("field7", "hasPredicate", "eVBnumber", false));
+      store.add(statement("field7", "hasPredicate", "http://ckg.de/default#eVBnumber", false));
       store.add(statement("field7", "isMandatory", "false", true));
       store.add(statement("field7", "description", "elektronische Versicherungsbestätigung (eVB-Nummer)", true));
 
-      store.add(statement("field8", "hasPredicate", "identityNumber", false));
+      store.add(statement("field8", "hasPredicate", "http://ckg.de/default#identityNumber", false));
       store.add(statement("field8", "isMandatory", "false", true));
       store.add(statement("field8", "description", "Personalausweisnummer", true));
 
