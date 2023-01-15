@@ -65,10 +65,12 @@ let mode = "normal";
 document.getElementById("advancedMode").addEventListener("click", function(e) {
   mode = mode === "normal" ? "advanced" : "normal";
   if (mode === "advanced") {
+    document.getElementById("advancedMode").innerHTML = "Switch to normal mode";
     document.getElementById("sub").style.display = "inline";
     document.getElementById("pred").placeholder = "predicate";
     document.getElementById("obj").placeholder = "object";
   } else {
+    document.getElementById("advancedMode").innerHTML = "Switch to advanced mode";
     document.getElementById("sub").style.display = "none";
     document.getElementById("pred").placeholder = "field name";
     document.getElementById("obj").placeholder = "value";
