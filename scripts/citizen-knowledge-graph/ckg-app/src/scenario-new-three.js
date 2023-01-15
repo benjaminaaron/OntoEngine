@@ -182,7 +182,7 @@ let flyPaths = [
     endLook: cameraStartLookAt
   },
   {
-    duration: 3500,
+    duration: 4000,
     endPos: [0, -3, 4],
     endLook: [0, 6, 2]
   },
@@ -226,6 +226,7 @@ animate();
 
 document.getElementById("makeChoiceBtn").addEventListener("click", e => {
   e.preventDefault();
+  document.getElementById("headline").innerHTML = "New scenario: Wahl der Krankenversicherung";
   fadeOut(document.getElementById('whichDatapointDiv'), 800, () => {
     fadeOut(document.getElementById("overlayBefore"), 800);
   });
