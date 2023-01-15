@@ -51,7 +51,8 @@ function fetchAllTriples() {
       }
       return [triple.subject, triple.predicate, triple.object]
     };
-    let dataRows = response.triples.map(triple => buildDataRow(triple));
+    let triplesSorted = response.triples.sort((a, b) => a.predicate.split('#')[1] > b.predicate.split('#')[1] ? 1 : -1);
+    let dataRows = triplesSorted.map(triple => buildDataRow(triple));
     buildTableSection(table, "", dataRows);
   })
   .catch(error => console.error(error))
