@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "querystringify": "^2.2.0",
     "rdflib": "^2.2.21"
   }
 }

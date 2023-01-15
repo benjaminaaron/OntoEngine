@@ -16,8 +16,10 @@ import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -258,9 +260,13 @@ public class ModelController {
         // would be nicer to extract it via query.getValuesVariables(), but didn't get that to work, was always null
         Matcher matcher = Pattern.compile("VALUES\\s+\\?\\S+\\s+\\{([^}]+)}").matcher(query);
         if (!matcher.find()) throw new RuntimeException("No VALUES clause found in the query: " + query);
-        String valuesStr = matcher.group(1).trim().replace(":", "");
-        Set<String> valuesInQuery =
-            Arrays.stream(valuesStr.split(" ")).collect(Collectors.toSet());
+        Map<String, String> prefixes = new HashMap<>(); // extract instead of entering values here
+        prefixes.put("ckg", "http://ckg.de/default#");
+        prefixes.put("vcard", "http://www.w3.org/2006/vcard/ns#");
+        prefixes.put("foaf", "http://xmlns.com/foaf/0.1#");
+        Set<String> valuesInQuery = Arrays.stream(matcher.group(1).trim().split(" "))
+            .map(val -> prefixes.get(val.split(":")[0]) + val.split(":")[1])
+            .collect(Collectors.toSet());
         return sortIntoValuesFoundAndNotFound(query, valuesInQuery, new JsonObject());
     }
 
@@ -270,10 +276,10 @@ public class ModelController {
             JsonObject valuesFound = new JsonObject();
             while(resultSet.hasNext()) {
                 QuerySolution qs = resultSet.next();
-                String predLocalName = qs.getResource("p").getLocalName();
-                if (valuesInQuery.contains(predLocalName)) {
-                    valuesFound.put(predLocalName, qs.get("o").toString());
-                    valuesInQuery.remove(predLocalName);
+                String pred = qs.getResource("p").toString();
+                if (valuesInQuery.contains(pred)) {
+                    valuesFound.put(pred, qs.get("o").toString());
+                    valuesInQuery.remove(pred);
                 }
             }
             JsonArray valuesNotFound = new JsonArray();

@@ -14,19 +14,20 @@ function sendQuery(query) {
   })
   .then(response => response.json())
   .then(data => {
+    console.log(data);
     let reportDiv = document.getElementById('reportDiv');
     clearDiv(reportDiv);
     let table = document.createElement('table');
     reportDiv.appendChild(table);
     if (data.valuesNotFound.length > 0) {
-      buildTableSection(table, "Values not found", data.valuesNotFound.map(val => [val, '?']));
+      buildTableSection(table, "Values not found", data.valuesNotFound.map(val => [val.split('#')[1], '?']));
     }
     if (Object.keys(data.valuesFound).length > 0) {
       buildTableSection(table, "Values found",
-          Object.keys(data.valuesFound).map(key => [key, data.valuesFound[key]]));
+          Object.keys(data.valuesFound).map(key => [key.split('#')[1], data.valuesFound[key]]));
       let queryParams = {};
       for (let key of Object.keys(data.valuesFound)) {
-        queryParams[key] = data.valuesFound[key];
+        queryParams[key.split('#')[1]] = data.valuesFound[key];
       }
       let btn = buildActionBtn('Fill values on website', () => {
         openInExternalBrowser(message.responseUrl, queryParams);

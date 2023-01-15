@@ -13,11 +13,11 @@
       <label for="firstName">Vorname</label><br>
       <input type="text" id="firstName" class="input-field"><br><br>
 
-      <label for="lastName">Nachname</label><br>
-      <input type="text" id="lastName" class="input-field"><br><br>
+      <label for="surname">Nachname</label><br>
+      <input type="text" id="surname" class="input-field"><br><br>
 
-      <label for="birthday">Geburtstag</label><br>
-      <input type="text" id="birthday" class="input-field"><br><br>
+      <label for="bday">Geburtstag</label><br>
+      <input type="text" id="bday" class="input-field"><br><br>
 
       <label for="birthplace">Geburtsort</label><br>
       <input type="text" id="birthplace" class="input-field"><br><br>
@@ -63,10 +63,11 @@
         headlineClickCounter ++;
       });
 
-      function addLiteralToMainPerson(store, field) {
-        const value = document.getElementById(field).value;
+      function addLiteralToMainPerson(store, predicate) {
+        let predicateLocalName = predicate.includes('#') ? predicate.split("#")[1] : predicate;
+        const value = document.getElementById(predicateLocalName).value;
         if (value.trim()) {
-          store.add(statement("mainPerson", field, value, true));
+          store.add(statement("mainPerson", predicate, value, true));
         }
       }
 
@@ -74,9 +75,9 @@
         const store = createStore();
         // store.add(statement("form-download-for-ckg", "hasTitle", "ElterngeldBeantragen", true));
         // store.add(statement("form-download-for-ckg", "timestamp", getTimestamp(), true));
-        addLiteralToMainPerson(store, "firstName");
-        addLiteralToMainPerson(store, "lastName");
-        addLiteralToMainPerson(store, "birthday");
+        addLiteralToMainPerson(store, "http://xmlns.com/foaf/0.1#firstName");
+        addLiteralToMainPerson(store, "http://xmlns.com/foaf/0.1#surname");
+        addLiteralToMainPerson(store, "http://www.w3.org/2006/vcard/ns#bday");
         addLiteralToMainPerson(store, "birthplace");
         addLiteralToMainPerson(store, "maritalStatus");
         addLiteralToMainPerson(store, "insuranceNumber");

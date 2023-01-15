@@ -15,11 +15,11 @@
     <label for="firstName">Vorname</label><br>
     <input type="text" id="firstName" class="input-field"><br><br>
 
-    <label for="lastName">Nachname</label><br>
-    <input type="text" id="lastName" class="input-field"><br><br>
+    <label for="surname">Nachname</label><br>
+    <input type="text" id="surname" class="input-field"><br><br>
 
-    <label for="birthday">Geburtstag</label><br>
-    <input type="text" id="birthday" class="input-field"><br><br>
+    <label for="bday">Geburtstag</label><br>
+    <input type="text" id="bday" class="input-field"><br><br>
 
     <label for="age">Aktuelles Alter in Jahren</label><br>
     <input type="text" id="age" class="input-field"><br><br>
@@ -51,15 +51,13 @@
     <br><br><br>
     <input type="submit" value="Formular einreichen">
   </form>
-  <script src="node_modules/querystringify/index.js"></script>
-  <script src="./graph-utils.js"></script>
   <script>
     let encodedQueryParams = window.location.href.split('?')[1];
     if (encodedQueryParams) {
-      let queryParams = querystring(encodedQueryParams);
-      for (let key of Object.keys(queryParams)) {
-        document.getElementById(key).value = queryParams[key];
-      }
+      decodeURIComponent(encodedQueryParams).split('&').forEach((param) => {
+        let [key, value] = param.split('=');
+        document.getElementById(key).value = value;
+      });
     }
 
     document.getElementById("headline").addEventListener("click", function(event) {
@@ -71,25 +69,20 @@
       window.open(url, "_self");
     }
 
-    let btnClickCount = 0;
-
     document.getElementById("send-query-btn").addEventListener("click", function(event) {
       event.preventDefault();
-      const query = "PREFIX : <http://onto.de/default#>\n"
+      const query = "PREFIX ckg: <http://ckg.de/default#>\n"
+          + "PREFIX vcard: <http://www.w3.org/2006/vcard/ns#>\n"
+          + "PREFIX foaf: <http://xmlns.com/foaf/0.1#>\n"
           + "SELECT ?s ?p ?o WHERE { \n"
-          + "  VALUES ?p { :firstName :lastName :birthday :birthplace :gender :eVBnumber :identityNumber }\n"
+          + "  VALUES ?p { foaf:firstName foaf:surname vcard:bday ckg:birthplace ckg:gender ckg:eVBnumber ckg:identityNumber }\n"
           + "  ?s ?p ?o .\n"
           + "}";
-      if (btnClickCount % 2 === 0) {
-        deepLinkHandoverToElectronApp({
-          command: "fill",
-          query: query,
-          responseUrl: window.location.href
-        });
-      } else {
-        download(query, "text/plain", "query.rq");
-      }
-      btnClickCount ++;
+      deepLinkHandoverToElectronApp({
+        command: "fill",
+        query: query,
+        responseUrl: window.location.href
+      });
     });
   </script>
 </body>

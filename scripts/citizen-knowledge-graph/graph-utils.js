@@ -1,12 +1,15 @@
 const rdflib = $rdf;
-const baseUri = "http://onto.de/default#";
+const baseUri = "http://ckg.de/default#";
 
 function createStore() {
   return rdflib.graph();
 }
 
-function namedNode(localName) {
-  return rdflib.namedNode(baseUri + localName);
+function namedNode(localNameOrFullUri) {
+  if (!localNameOrFullUri.startsWith("http")) {
+    localNameOrFullUri = baseUri + localNameOrFullUri;
+  }
+  return rdflib.namedNode(localNameOrFullUri);
 }
 
 function statement(sub, pred, obj, isLiteral) {

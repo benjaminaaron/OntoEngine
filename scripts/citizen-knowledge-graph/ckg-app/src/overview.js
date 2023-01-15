@@ -5,7 +5,7 @@ function submitTriple() {
   let sub = document.getElementById('sub');
   let pred = document.getElementById('pred');
   let obj = document.getElementById('obj');
-  let statementParts = [sub.value ?? "http://onto.de/default#mainPerson", pred.value, obj.value];
+  let statementParts = [sub.value ?? "http://ckg.de/default#mainPerson", pred.value, obj.value];
   fetch('http://localhost:8080/api/v1/ontoengine/addLocalNamesStatement', {
     method: 'POST',
     headers: {
