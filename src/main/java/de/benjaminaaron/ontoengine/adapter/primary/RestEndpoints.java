@@ -101,9 +101,9 @@ public class RestEndpoints {
         return ResponseEntity.ok().body(report.toString());
     }
 
-    @PostMapping(value = "/addLocalNamesStatement")
-    public ResponseEntity<String> addLocalNamesStatement(@RequestBody List<String> statementParts) {
-        boolean wasAdded = baseRouting.addLocalNamesStatement(
+    @PostMapping(value = "/addNewStatement")
+    public ResponseEntity<String> addNewStatement(@RequestBody List<String> statementParts) {
+        boolean wasAdded = baseRouting.addNewStatement(
             statementParts.get(0), statementParts.get(1), statementParts.get(2));
         return ResponseEntity.ok().body("Was added: " + wasAdded);
     }

@@ -334,7 +334,7 @@ public class ModelController {
         }
     }
 
-    public boolean addLocalNamesStatement(String sub, String pred, String obj) {
+    public boolean addNewStatement(String sub, String pred, String obj) {
         Statement statement = mainModel.createStatement(
             mainModel.createResource(ensureUri(sub)),
             mainModel.createProperty(ensureUri(pred)),

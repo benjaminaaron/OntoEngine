@@ -1,17 +1,27 @@
 
 document.getElementById('submitBtn').addEventListener('click', () => submitTriple());
 
+let newTriple;
+
 function submitTriple() {
   let sub = document.getElementById('sub');
   let pred = document.getElementById('pred');
   let obj = document.getElementById('obj');
-  let statementParts = [sub.value ?? "http://ckg.de/default#mainPerson", pred.value, obj.value];
-  fetch('http://localhost:8080/api/v1/ontoengine/addLocalNamesStatement', {
+  let statement = [
+      "http://ckg.de/default#" + (sub.value ? sub.value : "mainPerson"),
+    "http://ckg.de/default#" + pred.value,
+    obj.value
+  ];
+  newTriple = {
+    normal: statement[1].split('#')[1] + "_" + statement[2],
+    advanced: statement[0] + "_" + statement[1] + "_" + statement[2]
+  };
+  fetch('http://localhost:8080/api/v1/ontoengine/addNewStatement', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(statementParts)
+    body: JSON.stringify(statement)
   })
   .then(response => response.text())
   .then(response => {
@@ -53,7 +63,8 @@ function fetchAllTriples() {
     };
     let triplesSorted = response.triples.sort((a, b) => a.predicate.split('#')[1] > b.predicate.split('#')[1] ? 1 : -1);
     let dataRows = triplesSorted.map(triple => buildDataRow(triple));
-    buildTableSection(table, "", dataRows);
+    buildTableSection(table, "", dataRows, false, newTriple);
+    newTriple = undefined;
   })
   .catch(error => console.error(error))
 }

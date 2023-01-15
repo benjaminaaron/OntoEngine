@@ -168,8 +168,8 @@ public class BaseRouting {
         return modelController.handleFormWorkflowTurtleFile(inputStream);
     }
 
-    public boolean addLocalNamesStatement(String sub, String pred, String obj) {
-        return modelController.addLocalNamesStatement(sub, pred, obj);
+    public boolean addNewStatement(String sub, String pred, String obj) {
+        return modelController.addNewStatement(sub, pred, obj);
     }
 
     public JsonObject getAllTriples() {

@@ -13,7 +13,7 @@ function clearDiv(div) {
   while (div.firstChild) div.removeChild(div.lastChild);
 }
 
-function buildTableSection(table, text, dataRows, addPlus = false) {
+function buildTableSection(table, text, dataRows, addPlus = false, highlightNewTriple = undefined) {
   let tr, td;
   if (text) {
     tr = document.createElement('tr');
@@ -33,26 +33,30 @@ function buildTableSection(table, text, dataRows, addPlus = false) {
   };
 
   dataRows.forEach(dataRow => {
-    let tr = document.createElement('tr');
     let col1 = "";
     let col2 = dataRow[0];
     let col3 = dataRow[1];
+    let highlightRow = highlightNewTriple && highlightNewTriple.normal === col2 + "_" + col3;
     if (isAdvancedMode) {
       col1 = dataRow[0];
       col2 = dataRow[1];
       col3 = dataRow[2];
+      highlightRow = highlightNewTriple && highlightNewTriple.advanced === col1 + "_" + col2 + "_" + col3;
     }
-    let td = document.createElement('td');
-    if (addPlus) td.innerHTML = '+&nbsp;';
-    if (isAdvancedMode) td.innerHTML = formatUri(col1);
-    tr.appendChild(td);
-    td = document.createElement('td');
-    td.style.color = 'darkgray';
-    td.innerHTML = isAdvancedMode ? "&nbsp;&nbsp;&nbsp;" + formatUri(col2) : col2;
-    tr.appendChild(td);
-    td = document.createElement('td');
-    td.innerHTML = '&nbsp;&nbsp;&nbsp;' +  col3;
-    tr.appendChild(td);
+    let tr = document.createElement('tr');
+    let addPlusTd = document.createElement('td');
+    if (addPlus || highlightRow) addPlusTd.innerHTML = '+&nbsp;';
+    tr.appendChild(addPlusTd);
+    let col1Td = document.createElement('td');
+    if (isAdvancedMode) col1Td.innerHTML = formatUri(col1);
+    tr.appendChild(col1Td);
+    let col2Td = document.createElement('td');
+    col2Td.style.color = 'darkgray';
+    col2Td.innerHTML = isAdvancedMode ? "&nbsp;&nbsp;&nbsp;" + formatUri(col2) : col2;
+    tr.appendChild(col2Td);
+    let col3Td = document.createElement('td');
+    col3Td.innerHTML = '&nbsp;&nbsp;&nbsp;' +  col3;
+    tr.appendChild(col3Td);
     table.appendChild(tr);
   });
 }
