@@ -32,34 +32,8 @@ function sendQuery(query) {
       let btn = buildActionBtn('Fill values on website', () => {
         openInExternalBrowser(message.responseUrl, queryParams);
       });
-      btn.disabled = "disabled";
-      btn.style.backgroundColor = "gray";
-      btn.style.color = "silver";
 
-      reportDiv.appendChild(document.createElement('br'));
-      reportDiv.appendChild(document.createElement('br'));
-
-      let warningCheckbox = document.createElement('input');
-      warningCheckbox.type = "checkbox";
-      warningCheckbox.style.marginRight = "7px";
-      warningCheckbox.addEventListener('change', () => {
-        if (warningCheckbox.checked) {
-          btn.disabled = "";
-          btn.style.backgroundColor = "dimgray";
-          btn.style.color = "navajowhite";
-        } else {
-          btn.disabled = "disabled";
-          btn.style.backgroundColor = "gray";
-          btn.style.color = "silver";
-        }
-      });
-      reportDiv.appendChild(warningCheckbox);
-
-      let warningLabel = document.createElement('label');
-      warningLabel.innerHTML = "I understand that this data will leave my system and I have no control over what happens to it there";
-      warningLabel.style.color = "silver";
-      reportDiv.appendChild(warningLabel);
-
+      appendWarningCheckboxAndLabel(reportDiv, btn);
       reportDiv.appendChild(btn);
     }
   })

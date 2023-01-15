@@ -45,7 +45,11 @@ function sendFormWorkflow(turtleData) {
       reportDiv.appendChild(document.createElement('br'));
     }
     reportDiv.appendChild(document.createElement('br'));
-    reportDiv.appendChild(buildActionBtn('Submit form to endpoint'));
+
+    let btn = buildActionBtn('Submit form to endpoint');
+    appendWarningCheckboxAndLabel(reportDiv, btn);
+
+    reportDiv.appendChild(btn);
   })
   .catch(error => console.error(error))
 }
