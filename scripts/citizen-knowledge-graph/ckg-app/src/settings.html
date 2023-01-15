@@ -8,6 +8,10 @@
     <style>
       span {
         text-decoration: underline;
+        color: silver;
+      }
+      h3 {
+        margin-bottom: 9px;
       }
     </style>
   </head>
@@ -16,19 +20,16 @@
     <h3>Theme</h3>
     <span>Adjust the current theme</span> | <span>Import a new theme</span> | <span>Export the current theme</span>
     <div class="fadeIn order1">
-      <br>
       <h3>Form Workflow Plugin</h3>
       <span>Import a plugin</span> for the form workflow (theme and flow)
     </div>
     <div class="fadeIn order2">
-      <br>
       <h3>Import data</h3>
       <span>From CSV</span> | <span>From Excel</span> | <span>From RDF files</span> | <span>From a custom format</span> (build a mapper)
     </div>
     <div class="fadeIn order3">
-      <br>
       <h3>Export data</h3>
-      <em style="color: red; background-color: black">
+      <em style="color: red;">
         Warning: I can no longer protect your data if it leaves my system. Be very careful where you store your unencrypted data and where you upload
         or import it. You are responsible for what is happening to it.
       </em>
@@ -36,14 +37,22 @@
       <span>As CSV</span> | <span>As RDF file</span> | <span>To a graph database</span>
     </div>
     <div class="fadeIn order4">
-      <br>
       <h3>Obfuscation</h3>
       <small>
         In theory it is possible to derive insights into your interests by tracing your inquiry subscription downloads to your IP address.
         To add a layer of obfuscation, I can randomly download more subscriptions than those that you want, but don't run them on your data.
       </small>
-      <br><br>
+      <br>
       <span>Enable obfuscation</span>
+    </div>
+    <div class="fadeIn order5">
+      <h3>Hooks</h3>
+      <small>
+        Add hooks for various patterns and conditions when data is added or retrieved.
+        Integrate them with other apps or services.
+      </small>
+      <br>
+      <span>Setup a new hook</span>
     </div>
     <script src="shared.js"></script>
   </body>
