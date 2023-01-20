@@ -1,0 +1,10 @@
+PREFIX : <http://ckg.de/default#>
+
+SELECT * WHERE {
+  ?house a :Haus .
+  ?house :isLocatedInBundesland ?bundesland .
+  VALUES ?bundesland { "Brandenburg" "Sachsen" "Bayern" }
+  ?house :wasRenovatedBy ?owner .
+  ?house :hasConstructionYear ?constructionYear .
+  FILTER (?constructionYear < 1960) .
+}

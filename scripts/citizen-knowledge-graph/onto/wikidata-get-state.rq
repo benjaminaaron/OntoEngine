@@ -1,0 +1,29 @@
+# https://query.wikidata.org/
+
+SELECT * WHERE {
+  ?city rdfs:label "Potsdam"@de.
+  ?city wdt:P131* ?bundesland.
+  ?bundesland wdt:P31 wd:Q1221156.
+  ?bundesland rdfs:label ?bundeslandLabel .
+  FILTER (LANG(?bundeslandLabel) = "de")
+}
+
+# http://localhost:7200/sparql
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX wd: <http://www.wikidata.org/entity/>
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+PREFIX : <http://ckg.de/default#>
+
+# INSERT { :Haus456 :isLocatedInBundesland ?bundeslandLabelDe . }
+SELECT *
+WHERE {
+  SERVICE <https://query.wikidata.org/sparql> {
+    ?city rdfs:label "Potsdam"@de .
+    ?city wdt:P131* ?bundesland .
+    ?bundesland wdt:P31 wd:Q1221156 .
+    ?bundesland rdfs:label ?bundeslandLabel .
+    FILTER(LANG(?bundeslandLabel) = "de")
+    BIND(STR(?bundeslandLabel) AS ?bundeslandLabelDe)
+  }
+}
