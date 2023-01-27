@@ -22,8 +22,8 @@ function sendFormWorkflow(turtleData) {
       let label = document.createElement('label');
       label.setAttribute('for', fieldId);
       label.innerHTML = field.description;
-      if (field.hasPredicate === 'eVBnumber') {
-        label.innerHTML += ',<a href="#" style="color: yellow; font-weight: bold">mehr Infos</a>';
+      if (field.hasPredicate === 'http://ckg.de/default#eVBnumber') {
+        label.innerHTML += ',<span style="color: yellow; font-weight: bold">&#9200; mehr Infos</span>';
       }
       let input = document.createElement('input');
       input.className = 'form-input-field';
