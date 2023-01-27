@@ -90,6 +90,7 @@ function appendWarningCheckboxAndLabel(reportDiv, btn) {
   btn.style.backgroundColor = "gray";
   btn.style.color = "silver";
   reportDiv.appendChild(document.createElement('br'));
+  reportDiv.appendChild(document.createElement('br'));
   let warningCheckbox = document.createElement('input');
   warningCheckbox.type = "checkbox";
   warningCheckbox.style.marginRight = "7px";
@@ -108,7 +109,7 @@ function appendWarningCheckboxAndLabel(reportDiv, btn) {
 
   let warningLabel = document.createElement('label');
   warningLabel.innerHTML = "I understand that this data will leave my system and I have no control over what happens to it there";
-  warningLabel.style.color = "silver";
+  warningLabel.style.color = "yellow";
   reportDiv.appendChild(warningLabel);
   reportDiv.appendChild(document.createElement('br'));
 }
