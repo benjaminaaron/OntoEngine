@@ -31,12 +31,6 @@
     
 
 
-    <!-- http://ckg.de/default#owns -->
-
-    <owl:ObjectProperty rdf:about="http://ckg.de/default#owns"/>
-    
-
-
     <!-- http://ckg.de/default#renovated -->
 
     <owl:ObjectProperty rdf:about="http://ckg.de/default#renovated">
@@ -117,7 +111,6 @@
 
     <owl:NamedIndividual rdf:about="http://ckg.de/default#Bürger123">
         <rdf:type rdf:resource="http://ckg.de/default#Bürger"/>
-        <default:owns rdf:resource="http://ckg.de/default#Haus456"/>
         <default:renovated rdf:resource="http://ckg.de/default#Haus456"/>
     </owl:NamedIndividual>
     
