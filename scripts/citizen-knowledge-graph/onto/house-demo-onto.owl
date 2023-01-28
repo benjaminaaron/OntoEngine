@@ -78,9 +78,7 @@
 
     <!-- http://ckg.de/default#Bürger -->
 
-    <owl:Class rdf:about="http://ckg.de/default#Bürger">
-        <owl:disjointWith rdf:resource="http://ckg.de/default#Haus"/>
-    </owl:Class>
+    <owl:Class rdf:about="http://ckg.de/default#Bürger"/>
     
 
 
@@ -131,6 +129,25 @@
     <owl:NamedIndividual rdf:about="http://ckg.de/default#Potsdam">
         <rdf:type rdf:resource="http://ckg.de/default#Stadt"/>
     </owl:NamedIndividual>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // General axioms
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <owl:members rdf:parseType="Collection">
+            <rdf:Description rdf:about="http://ckg.de/default#Bürger"/>
+            <rdf:Description rdf:about="http://ckg.de/default#Haus"/>
+            <rdf:Description rdf:about="http://ckg.de/default#Stadt"/>
+        </owl:members>
+    </rdf:Description>
 </rdf:RDF>
 
 
