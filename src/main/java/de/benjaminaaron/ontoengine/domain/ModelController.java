@@ -338,7 +338,7 @@ public class ModelController {
         Statement statement = mainModel.createStatement(
             mainModel.createResource(ensureUri(sub)),
             mainModel.createProperty(ensureUri(pred)),
-            mainModel.createLiteral(obj)
+            obj.startsWith("http") ? mainModel.createResource(obj) : mainModel.createLiteral(obj)
         );
         if (statementAlreadyPresent(statement)) {
             return false;

@@ -28,6 +28,7 @@ function buildTableSection(table, text, dataRows, addPlus = false, highlightNewT
   let isAdvancedMode = dataRows.length > 1  && dataRows[0].length === 3;
 
   const formatUri = (uri) => {
+    if (!uri.includes('#')) return uri;
     return "<small style='color: silver'>" + uri.split('#')[0] + "#"
         + "<strong>" + uri.split('#')[1] + "</strong></small>";
   };
@@ -55,7 +56,7 @@ function buildTableSection(table, text, dataRows, addPlus = false, highlightNewT
     col2Td.innerHTML = isAdvancedMode ? "&nbsp;&nbsp;&nbsp;" + formatUri(col2) : col2;
     tr.appendChild(col2Td);
     let col3Td = document.createElement('td');
-    col3Td.innerHTML = '&nbsp;&nbsp;&nbsp;' +  col3;
+    col3Td.innerHTML = isAdvancedMode ? "&nbsp;&nbsp;&nbsp;" + formatUri(col3) : col3;
     tr.appendChild(col3Td);
     table.appendChild(tr);
   });

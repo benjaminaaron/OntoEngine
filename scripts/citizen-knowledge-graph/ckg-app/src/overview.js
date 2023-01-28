@@ -57,7 +57,10 @@ function fetchAllTriples() {
     triplesDiv.appendChild(table);
     const buildDataRow = (triple) => {
       if (mode === "normal") {
-        return [triple.predicate.split('#')[1], triple.object]
+        return [
+            triple.predicate.split('#')[1],
+          triple.object.includes('#') ? triple.object.split('#')[1] : triple.object
+        ]
       }
       return [triple.subject, triple.predicate, triple.object]
     };
