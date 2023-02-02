@@ -1,4 +1,4 @@
-package de.benjaminaaron.ontoengine.adapter.primary;
+/*package de.benjaminaaron.ontoengine.adapter.primary;
 
 import de.benjaminaaron.ontoengine.domain.ModelController;
 import java.io.File;
@@ -138,4 +138,4 @@ public class TelegramBot extends TelegramLongPollingBot implements ChangeListene
     public void broadcast(String msg) {
         sendMessage(msg);
     }
-}
+}*/
