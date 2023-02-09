@@ -45,12 +45,14 @@ const buildOutputGraph = visuType => {
 
 let outputGraph;
 let outputNodesMap = {};
+let filteredOutputNodesMap = {};
 let outputEdgesArr = [];
+let filteredOutputEdgesArr = [];
 const curvatureMinMax = 0.5;
 
 const updateOutputGraph = () => {
     let nodes = [];
-    Object.keys(outputNodesMap).forEach(key => nodes.push(outputNodesMap[key]));
+    Object.keys(filteredOutputNodesMap).forEach(key => nodes.push(filteredOutputNodesMap[key]));
 
     let edges = [];
     let selfLoopEdges = {};
@@ -63,7 +65,7 @@ const updateOutputGraph = () => {
         map[edge.vertexPairId].push(edge);
     };
 
-    outputEdgesArr.forEach(edge => {
+    filteredOutputEdgesArr.forEach(edge => {
         edges.push(edge);
         add(edge.sourceId === edge.targetId ? selfLoopEdges : vertexPairEdges, edge);
     });
@@ -128,6 +130,9 @@ const addNewTripleToGraph = (subjectUri, predicateUri, object, objectIsLiteral) 
         vertexPairId: vertexPairId,
         curvature: 0
     });
+
+    filteredOutputNodesMap = outputNodesMap;
+    filteredOutputEdgesArr = outputEdgesArr;
 };
 
 const appendRandomStr = str => {
@@ -137,6 +142,26 @@ const appendRandomStr = str => {
 const visuChange = visuType => {
     buildOutputGraph(visuType);
 };
+
+document.getElementById("filter-input").addEventListener("input", function(event) {
+    const searchStr = event.target.value;
+    if (searchStr.trim() === "") {
+        filteredOutputNodesMap = outputNodesMap;
+        filteredOutputEdgesArr = outputEdgesArr;
+    } else {
+        filteredOutputNodesMap = Object.values(filteredOutputNodesMap).filter(node => {
+            let label = node.label;
+            if (label.startsWith("http") && label.includes("#")) {
+                label = label.split("#")[1];
+            }
+            return label.toUpperCase().includes(searchStr.toUpperCase());
+        });
+        const nodeIds = filteredOutputNodesMap.map(node => node.id);
+        filteredOutputEdgesArr = filteredOutputEdgesArr
+            .filter(edge => nodeIds.includes(edge.sourceId) && nodeIds.includes(edge.targetId));
+    }
+    updateOutputGraph();
+});
 
 $(() => {
     connect();

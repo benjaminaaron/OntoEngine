@@ -8,7 +8,6 @@
     <script src="/webjars/jquery/jquery.min.js"></script>
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
-    <script src="/visu.js"></script>
     <script src="//unpkg.com/force-graph"></script>
     <script src="//unpkg.com/3d-force-graph"></script>
 </head>
@@ -18,9 +17,11 @@
         <label for="visu-2d">2D</label>
         <input type="radio" id="visu-3d" name="visu" value="3D" onChange="visuChange(this.value)">
         <label for="visu-3d">3D</label>
+        <input style="margin: 0 0 16px 16px" type="text" id="filter-input" placeholder="Filter">
         <br/>
         <!-- TODO it would be super neat to mark a bunch of nodes via drawing a selection over them -->
         <div id="graphOutput"></div>
     </div>
+    <script src="/visu.js"></script>
 </body>
 </html>
