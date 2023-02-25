@@ -3,7 +3,8 @@
 {
   "ACCESS_TOKEN": "",
   "BOARD_ID": "",
-  "TGF_DIR": ""
+  "EXPORT_DIR": "",
+  "BASE_URI": ""
 }
 ```
 

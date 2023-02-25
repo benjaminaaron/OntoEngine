@@ -1,6 +1,7 @@
 {
   "dependencies": {
-    "@mirohq/miro-api": "^1.0.2"
+    "@mirohq/miro-api": "^1.0.2",
+    "n3": "file:../../../N3.js"
   },
   "scripts": {
     "start": "node script.js"

@@ -2,6 +2,9 @@ const config = require('./config.json')
 const fs = require('fs')
 const path = require('path')
 const { MiroApi } = require("@mirohq/miro-api")
+const N3 = require('n3'); // using this version that already has RDF-star support, built locally https://github.com/rdfjs/N3.js/pull/311
+const { DataFactory } = N3;
+const { namedNode, literal, quad } = DataFactory;
 const api = new MiroApi(config.ACCESS_TOKEN)
 
 let board
@@ -40,9 +43,10 @@ const clean = txt => {
 (async function () {
   board = await api.getBoard(config.BOARD_ID)
 
-  let tgf = ""
+  // let tgf = ""
   let counter = 0
   let triples = []
+  let quads = []
 
   for await (const edge of board.getAllConnectors()) {
     await processEdge(edge)
@@ -50,18 +54,31 @@ const clean = txt => {
 
   Object.entries(nodes).forEach(([id, node]) => {
     node.id = ++ counter
-    tgf += node.id + " " + node.label + "\n"
+    // tgf += node.id + " " + node.label + "\n"
   })
 
-  tgf += "#\n"
+  // tgf += "#\n"
 
   edges.forEach(edge => {
-    tgf += nodes[edge.from].id + " " + nodes[edge.to].id + " " + edge.label + "\n"
-    triples.push([nodes[edge.from].label, edge.label, nodes[edge.to].label])
+    let from = nodes[edge.from]
+    let to = nodes[edge.to]
+    // tgf += from.id + " " + to.id + " " + edge.label + "\n"
+    triples.push([from.label, edge.label, to.label])
+    quads.push(quad(
+      namedNode(config.BASE_URI + from.label),
+      namedNode(config.BASE_URI + edge.label),
+      namedNode(config.BASE_URI + to.label),
+    ))
   })
 
   console.log(triples)
 
-  fs.mkdir(path.join(__dirname, config.TGF_DIR), () => {})
-  fs.writeFile(path.join(__dirname, config.TGF_DIR + "/graph.tgf"), tgf, () => {})
+  const writer = new N3.Writer({ prefixes: { dev: 'http://dev.de/default#' } });
+  quads.forEach(quad => writer.addQuad(quad))
+  writer.end((error, result) => {
+    if (error) { console.error(error); return; }
+    console.log(result);
+    fs.mkdir(path.join(__dirname, config.EXPORT_DIR), () => {})
+    fs.writeFile(path.join(__dirname, config.EXPORT_DIR + "/miro.ttl"), result, () => {})
+  });
 })()
