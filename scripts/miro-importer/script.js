@@ -38,7 +38,8 @@ async function processEdge(edge) {
 }
 
 const clean = txt => {
-  return txt.substring(3, txt.length - 4)
+  txt = txt.replace(/<[^>]*>/g, '').trim() // remove HTML tags
+  return txt.replace(/\s+(\w)/g, (match, letter) => letter.toUpperCase()); // camelCase
 }
 
 (async function () {
