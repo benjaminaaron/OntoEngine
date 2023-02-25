@@ -52,6 +52,10 @@ const clean = txt => {
   return removeHtml(txt).replace(/\s+(\w)/g, (match, letter) => letter.toUpperCase()); // camelCase
 }
 
+const uri = localName => {
+  return config.BASE_URI + localName
+}
+
 (async function () {
   board = await api.getBoard(config.BOARD_ID)
 
@@ -76,11 +80,22 @@ const clean = txt => {
     let to = nodes[edge.to]
     // tgf += from.id + " " + to.id + " " + edge.label + "\n"
     triples.push([from.label, edge.label, to.label])
-    quads.push(quad(
-      namedNode(config.BASE_URI + from.label),
-      namedNode(config.BASE_URI + edge.label),
-      namedNode(config.BASE_URI + to.label),
-    ))
+    let triple = quad(
+      namedNode(uri(from.label)),
+      namedNode(uri(edge.label)),
+      namedNode(uri(to.label)),
+    )
+    quads.push(triple)
+    edge.keyValuePairs.forEach(pair => { // RDF-star
+      let pred = clean(pair[0])
+      let obj = clean(pair[1])
+      triples.push(["<<" + from.label + " " + edge.label + " " + to.label + ">>", pred, obj])
+      quads.push(quad(
+          triple,
+          namedNode(uri(pred)),
+          namedNode(uri(obj)),
+      ))
+    });
   })
 
   console.log(triples)
