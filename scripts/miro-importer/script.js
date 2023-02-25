@@ -21,25 +21,35 @@ async function processEdge(edge) {
       startItem.data.content &&
       endItem.data.content
   ) {
-      edges.push({
-        from: edge.startItem.id,
-        to: edge.endItem.id,
-        label: clean(edge.captions[0].content)
-      })
-      nodes[edge.startItem.id] = {
-        id: undefined,
-        label: clean(startItem.data.content)
-      }
-      nodes[edge.endItem.id] = {
-        id: undefined,
-        label: clean(endItem.data.content)
-      }
+    let edgeObj = {
+      from: edge.startItem.id,
+      to: edge.endItem.id,
+      label: undefined,
+      keyValuePairs: []
     }
+    let edgeLabel = removeHtml(edge.captions[0].content)
+    if (edgeLabel.includes(",")) {
+      edgeLabel.split(",").slice(1).forEach(pair => edgeObj.keyValuePairs.push(pair.split(":")))
+      edgeLabel = edgeLabel.split(",")[0]
+    }
+    edgeObj.label = clean(edgeLabel)
+    edges.push(edgeObj)
+
+    nodes[edge.startItem.id] = {
+      id: undefined,
+      label: clean(startItem.data.content)
+    }
+    nodes[edge.endItem.id] = {
+      id: undefined,
+      label: clean(endItem.data.content)
+    }
+  }
 }
 
+const removeHtml = txt => txt.replace(/<[^>]*>/g, '').trim()
+
 const clean = txt => {
-  txt = txt.replace(/<[^>]*>/g, '').trim() // remove HTML tags
-  return txt.replace(/\s+(\w)/g, (match, letter) => letter.toUpperCase()); // camelCase
+  return removeHtml(txt).replace(/\s+(\w)/g, (match, letter) => letter.toUpperCase()); // camelCase
 }
 
 (async function () {
