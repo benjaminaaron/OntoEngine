@@ -79,6 +79,13 @@ const clean = txt => {
     if (error) { console.error(error); return; }
     console.log(result);
     fs.mkdir(path.join(__dirname, config.EXPORT_DIR), () => {})
-    fs.writeFile(path.join(__dirname, config.EXPORT_DIR + "/miro.ttl"), result, () => {})
+    fs.writeFile(path.join(__dirname, config.EXPORT_DIR + "/miro_" + getTimestamp() + ".ttl"), result, () => {})
   });
 })()
+
+function getTimestamp() {
+  const pad = num => String(num).padStart(2, "0")
+  let date = new Date();
+  return date.getFullYear() + pad(date.getMonth() + 1) + pad(date.getDate())
+      + "-" +  pad(date.getHours()) + pad(date.getMinutes()) + pad(date.getSeconds());
+}
