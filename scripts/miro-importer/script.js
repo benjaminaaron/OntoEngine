@@ -5,6 +5,7 @@ const { MiroApi } = require("@mirohq/miro-api")
 const N3 = require('n3'); // using this version that already has RDF-star support, built locally https://github.com/rdfjs/N3.js/pull/311
 const { DataFactory } = N3;
 const { namedNode, literal, quad } = DataFactory;
+const slugify = require('slugify')
 const api = new MiroApi(config.ACCESS_TOKEN)
 
 let board
@@ -73,13 +74,14 @@ const clean = txt => {
 
   console.log(triples)
 
+  const filename = "miro_" + slugify(board.name) + "_" + getTimestamp() + ".ttl"
   const writer = new N3.Writer({ prefixes: { dev: 'http://dev.de/default#' } });
   quads.forEach(quad => writer.addQuad(quad))
   writer.end((error, result) => {
     if (error) { console.error(error); return; }
     console.log(result);
     fs.mkdir(path.join(__dirname, config.EXPORT_DIR), () => {})
-    fs.writeFile(path.join(__dirname, config.EXPORT_DIR + "/miro_" + getTimestamp() + ".ttl"), result, () => {})
+    fs.writeFile(path.join(__dirname, config.EXPORT_DIR + "/" + filename), result, () => {})
   });
 })()
 

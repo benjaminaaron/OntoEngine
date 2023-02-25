@@ -1,7 +1,8 @@
 {
   "dependencies": {
     "@mirohq/miro-api": "^1.0.2",
-    "n3": "file:../../../N3.js"
+    "n3": "file:../../../N3.js",
+    "slugify": "^1.6.5"
   },
   "scripts": {
     "start": "node script.js"
