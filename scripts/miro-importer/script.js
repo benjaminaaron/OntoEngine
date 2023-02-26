@@ -62,19 +62,33 @@ const toCamelCase = (txt, isPredicate) => {
   return isPredicate ? txt.charAt(0).toLowerCase() + txt.slice(1) : txt
 }
 
-const isLiteral = txt => {
-  return (txt.startsWith("&#34;") && txt.endsWith("&#34;")) ||
-      (txt.startsWith("\"") && txt.endsWith("\""))
+function isValidDate(dateStr) {
+  const date = new Date(dateStr);
+  if (isNaN(date.getTime())) return false;
+  return date.toISOString().slice(0, 10) === dateStr; // YYYY-MM-DD
 }
 
-const processLiteral = txt => {
-  if (txt.startsWith("&#34;")) return txt.substring(5, txt.length - 5)
-  return txt.substring(1, txt.length - 1)
+function isValidNumber(numberStr) {
+  numberStr = numberStr.replace(",", ".")
+  return !isNaN(numberStr) && !isNaN(parseFloat(numberStr))
+}
+
+const checkIfLiteral = txt => {
+  if (txt.startsWith("&#34;") && txt.endsWith("&#34;"))
+    return [true, "\"" + txt.substring(5, txt.length - 5) + "\""]
+  if (txt.startsWith("\"") && txt.endsWith("\""))
+    return [true, txt]
+  if (isValidDate(txt))
+    return [true, "\"" + txt + "\"^^xsd:date"]
+  if (isValidNumber(txt))
+    return [true, "\"" + txt + "\"^^xsd:decimal"]
+  return [false, txt]
 }
 
 const processNodeLabel = txt => {
   txt = removeHtml(txt)
-  if (isLiteral(txt)) return [true, processLiteral(txt)]
+  let [isLiteral, literalTxt] = checkIfLiteral(txt)
+  if (isLiteral) return [true, literalTxt]
   return [false, toCamelCase(txt, false)]
 }
 
@@ -115,7 +129,7 @@ const uri = localName => {
     // let triple = quad(namedNode(subUri), namedNode(predUri), to.isLiteral ? literal(to.label) : namedNode(uri(to.label)))
     // quads.push(triple)
 
-    let objSparql = to.isLiteral ? ("\"" + to.label + "\"") : ("<" + uri(to.label) + ">")
+    let objSparql = to.isLiteral ? to.label : ("<" + uri(to.label) + ">")
     let statementStr = "<" + subUri + "> <" + predUri + "> " + objSparql;
     query = "INSERT DATA { " + statementStr + " . }"
     await sparql.fetchUpdate(config.SPARQL_ENDPOINT_UPDATE, query)
@@ -129,7 +143,7 @@ const uri = localName => {
       // triple = quad(triple, namedNode(predUri), objIsLiteral ? literal(objLabel) : namedNode(uri(objLabel)))
       // quads.push(triple)
 
-      objSparql = objIsLiteral ? ("\"" + objLabel + "\"") : ("<" + uri(objLabel) + ">")
+      objSparql = objIsLiteral ? objLabel : ("<" + uri(objLabel) + ">")
       let rdfStarStatementStr = "<<" + statementStr + ">> <" + predUri + "> " + objSparql;
       query = "INSERT DATA { " + rdfStarStatementStr + " . }"
       await sparql.fetchUpdate(config.SPARQL_ENDPOINT_UPDATE, query)
