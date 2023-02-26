@@ -1,11 +1,11 @@
-const config = require('./config.json')
-const fs = require('fs')
-const path = require('path')
+const config = require("./config.json")
+const fs = require("fs")
+const path = require("path")
 const { MiroApi } = require("@mirohq/miro-api")
-const N3 = require('n3'); // using this version that already has RDF-star support, built locally https://github.com/rdfjs/N3.js/pull/311
+const N3 = require("n3"); // using this version that already has RDF-star support, built locally https://github.com/rdfjs/N3.js/pull/311
 const { DataFactory } = N3;
 const { namedNode, literal, quad } = DataFactory;
-const slugify = require('slugify')
+const slugify = require("slugify")
 const api = new MiroApi(config.ACCESS_TOKEN)
 
 let board
@@ -52,7 +52,7 @@ async function processEdge(edge) {
 }
 
 const removeHtml = txt => {
-  return txt.replace(/<[^>]*>/g, '').trim()
+  return txt.replace(/<[^>]*>/g, "").trim()
 }
 
 const toCamelCase = (txt, isPredicate) => {
@@ -125,7 +125,7 @@ const uri = localName => {
   console.log(triples)
 
   const filename = "miro_" + slugify(board.name) + "_" + getTimestamp() + ".ttl"
-  const writer = new N3.Writer({ prefixes: { dev: 'http://dev.de/default#' } });
+  const writer = new N3.Writer({ prefixes: { dev: "http://dev.de/default#" } });
   quads.forEach(quad => writer.addQuad(quad))
   writer.end((error, result) => {
     if (error) { console.error(error); return; }
