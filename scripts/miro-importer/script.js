@@ -99,7 +99,7 @@ const uri = localName => {
 
   // tgf += "#\n"
 
-  edges.forEach(edge => {
+  for (const edge of edges) {
     let from = nodes[edge.from]
     let to = nodes[edge.to]
     // tgf += from.id + " " + to.id + " " + edge.label + "\n"
@@ -110,7 +110,7 @@ const uri = localName => {
         to.isLiteral ? literal(to.label) : namedNode(uri(to.label)),
     )
     quads.push(triple)
-    edge.keyValuePairs.forEach(pair => { // RDF-star
+    for (const pair of edge.keyValuePairs) { // RDF-star
       let pred = toCamelCase(pair[0], true)
       let [objIsLiteral, objLabel] = processNodeLabel(pair[1])
       triples.push(["<<" + from.label + " " + edge.label + " " + to.label + ">>", pred, objLabel])
@@ -119,8 +119,8 @@ const uri = localName => {
           namedNode(uri(pred)),
           objIsLiteral ? literal(objLabel) : namedNode(uri(objLabel))
       ))
-    });
-  })
+    }
+  }
 
   console.log(triples)
 
