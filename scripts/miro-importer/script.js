@@ -1,11 +1,11 @@
-const config = require("./config.json")
-const fs = require("fs")
+/*const fs = require("fs")
 const path = require("path")
-const { MiroApi } = require("@mirohq/miro-api")
 const N3 = require("n3"); // using this version that already has RDF-star support, built locally https://github.com/rdfjs/N3.js/pull/311
-const { DataFactory } = N3;
 const { namedNode, literal, quad } = DataFactory;
 const slugify = require("slugify")
+const { DataFactory } = N3;*/
+const config = require("./config.json")
+const { MiroApi } = require("@mirohq/miro-api")
 const { SparqlEndpointFetcher } = require("fetch-sparql-endpoint");
 const api = new MiroApi(config.ACCESS_TOKEN)
 const sparql = new SparqlEndpointFetcher();
@@ -112,10 +112,8 @@ const uri = localName => {
 
     let subUri = uri(from.label)
     let predUri = uri(edge.label)
-    let triple = quad(namedNode(subUri), namedNode(predUri),
-        to.isLiteral ? literal(to.label) : namedNode(uri(to.label)),
-    )
-    quads.push(triple)
+    // let triple = quad(namedNode(subUri), namedNode(predUri), to.isLiteral ? literal(to.label) : namedNode(uri(to.label)))
+    // quads.push(triple)
 
     let objSparql = to.isLiteral ? ("\"" + to.label + "\"") : ("<" + uri(to.label) + ">")
     let statementStr = "<" + subUri + "> <" + predUri + "> " + objSparql;
@@ -128,10 +126,8 @@ const uri = localName => {
       triples.push(["<<" + from.label + " " + edge.label + " " + to.label + ">>", pred, objLabel])
 
       predUri = uri(pred)
-      triple = quad(triple, namedNode(predUri),
-          objIsLiteral ? literal(objLabel) : namedNode(uri(objLabel))
-      )
-      quads.push(triple)
+      // triple = quad(triple, namedNode(predUri), objIsLiteral ? literal(objLabel) : namedNode(uri(objLabel)))
+      // quads.push(triple)
 
       objSparql = to.isLiteral ? ("\"" + objLabel + "\"") : ("<" + uri(objLabel) + ">")
       let rdfStarStatementStr = "<<" + statementStr + ">> <" + predUri + "> " + objSparql;
@@ -141,8 +137,7 @@ const uri = localName => {
   }
 
   console.log(triples)
-
-  const filename = "miro_" + slugify(board.name) + "_" + getTimestamp() + ".ttl"
+/*const filename = "miro_" + slugify(board.name) + "_" + getTimestamp() + ".ttl"
   const writer = new N3.Writer({ prefixes: { [config.BASE_URI_PREFIX]: config.BASE_URI } });
   quads.forEach(quad => writer.addQuad(quad))
   writer.end((error, result) => {
@@ -150,7 +145,7 @@ const uri = localName => {
     console.log(result);
     fs.mkdir(path.join(__dirname, config.EXPORT_DIR), () => {})
     fs.writeFile(path.join(__dirname, config.EXPORT_DIR + "/" + filename), result, () => {})
-  });
+  });*/
 })()
 
 function getTimestamp() {
