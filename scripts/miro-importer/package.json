@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@mirohq/miro-api": "^1.0.2",
+    "fetch-sparql-endpoint": "^3.2.1",
     "n3": "file:../../../N3.js",
     "slugify": "^1.6.5"
   },

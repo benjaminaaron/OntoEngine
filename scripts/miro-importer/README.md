@@ -5,7 +5,8 @@
   "BOARD_ID": "",
   "EXPORT_DIR": "",
   "BASE_URI": "",
-  "BASE_URI_PREFIX": ""
+  "BASE_URI_PREFIX": "",
+  "SPARQL_ENDPOINT_UPDATE": ""
 }
 ```
 

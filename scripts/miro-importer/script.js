@@ -6,7 +6,9 @@ const N3 = require("n3"); // using this version that already has RDF-star suppor
 const { DataFactory } = N3;
 const { namedNode, literal, quad } = DataFactory;
 const slugify = require("slugify")
+const { SparqlEndpointFetcher } = require("fetch-sparql-endpoint");
 const api = new MiroApi(config.ACCESS_TOKEN)
+const sparql = new SparqlEndpointFetcher();
 
 let board
 const nodes = {}
@@ -83,6 +85,9 @@ const uri = localName => {
 (async function () {
   board = await api.getBoard(config.BOARD_ID)
 
+  let query = "DELETE { ?s ?p ?o . } WHERE { ?s ?p ?o . }"
+  await sparql.fetchUpdate(config.SPARQL_ENDPOINT_UPDATE, query)
+
   // let tgf = ""
   let counter = 0
   let triples = []
@@ -104,21 +109,34 @@ const uri = localName => {
     let to = nodes[edge.to]
     // tgf += from.id + " " + to.id + " " + edge.label + "\n"
     triples.push([from.label, edge.label, to.label])
-    let triple = quad(
-        namedNode(uri(from.label)),
-        namedNode(uri(edge.label)),
+
+    let subUri = uri(from.label)
+    let predUri = uri(edge.label)
+    let triple = quad(namedNode(subUri), namedNode(predUri),
         to.isLiteral ? literal(to.label) : namedNode(uri(to.label)),
     )
     quads.push(triple)
-    for (const pair of edge.keyValuePairs) { // RDF-star
+
+    let objSparql = to.isLiteral ? ("\"" + to.label + "\"") : ("<" + uri(to.label) + ">")
+    let statementStr = "<" + subUri + "> <" + predUri + "> " + objSparql;
+    query = "INSERT DATA { " + statementStr + " . }"
+    await sparql.fetchUpdate(config.SPARQL_ENDPOINT_UPDATE, query)
+
+    for (const pair of edge.keyValuePairs) { // RDF-star: statements about statements
       let pred = toCamelCase(pair[0], true)
       let [objIsLiteral, objLabel] = processNodeLabel(pair[1])
       triples.push(["<<" + from.label + " " + edge.label + " " + to.label + ">>", pred, objLabel])
-      quads.push(quad(
-          triple,
-          namedNode(uri(pred)),
+
+      predUri = uri(pred)
+      triple = quad(triple, namedNode(predUri),
           objIsLiteral ? literal(objLabel) : namedNode(uri(objLabel))
-      ))
+      )
+      quads.push(triple)
+
+      objSparql = to.isLiteral ? ("\"" + objLabel + "\"") : ("<" + uri(objLabel) + ">")
+      let rdfStarStatementStr = "<<" + statementStr + ">> <" + predUri + "> " + objSparql;
+      query = "INSERT DATA { " + rdfStarStatementStr + " . }"
+      await sparql.fetchUpdate(config.SPARQL_ENDPOINT_UPDATE, query)
     }
   }
 
