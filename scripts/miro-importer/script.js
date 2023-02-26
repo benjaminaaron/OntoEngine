@@ -28,28 +28,52 @@ async function processEdge(edge) {
       keyValuePairs: []
     }
     let edgeLabel = removeHtml(edge.captions[0].content)
-    if (edgeLabel.includes(",")) {
-      edgeLabel.split(",").slice(1).forEach(pair => edgeObj.keyValuePairs.push(pair.split(":")))
-      edgeLabel = edgeLabel.split(",")[0]
+    let parts = edgeLabel.split(",")
+    if (parts.length > 1) {
+      edgeLabel = parts[0]
+      parts.slice(1).forEach(pair => edgeObj.keyValuePairs.push(pair.split(":")))
     }
-    edgeObj.label = clean(edgeLabel)
+    edgeObj.label = toCamelCase(edgeLabel, true)
     edges.push(edgeObj)
 
+    let [fromIsLiteral, fromLabel] = processNodeLabel(startItem.data.content)
     nodes[edge.startItem.id] = {
       id: undefined,
-      label: clean(startItem.data.content)
+      label: fromLabel,
+      isLiteral: fromIsLiteral
     }
+    let [toIsLiteral, toLabel] = processNodeLabel(endItem.data.content)
     nodes[edge.endItem.id] = {
       id: undefined,
-      label: clean(endItem.data.content)
+      label: toLabel,
+      isLiteral: toIsLiteral
     }
   }
 }
 
-const removeHtml = txt => txt.replace(/<[^>]*>/g, '').trim()
+const removeHtml = txt => {
+  return txt.replace(/<[^>]*>/g, '').trim()
+}
 
-const clean = txt => {
-  return removeHtml(txt).replace(/\s+(\w)/g, (match, letter) => letter.toUpperCase()); // camelCase
+const toCamelCase = (txt, isPredicate) => {
+  txt = txt.replace(/\s+(\w)/g, (match, letter) => letter.toUpperCase()).trim()
+  return isPredicate ? txt.charAt(0).toLowerCase() + txt.slice(1) : txt
+}
+
+const isLiteral = txt => {
+  return (txt.startsWith("&#34;") && txt.endsWith("&#34;")) ||
+      (txt.startsWith("\"") && txt.endsWith("\""))
+}
+
+const processLiteral = txt => {
+  if (txt.startsWith("&#34;")) return txt.substring(5, txt.length - 5)
+  return txt.substring(1, txt.length - 1)
+}
+
+const processNodeLabel = txt => {
+  txt = removeHtml(txt)
+  if (isLiteral(txt)) return [true, processLiteral(txt)]
+  return [false, toCamelCase(txt, false)]
 }
 
 const uri = localName => {
@@ -81,19 +105,19 @@ const uri = localName => {
     // tgf += from.id + " " + to.id + " " + edge.label + "\n"
     triples.push([from.label, edge.label, to.label])
     let triple = quad(
-      namedNode(uri(from.label)),
-      namedNode(uri(edge.label)),
-      namedNode(uri(to.label)),
+        namedNode(uri(from.label)),
+        namedNode(uri(edge.label)),
+        to.isLiteral ? literal(to.label) : namedNode(uri(to.label)),
     )
     quads.push(triple)
     edge.keyValuePairs.forEach(pair => { // RDF-star
-      let pred = clean(pair[0])
-      let obj = clean(pair[1])
-      triples.push(["<<" + from.label + " " + edge.label + " " + to.label + ">>", pred, obj])
+      let pred = toCamelCase(pair[0], true)
+      let [objIsLiteral, objLabel] = processNodeLabel(pair[1])
+      triples.push(["<<" + from.label + " " + edge.label + " " + to.label + ">>", pred, objLabel])
       quads.push(quad(
           triple,
           namedNode(uri(pred)),
-          namedNode(uri(obj)),
+          objIsLiteral ? literal(objLabel) : namedNode(uri(objLabel))
       ))
     });
   })
