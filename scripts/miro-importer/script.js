@@ -129,7 +129,7 @@ const uri = localName => {
       // triple = quad(triple, namedNode(predUri), objIsLiteral ? literal(objLabel) : namedNode(uri(objLabel)))
       // quads.push(triple)
 
-      objSparql = to.isLiteral ? ("\"" + objLabel + "\"") : ("<" + uri(objLabel) + ">")
+      objSparql = objIsLiteral ? ("\"" + objLabel + "\"") : ("<" + uri(objLabel) + ">")
       let rdfStarStatementStr = "<<" + statementStr + ">> <" + predUri + "> " + objSparql;
       query = "INSERT DATA { " + rdfStarStatementStr + " . }"
       await sparql.fetchUpdate(config.SPARQL_ENDPOINT_UPDATE, query)
