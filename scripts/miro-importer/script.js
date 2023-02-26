@@ -125,7 +125,7 @@ const uri = localName => {
   console.log(triples)
 
   const filename = "miro_" + slugify(board.name) + "_" + getTimestamp() + ".ttl"
-  const writer = new N3.Writer({ prefixes: { dev: "http://dev.de/default#" } });
+  const writer = new N3.Writer({ prefixes: { [config.BASE_URI_PREFIX]: config.BASE_URI } });
   quads.forEach(quad => writer.addQuad(quad))
   writer.end((error, result) => {
     if (error) { console.error(error); return; }
