@@ -6,6 +6,6 @@
     "slugify": "^1.6.5"
   },
   "scripts": {
-    "start": "node script.js"
+    "start": "node export.js"
   }
 }
