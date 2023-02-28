@@ -106,6 +106,9 @@ public class Utils {
         if (rdfNode.isLiteral()) {
             return fullUri ? rdfNodeToGraphDatabaseEntryString(rdfNode) : getValueFromLiteral(rdfNode.asLiteral());
         }
+        if (rdfNode.isStmtResource()) {
+            return "<< triple >>"; // TODO
+        }
         return rdfNode.toString();
     }
 

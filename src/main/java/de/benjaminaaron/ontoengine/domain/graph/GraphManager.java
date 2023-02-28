@@ -87,7 +87,7 @@ public class GraphManager {
         exporter.setEdgeLabelAttributeName("label");
         exporter.setExportEdgeLabels(true);
 
-        // use Edit > "Properties Mapper..." to map "label" to "Label Text" for nodes and edges
+        // Edit > "Properties Mapper..." --> map "label" to "Label Text" for nodes & edges, press apply for each
         try {
             FileWriter fileWriter = new FileWriter(file);
             exporter.exportGraph(graph, fileWriter);
