@@ -50,6 +50,7 @@ async function processEdge(edge) {
       label: toLabel,
       isLiteral: toIsLiteral
     }
+    console.log([fromLabel, edgeObj.label, toLabel])
   }
 }
 
@@ -137,7 +138,9 @@ const uri = localName => {
     for (const pair of edge.keyValuePairs) { // RDF-star: statements about statements
       let pred = toCamelCase(pair[0], true)
       let [objIsLiteral, objLabel] = processNodeLabel(pair[1])
-      triples.push(["<<" + from.label + " " + edge.label + " " + to.label + ">>", pred, objLabel])
+      let tripleArr = ["<<" + from.label + " " + edge.label + " " + to.label + ">>", pred, objLabel]
+      triples.push(tripleArr)
+      console.log(tripleArr)
 
       predUri = uri(pred)
       // triple = quad(triple, namedNode(predUri), objIsLiteral ? literal(objLabel) : namedNode(uri(objLabel)))
@@ -150,7 +153,7 @@ const uri = localName => {
     }
   }
 
-  console.log(triples)
+  // console.log(triples)
 /*const filename = "miro_" + slugify(board.name) + "_" + getTimestamp() + ".ttl"
   const writer = new N3.Writer({ prefixes: { [config.BASE_URI_PREFIX]: config.BASE_URI } });
   quads.forEach(quad => writer.addQuad(quad))
