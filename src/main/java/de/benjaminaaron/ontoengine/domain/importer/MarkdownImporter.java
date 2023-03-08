@@ -14,6 +14,7 @@ import de.benjaminaaron.ontoengine.adapter.primary.messages.AddStatementMessage;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,7 +45,12 @@ public class MarkdownImporter {
 
     @SneakyThrows
     public static void doImport(ModelController modelController, String folderName) {
-        Path markdownDir = getObsidianICloudDir(folderName);
+        Path markdownDir;
+        if (folderName.contains("/")) {
+            markdownDir = Paths.get(folderName);
+        } else {
+            markdownDir = getObsidianICloudDir(folderName);
+        }
         Model model = modelController.getMainModel();
         MetaHandler metaHandler = modelController.getMetaHandler();
         Map<String, Path> markdownFiles = new HashMap<>(); // key: resourceLocalName, value: file path
