@@ -9,10 +9,22 @@
     html * {
       font-family: Arial, serif;
     }
+    .link {
+      color: darkgray;
+      text-decoration: underline;
+      cursor: pointer;
+    }
   </style>
   <body>
-    <h2 id="headline">KnowThyselves</h2>
-    <input type="submit" id="query1btn" value="Query1"/>
+    <div style="text-align: center">
+      <h2 id="headline" style="color: darkblue; padding-top: 20px">KnowThyselves</h2>
+      <span style="color: darkgray">Examples:</span>
+      <span class="link" id="ex1link">1</span>
+      <span class="link" id="ex2link">2</span>
+      <span class="link" id="ex3link">3</span>
+      <span class="link" id="ex4link">4</span>
+      <div style="padding-top: 40px" id="root"></div>
+    </div>
     <script src="./dist/main.js"></script>
   </body>
 </html>

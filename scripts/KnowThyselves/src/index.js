@@ -18,6 +18,20 @@ async function fetch() {
   })
 }
 
-window.document.getElementById("query1btn").addEventListener("click", () => {
-  fetch().then(r => {})
-})
+function clearElement(el) {
+  while (el.firstChild) el.removeChild(el.lastChild);
+}
+
+function showExample(idx) {
+  clearElement(document.getElementById("root"))
+  //  fetch().then(r => {})
+}
+
+function registerClickListener(id, idx) {
+  document.getElementById(id).addEventListener("click", () => showExample(idx))
+}
+
+registerClickListener("ex1link", 1)
+registerClickListener("ex2link", 2)
+registerClickListener("ex3link", 3)
+registerClickListener("ex4link", 4)
