@@ -5,7 +5,6 @@ export const tailoredQueryObjects = {
     query: "PREFIX : <http://dev.de/default#> "
         + "SELECT * WHERE { "
         + "  :DigitalService :hasEmployee ?employee . "
-        + "}",
-    tableHeaders: ["employee"],
+        + "}"
   }
 }
