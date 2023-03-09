@@ -6,5 +6,14 @@ export const tailoredQueryObjects = {
         + "SELECT * WHERE { "
         + "  :DigitalService :hasEmployee ?employee . "
         + "}"
-  }
+  },
+  2: {
+    name: "Ministries",
+    description: "Ministries we worked with.",
+    query: "PREFIX : <http://dev.de/default#> "
+        + "SELECT * WHERE { "
+        + "  ?project :hasProjectPartner ?ministry . "
+        + "  ?ministry :hasLogo ?logo . "
+        + "}"
+  },
 }
