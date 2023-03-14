@@ -2,16 +2,17 @@ package de.benjaminaaron.ontoengine.domain.exporter;
 
 import static de.benjaminaaron.ontoengine.domain.Utils.DEFAULT_URI_NAMESPACE;
 import static de.benjaminaaron.ontoengine.domain.Utils.determineShortestUriRepresentation;
+import static de.benjaminaaron.ontoengine.domain.Utils.getObsidianICloudDir;
 import static de.benjaminaaron.ontoengine.domain.Utils.writeLine;
 import static de.benjaminaaron.ontoengine.domain.Utils.writeQueryLine;
 import static de.benjaminaaron.ontoengine.domain.Utils.writeSectionHeadline;
 
 import de.benjaminaaron.ontoengine.domain.ModelController;
-import de.benjaminaaron.ontoengine.domain.Utils;
 import de.benjaminaaron.ontoengine.domain.graph.Edge;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 import lombok.SneakyThrows;
 import org.apache.commons.io.FileUtils;
@@ -40,7 +41,12 @@ public class MarkdownExporter {
 
     @SneakyThrows
     public static void export(ModelController modelController, String folderName) {
-        Path markdownDir = Utils.getObsidianICloudDir(folderName); // MARKDOWN_DEFAULT_DIRECTORY
+        Path markdownDir;
+        if (folderName.contains("/")) {
+            markdownDir = Paths.get(folderName);
+        } else {
+            markdownDir = getObsidianICloudDir(folderName); // MARKDOWN_DEFAULT_DIRECTORY
+        }
         // sync mechanism? TODO
 
         try {
